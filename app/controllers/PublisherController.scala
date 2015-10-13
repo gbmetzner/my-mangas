@@ -8,7 +8,7 @@ import play.api.libs.json.Json
 import play.api.mvc.Action
 import play.modules.reactivemongo.ReactiveMongoApi
 import services.PublisherService
-import utils.json.Publisher.publisherFormatter
+import utils.json.PublisherParser.publisherFormatter
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future

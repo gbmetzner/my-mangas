@@ -5,6 +5,7 @@ import models.filters.{Predicate, PublisherFilter}
 import play.api.libs.json.Json
 import play.modules.reactivemongo.json._
 import play.modules.reactivemongo.json.collection.JSONCollection
+import utils.json.PublisherParser.publisherFormatter
 import utils.messages.{Error, Failed, Succeed}
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -13,8 +14,6 @@ import scala.concurrent.{ExecutionContext, Future}
  * @author Gustavo Metzner on 10/10/15.
  */
 class PublisherService {
-
-  implicit val publisherFormat = Json.format[Publisher]
 
   def insert(publisher: Publisher)(collection: JSONCollection)(implicit ec: ExecutionContext): Future[Either[Failed, Succeed]] = {
     findBy(PublisherFilter(name = publisher.name))(collection).flatMap {
