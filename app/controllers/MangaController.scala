@@ -9,7 +9,7 @@ import models.filters.MangaFilter
 import play.api.libs.json.Json
 import play.api.mvc.Action
 import services.MangaService
-import utils.json.MangaParser._
+import utils.json.MangaParser.{mangaFormatterController, queryString2Predicate}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -19,12 +19,10 @@ import scala.concurrent.Future
  */
 class MangaController @Inject()(mangaService: MangaService) extends BaseController {
 
-  override protected[controllers] val collectionName: String = "mangas"
-
   def create = Action.async(parse.json) {
     request =>
 
-      logger debug s"Create a Manga = $request"
+      logger info s"Create a Manga = $request"
 
       request.body.validate[Manga].map {
         manga => mangaService.insert(manga).map {
@@ -45,6 +43,7 @@ class MangaController @Inject()(mangaService: MangaService) extends BaseControll
 
   def update(id: UUID) = Action.async(parse.json) {
     request =>
+
       logger info s"Update manga = ($request)"
 
       request.body.validate[Manga].map {

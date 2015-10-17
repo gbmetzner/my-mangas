@@ -38,8 +38,9 @@ object MangaParser {
     }
   }
 
-  implicit val mangaFormatter = Format(reads, writes)
-  implicit val mangaFormatterJson = Json.format[Manga]
+  implicit val mangaFormatterController = Format(reads, writes)
+  
+  implicit val mangaFormatterService = Json.format[Manga]
 
   def queryString2Predicate(request: Request[AnyContent]): Predicate = {
     val id = request.getQueryString("id").map(fromString)

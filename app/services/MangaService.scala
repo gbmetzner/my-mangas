@@ -11,7 +11,7 @@ import play.api.libs.json.Json
 import play.modules.reactivemongo.ReactiveMongoApi
 import play.modules.reactivemongo.json._
 import utils.FileUpload
-import utils.json.MangaParser.mangaFormatterJson
+import utils.json.MangaParser.mangaFormatterService
 import utils.messages.{Error, Failed, Succeed, Warning}
 
 import scala.concurrent.{ExecutionContext, Future}

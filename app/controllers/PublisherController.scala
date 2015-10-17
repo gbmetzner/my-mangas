@@ -6,7 +6,6 @@ import models.Publisher
 import models.filters.PublisherFilter
 import play.api.libs.json.Json
 import play.api.mvc.Action
-import play.modules.reactivemongo.ReactiveMongoApi
 import services.PublisherService
 import utils.json.PublisherParser.publisherFormatter
 
@@ -16,10 +15,7 @@ import scala.concurrent.Future
 /**
  * @author Gustavo Metzner on 10/10/15.
  */
-class PublisherController @Inject()(publisherService: PublisherService,
-                                    val reactiveMongoApi: ReactiveMongoApi) extends BaseController {
-
-  override protected[controllers] val collectionName: String = "publishers"
+class PublisherController @Inject()(publisherService: PublisherService) extends BaseController {
 
   def create = Action.async(parse.json) {
     request =>
@@ -27,7 +23,7 @@ class PublisherController @Inject()(publisherService: PublisherService,
       logger debug s"Create a Publisher = $request"
 
       request.body.validate[Publisher].map {
-        publisher => publisherService.insert(publisher)(collection).map {
+        publisher => publisherService.insert(publisher).map {
           case Left(error) => BadRequest(error.message)
           case Right(success) => Created(success.message)
         }
@@ -38,7 +34,7 @@ class PublisherController @Inject()(publisherService: PublisherService,
 
     logger debug s"Find by name = $name"
 
-    publisherService.findBy(PublisherFilter(name = Some(name)))(collection).map {
+    publisherService.findBy(PublisherFilter(name = Some(name))).map {
       publishers => Ok(Json.toJson(publishers))
     }
   }
