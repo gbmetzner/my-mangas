@@ -7,14 +7,14 @@ import play.api.libs.json._
 
 object PublisherParser {
 
-  implicit val reads: Reads[Publisher] = new Reads[Publisher] {
+  private val reads: Reads[Publisher] = new Reads[Publisher] {
     override def reads(json: JsValue): JsResult[Publisher] = {
       val name = (json \ "name").as[String](minLength[String](3) keepAnd maxLength[String](30))
       JsSuccess(Publisher(name = name))
     }
   }
 
-  implicit val writes: Writes[Publisher] = new Writes[Publisher] {
+  private val writes: Writes[Publisher] = new Writes[Publisher] {
     override def writes(p: Publisher): JsValue = {
       Json.obj(
         "id" -> p.id,
@@ -26,4 +26,5 @@ object PublisherParser {
   }
 
   implicit val publisherFormatter = Format(reads, writes)
+  implicit val publisherFormatterJson = Json.format[Publisher]
 }

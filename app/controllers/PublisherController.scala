@@ -38,7 +38,7 @@ class PublisherController @Inject()(publisherService: PublisherService,
 
     logger debug s"Find by name = $name"
 
-    publisherService.findBy(PublisherFilter(name = name))(collection).map {
+    publisherService.findBy(PublisherFilter(name = Some(name)))(collection).map {
       publishers => Ok(Json.toJson(publishers))
     }
   }

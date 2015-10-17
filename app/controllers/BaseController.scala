@@ -10,13 +10,12 @@ import play.modules.reactivemongo.{MongoController, ReactiveMongoComponents}
  */
 trait BaseController
   extends Controller
-  with MongoController
-  with ReactiveMongoComponents with LazyLogging {
+  with LazyLogging {
 
   protected[controllers] val collectionName: String
 
   /** */
-  protected[controllers] def collection: JSONCollection =
-    db.collection[JSONCollection](collectionName)
+  protected[controllers] def collection: JSONCollection = ???
+    //db.collection[JSONCollection](collectionName)
 
 }

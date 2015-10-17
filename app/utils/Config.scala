@@ -9,10 +9,15 @@ object Config {
 
   private val config = play.api.Play.configuration
 
-  lazy val facebookClientId = config.getString("").getOrElse(throwException(""))
+  lazy val defaultMangaImage = getStringFromKey("manga.no.cover")
 
-  private def throwException(message: String) = {
-    throw new IllegalArgumentException(message)
+  lazy val smartFileKey: String = getStringFromKey("smartfile.key")
+
+  lazy val smartFileSecret: String = getStringFromKey("smartfile.secret")
+
+  lazy val smartFileApiUrl: String = getStringFromKey("smartfile.api.url")
+
+  private def getStringFromKey(key: String): String = {
+    config.getString(key).getOrElse(throw new IllegalArgumentException(s"key $key not found."))
   }
-
 }

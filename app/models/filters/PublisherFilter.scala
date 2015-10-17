@@ -1,21 +1,23 @@
 package models.filters
 
-import play.api.libs.json.{JsObject, Json}
+import play.api.libs.json.{JsArray, JsObject, Json}
 
 /**
  * @author Gustavo Metzner on 10/12/15.
  */
-object PublisherFilter {
+case class PublisherFilter(name: Option[String] = None,
+                           override val limit: Option[Int] = None,
+                           override val skip: Option[Int] = None) extends Predicate {
 
-  def apply(name: String = ""): Predicate = new Predicate {
-    override def filter: JsObject = Json.obj(
-      "name" -> Json.obj(
-        "$regex" -> s".*$name*.", "$options" -> "i"
-      )
-    )
+  override def filter: JsObject = {
+    val filter = (name.map(n => Json.obj("name" -> Json.obj(
+      "$regex" -> s".*$n*.", "$options" -> "i"
+    ))) :: Nil).map(_.getOrElse(JsObject(Nil)))
 
-    override def sort: JsObject = Json.obj(
-      "createdAt" -> -1
-    )
+    Json.obj("$and" -> JsArray(filter.toSeq))
   }
+
+  override def sort: JsObject = Json.obj(
+    "createdAt" -> -1
+  )
 }

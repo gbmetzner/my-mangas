@@ -8,3 +8,5 @@ target
 /RUNNING_PID
 /conf/db-dev.conf
 /conf/db-prod.conf
+/conf/smartfile.conf
+.DS_Store

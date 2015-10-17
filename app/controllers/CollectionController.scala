@@ -38,7 +38,7 @@ class CollectionController @Inject()(collectionService: CollectionService,
 
     logger debug s"Find by name = $name"
 
-    collectionService.findBy(CollectionFilter(name = name))(collection).map {
+    collectionService.findBy(CollectionFilter(name = Some(name)))(collection).map {
       collections => Ok(Json.toJson(collections))
     }
   }
