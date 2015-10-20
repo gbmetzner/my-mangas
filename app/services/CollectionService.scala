@@ -3,10 +3,10 @@ package services
 import javax.inject.Inject
 
 import models.Collection
-import models.filters.{Predicate, PublisherFilter}
+import models.filters.{CollectionFilter, Predicate}
 import play.modules.reactivemongo.ReactiveMongoApi
 import play.modules.reactivemongo.json._
-import utils.json.CollectionParser.collectionFormatterJson
+import utils.json.CollectionParser.collectionFormatterService
 import utils.messages.{Error, Failed, Succeed}
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -19,8 +19,8 @@ class CollectionService @Inject()(val reactiveMongoApi: ReactiveMongoApi) extend
   override protected[services] val collectionName: String = "collections"
 
   def insert(coll: Collection)(implicit ec: ExecutionContext): Future[Either[Failed, Succeed]] = {
-    findBy(PublisherFilter(name = Some(coll.name))).flatMap {
-      publishers => if (publishers.isEmpty) {
+    findBy(CollectionFilter(name = Some(coll.name))).flatMap {
+      colls => if (colls.isEmpty) {
         (collection insert coll).map {
           lastError => if (lastError.hasErrors) Left(Error(lastError.message)) else Right(Succeed("collection.added"))
         }

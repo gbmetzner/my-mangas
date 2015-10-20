@@ -12,8 +12,10 @@ object CollectionParser {
 
   private val reads: Reads[Collection] = new Reads[Collection] {
     override def reads(json: JsValue): JsResult[Collection] = {
+      val publisher = (json \ "publisher").as[String](minLength[String](3) keepAnd maxLength[String](30))
       val name = (json \ "name").as[String](minLength[String](3) keepAnd maxLength[String](30))
-      JsSuccess(Collection(name = name))
+      val baseURL = (json \ "baseURL").as[String](minLength[String](15) keepAnd maxLength[String](50))
+      JsSuccess(Collection(publisher = publisher, name = name, baseURL = baseURL))
     }
   }
 
@@ -21,7 +23,10 @@ object CollectionParser {
     override def writes(c: Collection): JsValue = {
       Json.obj(
         "id" -> c.id,
+        "publisher" -> c.publisher,
         "name" -> c.name,
+        "baseURL" -> c.baseURL,
+        "isComplete" -> c.isComplete,
         "createdAt" -> c.createdAt,
         "updatedAt" -> c.updatedAt
       )
@@ -29,5 +34,5 @@ object CollectionParser {
   }
 
   implicit val collectionFormatter = Format(reads, writes)
-  implicit val collectionFormatterJson = Json.format[Collection]
+  implicit val collectionFormatterService = Json.format[Collection]
 }

@@ -77,4 +77,12 @@ class MangaService @Inject()(val reactiveMongoApi: ReactiveMongoApi) extends Ser
       } else Future.successful(Left(Warning("manga.not.found")))
     }
   }
+
+  def latestNumber(collectionName: String)(implicit ec: ExecutionContext): Future[Option[Manga]] = {
+    val predicate = MangaFilter(name = Some(collectionName))
+    collection.find(predicate.filter).
+      options(predicate.queryOpts).
+      sort(Json.obj("number" -> -1)).
+      one[Manga]
+  }
 }

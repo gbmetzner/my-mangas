@@ -3,19 +3,20 @@
 # ~~~~
 
 # Home page
-GET         /                           controllers.Application.index
+GET         /                                            controllers.Application.index
 
-POST        /publishers                 controllers.PublisherController.create
-GET         /publishers/:name           controllers.PublisherController.findByName(name: String)
+POST        /publishers                                  controllers.PublisherController.create
+GET         /publishers/:name                            controllers.PublisherController.findByName(name: String)
 
-POST        /collections                controllers.CollectionController.create
-GET         /collections/:name          controllers.CollectionController.findByName(name: String)
+POST        /collections                                 controllers.CollectionController.create
+GET         /collections/:name                           controllers.CollectionController.findByName(name: String)
 
-POST        /mangas                     controllers.MangaController.create
-POST        /mangas/cover/upload        controllers.MangaController.uploadCover
-PUT         /mangas/:id                 controllers.MangaController.update(id: java.util.UUID)
-GET         /mangas/search              controllers.MangaController.filter
-GET         /mangas/:name               controllers.MangaController.findByName(name: String)
+POST        /mangas                                      controllers.MangaController.create
+POST        /mangas/cover/upload                         controllers.MangaController.uploadCover
+PUT         /mangas/:id                                  controllers.MangaController.update(id: java.util.UUID)
+GET         /mangas/search                               controllers.MangaController.filter
+GET         /mangas/:name                                controllers.MangaController.findByName(name: String)
+GET         /mangas/:collectionName/latest-number        controllers.MangaController.latestNumber(collectionName: String)
 
 # Map static resources from the /public folder to the /assets URL path
-GET         /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
+GET         /assets/*file                                controllers.Assets.versioned(path="/public", file: Asset)

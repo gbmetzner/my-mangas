@@ -16,7 +16,8 @@ libraryDependencies ++= Seq(
   "org.reactivemongo" %% "play2-reactivemongo" % latestIntegration withSources(),
   "com.typesafe.scala-logging" %% "scala-logging" % latestIntegration withSources(),
   "com.typesafe.play" %% "play-mailer" % latestIntegration withSources(),
-  "com.smartfile" % "JavaClient" % "1.0"
+  "com.smartfile" % "JavaClient" % "1.0",
+  "net.ruippeixotog" %% "scala-scraper" % "0.1.1"
 )
 
 // Play provides two styles of routers, one expects its actions to be injected, the

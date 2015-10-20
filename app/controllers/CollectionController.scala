@@ -20,7 +20,7 @@ class CollectionController @Inject()(collectionService: CollectionService) exten
   def create = Action.async(parse.json) {
     request =>
 
-      logger debug s"Create a Collection = $request"
+      logger info s"Create a Collection = $request"
 
       request.body.validate[Collection].map {
         coll => collectionService.insert(coll).map {
@@ -32,7 +32,7 @@ class CollectionController @Inject()(collectionService: CollectionService) exten
 
   def findByName(name: String) = Action.async {
 
-    logger debug s"Find by name = $name"
+    logger info s"Find by name = $name"
 
     collectionService.findBy(CollectionFilter(name = Some(name))).map {
       collections => Ok(Json.toJson(collections))

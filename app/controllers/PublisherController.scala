@@ -3,7 +3,7 @@ package controllers
 import javax.inject.Inject
 
 import models.Publisher
-import models.filters.PublisherFilter
+import models.filters.CollectionFilter
 import play.api.libs.json.Json
 import play.api.mvc.Action
 import services.PublisherService
@@ -34,7 +34,7 @@ class PublisherController @Inject()(publisherService: PublisherService) extends 
 
     logger debug s"Find by name = $name"
 
-    publisherService.findBy(PublisherFilter(name = Some(name))).map {
+    publisherService.findBy(CollectionFilter(name = Some(name))).map {
       publishers => Ok(Json.toJson(publishers))
     }
   }

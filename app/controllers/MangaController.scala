@@ -82,4 +82,11 @@ class MangaController @Inject()(mangaService: MangaService) extends BaseControll
         Future.successful(Redirect(routes.Application.index()).flashing("error" -> "Missing file"))
       }
   }
+
+  def latestNumber(collectionName: String) = Action.async {
+    mangaService.latestNumber(collectionName).map {
+      case Some(manga) => Ok(Json.obj("data" -> Json.toJson(manga)))
+      case None => NotFound(Json.obj("msg" -> "manga.not.found"))
+    }
+  }
 }
