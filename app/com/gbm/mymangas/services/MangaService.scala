@@ -78,7 +78,7 @@ class MangaService @Inject()(val reactiveMongoApi: ReactiveMongoApi) extends Ser
   }
 
   def latestNumber(collectionName: String)(implicit ec: ExecutionContext): Future[Option[Manga]] = {
-    val predicate = MangaFilter(name = Some(collectionName))
+    val predicate = MangaFilter(collection = Some(collectionName))
     collection.find(predicate.filter).
       options(predicate.queryOpts).
       sort(Json.obj("number" -> -1)).

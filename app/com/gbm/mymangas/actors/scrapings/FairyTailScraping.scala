@@ -9,7 +9,7 @@ import org.jsoup.nodes.Document
  */
 class FairyTailScraping(override val collection: String,
                         override val latestNumber: Int,
-                        override val baseURL: String) extends JBCScrapable(collection, latestNumber, baseURL) {
+                        override val searchParam: String) extends JBCScraping(collection, latestNumber, searchParam) {
 
   override def extractNumber(document: Document): Int = (document >> extractor(".txt h1", text)).split("#").last.toInt
 

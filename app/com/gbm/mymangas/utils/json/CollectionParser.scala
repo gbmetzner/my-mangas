@@ -14,8 +14,8 @@ object CollectionParser {
     override def reads(json: JsValue): JsResult[Collection] = {
       val publisher = (json \ "publisher").as[String](minLength[String](3) keepAnd maxLength[String](30))
       val name = (json \ "name").as[String](minLength[String](3) keepAnd maxLength[String](30))
-      val baseURL = (json \ "baseURL").as[String](minLength[String](15) keepAnd maxLength[String](50))
-      JsSuccess(Collection(publisher = publisher, name = name, baseURL = baseURL))
+      val searchParam = (json \ "searchParam").as[String](minLength[String](3) keepAnd maxLength[String](50))
+      JsSuccess(Collection(publisher = publisher, name = name, searchParam = searchParam))
     }
   }
 
@@ -25,7 +25,7 @@ object CollectionParser {
         "id" -> c.id,
         "publisher" -> c.publisher,
         "name" -> c.name,
-        "baseURL" -> c.baseURL,
+        "searchParam" -> c.searchParam,
         "isComplete" -> c.isComplete,
         "createdAt" -> c.createdAt,
         "updatedAt" -> c.updatedAt

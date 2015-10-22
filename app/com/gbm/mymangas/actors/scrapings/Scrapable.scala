@@ -1,0 +1,46 @@
+package com.gbm.mymangas.actors.scrapings
+
+import com.gbm.mymangas.models.Manga
+import net.ruippeixotog.scalascraper.browser.Browser
+import org.jsoup.nodes.Document
+
+import scala.util.{Failure, Success, Try}
+
+/**
+ * @author Gustavo Metzner on 10/17/15.
+ */
+
+trait Scrapable {
+  val collection: String
+  val latestNumber: Int
+  val baseURL: String
+  val searchParam: String
+
+  private[scrapings] val browser = BrowserDecorator(new Browser)
+
+  case class BrowserDecorator(private val browser: Browser) {
+    def get(url: String): Option[Document] = Try(browser get url) match {
+      case Success(document) => Some(document)
+      case Failure(_) => None
+    }
+  }
+
+  private[scrapings] def extractManga(document: Document): Manga = {
+    Manga(collection = collection, name = extractName(document), number = extractNumber(document))
+  }
+
+  private[scrapings] def extractMangasLinks(document: Document)(f: Document => Seq[String]): Seq[String] = {
+    f(document).map(link => s"$baseURL$link")
+  }
+
+  def extractLinks(title: String): Seq[String]
+
+  def extractName(document: Document): String
+
+  def extractNumber(document: Document): Int
+
+  def extractImgLink(document: Document): String
+
+  def scrape: Seq[(Manga, String)]
+
+}

@@ -2,8 +2,8 @@ package com.gbm.mymangas.models
 
 import java.util.UUID
 
-import org.joda.time.DateTime
 import com.gbm.mymangas.utils.UUID._
+import org.joda.time.DateTime
 
 /**
  * @author Gustavo Metzner on 10/13/15.
@@ -11,7 +11,7 @@ import com.gbm.mymangas.utils.UUID._
 case class Collection(id: UUID = generate(),
                       publisher: String,
                       name: String,
-                      baseURL: String,
+                      searchParam: String,
                       isComplete: Boolean = false,
                       createdAt: DateTime = DateTime.now(),
                       updatedAt: DateTime = DateTime.now())

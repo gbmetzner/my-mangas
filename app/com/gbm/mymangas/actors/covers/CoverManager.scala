@@ -1,8 +1,9 @@
 package com.gbm.mymangas.actors.covers
 
-import com.gbm.mymangas.actors.mangas.MangaManager
 import akka.actor._
+import com.gbm.mymangas.actors.mangas.MangaManager
 import com.gbm.mymangas.models.Manga
+import com.gbm.mymangas.utils.StandardizeNames.StandardizeName
 
 /**
  * @author Gustavo Metzner on 10/19/15.
@@ -28,41 +29,57 @@ class CoverManager(creator: ActorRef) extends Actor with ActorLogging {
 
   override def receive: Receive = {
     case CoverManager.Start(mangas) => mangas.foreach {
-      case (manga, link) => coverDownloadActor(s"download_${manga.collection}_${manga.number}".replaceAll(" ", "_")) ! CoverDownloader.Download(manga, link)
+      case (manga, link) =>
+        val name = s"${manga.collection}_${manga.number}".standardize
+        createCoverDownloadActor(name) ! CoverDownloader.Download(manga, link)
     }
-    case CoverManager.DownloadDone(manga, filePath) => {
-      val name = s"download_${manga.collection}_${manga.number}".replaceAll(" ", "_")
-      val name2 = s"upload_${manga.collection}_${manga.number}".replaceAll(" ", "_")
+    case CoverManager.DownloadDone(manga, filePath) =>
+      log debug s"Download done. Filepath = $filePath"
+
+      val name = s"${manga.collection}_${manga.number}".standardize
       killCoverDownloadActor(name)
-      coverUploadActor(name2) ! CoverUploader.Upload(manga, filePath)
-    }
-    case CoverManager.UploadDone(manga) => {
-      val name = s"upload_${manga.collection}_${manga.number}".replaceAll(" ", "_")
+      createCoverUploadActor(name) ! CoverUploader.Upload(manga, filePath)
+
+    case CoverManager.UploadDone(manga) =>
+      log debug s"Upload done of ${manga.fullName}"
+
+      val name = s"${manga.collection}_${manga.number}".standardize
       killCoverUploadActor(name)
       creator ! MangaManager.Persist(manga)
+  }
+
+  def createCoverDownloadActor(name: String): ActorRef = {
+    log debug s"Creating CoverDownloadActor = $name"
+
+    val actorRef = context.actorOf(CoverDownloader.props(self), s"download-$name")
+    coverDownloaders += (s"download-$name" -> actorRef)
+    actorRef
+  }
+
+  def killCoverDownloadActor(key: String): Unit = {
+    log debug s"Killing CoverDownloadActor = $key"
+
+    coverDownloaders.get(s"download-$key") match {
+      case Some(actorRef) => actorRef ! PoisonPill
+      case None => log warning s"Trying to kill CoverDownloadActor key = $key"
     }
   }
 
-  def coverDownloadActor(name: String): ActorRef = {
-    val actorRef = context.actorOf(CoverDownloader.props(self), name)
-    coverDownloaders += (name -> actorRef)
+  def createCoverUploadActor(name: String): ActorRef = {
+    log debug s"Creating CoverUploadActor = $name"
+
+    val actorRef = context.actorOf(CoverUploader.props(self), s"upload-$name")
+    coverUploaders += (s"upload-$name" -> actorRef)
     actorRef
   }
 
-  def killCoverDownloadActor(key: String): Unit = coverDownloaders.get(key) match {
-    case Some(actorRef) => actorRef ! PoisonPill
-    case None => //log warning s"Trying to kill actor key = $key"
-  }
+  def killCoverUploadActor(key: String): Unit = {
+    log debug s"Killing CoverUploadActor = $key"
 
-  def coverUploadActor(name: String): ActorRef = {
-    val actorRef = context.actorOf(CoverUploader.props(self), name)
-    coverUploaders += (name -> actorRef)
-    actorRef
-  }
-
-  def killCoverUploadActor(key: String): Unit = coverUploaders.get(key) match {
-    case Some(actorRef) => actorRef ! PoisonPill
-    case None => //log warning s"Trying to kill actor key = $key"
+    coverUploaders.get(s"upload-$key") match {
+      case Some(actorRef) => actorRef ! PoisonPill
+      case None => log warning s"Trying to kill CoverUploadActor key = $key"
+    }
   }
 
 }
