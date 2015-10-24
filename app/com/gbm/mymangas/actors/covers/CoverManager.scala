@@ -16,6 +16,8 @@ object CoverManager {
 
   case class DownloadDone(manga: Manga, filePath: String)
 
+  case class CoverNotAvailable(manga: Manga)
+
   case class StartDownload(manga: Manga, link: String)
 
   case class UploadDone(manga: Manga)
@@ -39,6 +41,13 @@ class CoverManager(creator: ActorRef) extends Actor with ActorLogging {
       val name = s"${manga.collection}_${manga.number}".standardize
       killCoverDownloadActor(name)
       createCoverUploadActor(name) ! CoverUploader.Upload(manga, filePath)
+
+    case CoverManager.CoverNotAvailable(manga) =>
+      log debug s"Cover not available for ${manga.fullName}"
+
+      val name = s"${manga.collection}_${manga.number}".standardize
+      killCoverUploadActor(name)
+      creator ! MangaManager.Persist(manga)
 
     case CoverManager.UploadDone(manga) =>
       log debug s"Upload done of ${manga.fullName}"

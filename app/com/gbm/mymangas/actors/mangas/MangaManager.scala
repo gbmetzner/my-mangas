@@ -2,7 +2,8 @@ package com.gbm.mymangas.actors.mangas
 
 import javax.inject.{Inject, Singleton}
 
-import akka.actor.{Actor, ActorLogging, ActorRef, PoisonPill}
+import akka.actor.SupervisorStrategy.{Decider, Restart, Stop}
+import akka.actor._
 import com.gbm.mymangas.actors.covers.CoverManager
 import com.gbm.mymangas.actors.scrapings.ScrapingActor
 import com.gbm.mymangas.models.Manga

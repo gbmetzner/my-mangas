@@ -1,7 +1,6 @@
 package com.gbm.mymangas.actors.scrapings
 
 
-import com.gbm.mymangas.models.Manga
 import net.ruippeixotog.scalascraper.dsl.DSL.Extract._
 import net.ruippeixotog.scalascraper.dsl.DSL._
 import org.jsoup.nodes.Document
@@ -28,24 +27,8 @@ class JBCScraping(override val collection: String,
     document >> extractor("#int_content img", attr("src"))
   }
 
-  def scrape: Seq[(Manga, String)] = {
-    val links = extractLinks(searchParam)
+  override def extractLinks: Seq[String] = {
 
-    @annotation.tailrec
-    def process(links: Seq[String], acc: Seq[(Manga, String)]): Seq[(Manga, String)] = links match {
-      case Nil => acc
-      case head :: tail => browser get head match {
-        case None => acc
-        case Some(document) =>
-          val manga = (extractManga(document), extractImgLink(document))
-          process(tail, if (manga._1.number > latestNumber) acc :+ manga else acc)
-      }
-    }
-
-    if (links.nonEmpty) process(links, Seq.empty[(Manga, String)]) else Seq.empty[(Manga, String)]
-  }
-
-  override def extractLinks(title: String): Seq[String] = {
     def buildPageURL(pageNumber: Int): String = s"http://mangasjbc.uol.com.br/titulos/$searchParam/page/$pageNumber"
 
     @annotation.tailrec
@@ -56,6 +39,7 @@ class JBCScraping(override val collection: String,
       })
     }
 
-    extract(1, Seq.empty[String])
+    extract(latestNumber + 1, Seq.empty[String])
   }
+
 }

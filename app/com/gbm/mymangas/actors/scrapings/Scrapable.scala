@@ -33,14 +33,27 @@ trait Scrapable {
     f(document).map(link => s"$baseURL$link")
   }
 
-  def extractLinks(title: String): Seq[String]
-
   def extractName(document: Document): String
 
   def extractNumber(document: Document): Int
 
   def extractImgLink(document: Document): String
 
-  def scrape: Seq[(Manga, String)]
+  def scrape: Seq[(Manga, String)] = {
+    val links = extractLinks
 
+    @annotation.tailrec
+    def process(links: Seq[String], acc: Seq[(Manga, String)]): Seq[(Manga, String)] = links match {
+      case Nil => acc
+      case head :: tail => browser get head match {
+        case None => acc
+        case Some(document) =>
+          val manga = (extractManga(document), extractImgLink(document))
+          process(tail, if (manga._1.number > latestNumber) acc :+ manga else acc)
+      }
+    }
+    if (links.nonEmpty) process(links, Seq.empty[(Manga, String)]) else Seq.empty[(Manga, String)]
+  }
+
+  def extractLinks: Seq[String]
 }

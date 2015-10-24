@@ -2,13 +2,15 @@ package com.gbm.mymangas.utils
 
 import java.io.{File, InputStream}
 
+import com.gbm.mymangas.utils.Config._
 import com.smartfile.api.BasicClient
 import org.apache.commons.io.IOUtils
 import play.api.libs.json.Json
-import com.gbm.mymangas.utils.Config._
+
+import scala.util.{Failure, Success, Try}
 
 /**
- * Created by gbmetzner on 10/14/15.
+ * @author Gustavo Metzner on 10/14/15.
  */
 object FileUpload {
 
@@ -18,9 +20,14 @@ object FileUpload {
   client.setApiUrl(smartFileApiUrl)
 
   def upload(externalPath: String, file: File): String = {
-    makeDirectory(externalPath)
-    uploadFile(externalPath, file)
-    parsePublicLink(makePublicLink(externalPath, file.getName)) concat file.getName
+    Try {
+      makeDirectory(externalPath)
+      uploadFile(externalPath, file)
+      parsePublicLink(makePublicLink(externalPath, file.getName)) concat file.getName
+    } match {
+      case Success(publicLink) => publicLink
+      case Failure(_) => Config.defaultMangaImage
+    }
   }
 
   private def makeDirectory(directory: String): Unit = {

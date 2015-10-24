@@ -5,9 +5,11 @@ import java.net.URL
 
 import akka.actor.{Actor, ActorLogging, ActorRef, Props}
 import com.gbm.mymangas.models.Manga
+import com.gbm.mymangas.utils.Config
 import com.gbm.mymangas.utils.StandardizeNames.StandardizeName
 
 import scala.sys.process._
+import scala.util.{Failure, Success, Try}
 
 /**
  * @author Gustavo Metzner on 10/19/15.
@@ -25,11 +27,14 @@ class CoverDownloader(creator: ActorRef) extends Actor with ActorLogging {
   override def receive: Receive = {
     case CoverDownloader.Download(manga, url) =>
       log debug s"Downloading ${manga.fullName} from $url"
-
-      val extension = extractExtension(url)
-      val filePath = s"/tmp/${manga.collection}_${manga.number}$extension".standardize
-      downloadImage(url, filePath)
-      creator ! CoverManager.DownloadDone(manga, filePath)
+      Try {
+        val extension = extractExtension(url)
+        val filePath = s"/tmp/${manga.collection}_${manga.number}$extension".standardize
+        downloadImage(url, filePath)
+      } match {
+        case Success(filePath) => creator ! CoverManager.DownloadDone(manga, filePath)
+        case Failure(_) => creator ! CoverManager.CoverNotAvailable(manga.copy(publicLink = Config.defaultMangaImage))
+      }
   }
 
   def extractExtension(url: String): String = {

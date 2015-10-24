@@ -1,6 +1,5 @@
 package com.gbm.mymangas.actors.scrapings
 
-import com.gbm.mymangas.models.Manga
 import com.typesafe.scalalogging.LazyLogging
 import net.ruippeixotog.scalascraper.dsl.DSL.Extract._
 import net.ruippeixotog.scalascraper.dsl.DSL._
@@ -19,14 +18,13 @@ class PaniniScraping(override val collection: String,
     (document >> extractor(".title h3", text)).toLowerCase.split("ed.").last.trim().toInt
   }
 
-  override def extractLinks(searchParam: String): Seq[String] = {
+  override def extractLinks: Seq[String] = {
+
     def extractQuantity(document: Document): Int = {
       (document >> extractor(".search_summary h3 strong", text)).toInt
     }
     def buildPageURL(pageNumber: Int): String = {
-      val url = s"$baseURL/web/guest/search_product?search=$searchParam".replace("#", pageNumber.toString)
-      logger debug url
-      url
+      s"$baseURL/web/guest/search_product?search=$searchParam".replace("#", pageNumber.toString)
     }
 
     @annotation.tailrec
@@ -49,22 +47,4 @@ class PaniniScraping(override val collection: String,
   override def extractName(document: Document): String = {
     (document >> extractor(".titles h1", text)).split("-").head.trim()
   }
-
-  override def scrape: Seq[(Manga, String)] = {
-    val links = extractLinks(searchParam)
-
-    @annotation.tailrec
-    def process(links: Seq[String], acc: Seq[(Manga, String)]): Seq[(Manga, String)] = links match {
-      case Nil => acc
-      case head :: tail => browser get head match {
-        case None => acc
-        case Some(document) =>
-          val manga = (extractManga(document), extractImgLink(document))
-          process(tail, if (manga._1.number > latestNumber) acc :+ manga else acc)
-      }
-    }
-
-    if (links.nonEmpty) process(links, Seq.empty[(Manga, String)]) else Seq.empty[(Manga, String)]
-  }
-
 }
