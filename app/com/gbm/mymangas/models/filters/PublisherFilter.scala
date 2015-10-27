@@ -1,18 +1,22 @@
 package com.gbm.mymangas.models.filters
 
+import java.util.UUID
+
 import play.api.libs.json.{JsArray, JsObject, Json}
 
 /**
  * @author Gustavo Metzner on 10/12/15.
  */
-case class PublisherFilter(name: Option[String] = None,
+case class PublisherFilter(id: Option[UUID] = None,
+                           name: Option[String] = None,
                            override val limit: Option[Int] = None,
                            override val skip: Option[Int] = None) extends Predicate {
 
   override def filter: JsObject = {
     val filter = (name.map(n => Json.obj("name" -> Json.obj(
       "$regex" -> s".*$n*.", "$options" -> "i"
-    ))) :: Nil).map(_.getOrElse(JsObject(Nil)))
+    ))) :: id.map(i => Json.obj("id" -> i
+    )) :: Nil).map(_.getOrElse(JsObject(Nil)))
 
     Json.obj("$and" -> JsArray(filter.toSeq))
   }

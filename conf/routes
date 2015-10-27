@@ -5,12 +5,18 @@
 # Home page
 GET         /                                            com.gbm.mymangas.controllers.Application.index
 
+# Publishers
 POST        /publishers                                  com.gbm.mymangas.controllers.PublisherController.create
-GET         /publishers/:name                            com.gbm.mymangas.controllers.PublisherController.findByName(name: String)
+GET         /publishers/new-page                         com.gbm.mymangas.controllers.PublisherController.newPublisherPage
+GET         /publishers/search-page                      com.gbm.mymangas.controllers.PublisherController.searchPublisherPage
+GET         /publishers/search                           com.gbm.mymangas.controllers.PublisherController.search
+GET         /publishers/:id/edit                         com.gbm.mymangas.controllers.PublisherController.edit(id: java.util.UUID)
 
+# Collections
 POST        /collections                                 com.gbm.mymangas.controllers.CollectionController.create
 GET         /collections/:name                           com.gbm.mymangas.controllers.CollectionController.findByName(name: String)
 
+# Mangas
 POST        /mangas                                      com.gbm.mymangas.controllers.MangaController.create
 POST        /mangas/cover/upload                         com.gbm.mymangas.controllers.MangaController.uploadCover
 PUT         /mangas/:id                                  com.gbm.mymangas.controllers.MangaController.update(id: java.util.UUID)

@@ -1,0 +1,40 @@
+@main("Publishers") {
+    <div class="col-sm-12">
+        <div class="col-md-10">
+            <div ng-controller="NewPublisherController">
+
+                <form id="publisherForm" name="publisherForm" class="form-horizontal">
+
+                    <fieldset>
+
+                        <legend>Add New Publisher</legend>
+
+                        <uib-alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
+                            {{alert.msg}}</uib-alert>
+
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="textinput">Name</label>
+                            <div class="col-md-4">
+                                <input id="name" name="name" type="text" ng-model="publisher.name"
+                                placeholder="Publisher's name" class="form-control input-md" required
+                                pattern=".{2,}" title="Please type at least 2 characters">
+                                <span data-ng-show="publisherForm.name.$invalid">Please enter a valid name</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="submit"></label>
+                            <div class="col-md-8">
+                                <button id="submit" name="submit" ng-click="save(publisher)" class="btn btn-success">
+                                    Save</button>
+                                <button id="reset" name="reset" ng-click="clear()" class="btn btn-warning">Clear</button>
+                            </div>
+                        </div>
+
+                    </fieldset>
+                </form>
+
+            </div>
+        </div>
+    </div>
+}
