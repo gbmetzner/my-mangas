@@ -31,9 +31,12 @@ class CoverDownloader(creator: ActorRef) extends Actor with ActorLogging {
         val extension = extractExtension(url)
         val filePath = s"/tmp/${manga.collection}_${manga.number}$extension".standardize
         downloadImage(url, filePath)
+        filePath
       } match {
         case Success(filePath) => creator ! CoverManager.DownloadDone(manga, filePath)
-        case Failure(_) => creator ! CoverManager.CoverNotAvailable(manga.copy(publicLink = Config.defaultMangaImage))
+        case Failure(_) =>
+          log info s"Cover not found for ${manga.fullName}"
+          creator ! CoverManager.CoverNotAvailable(manga.copy(publicLink = Config.defaultMangaImage))
       }
   }
 
@@ -43,5 +46,8 @@ class CoverDownloader(creator: ActorRef) extends Actor with ActorLogging {
     if (extension.length > 4) ".jpg" else extension
   }
 
-  def downloadImage(url: String, file: String) = new URL(url) #> new File(file) !!
+  def downloadImage(url: String, file: String) = {
+    log debug s"Downloading from $url to $file"
+    new URL(url) #> new File(file) !!
+  }
 }

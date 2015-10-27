@@ -21,7 +21,9 @@ class CoverUploader(creator: ActorRef) extends Actor with ActorLogging {
 
   override def receive: Receive = {
     case Upload(manga, filePath) =>
-      log debug s"Uploading cover for ${manga.fullName} of ${manga.collection}"
+      log debug s"Uploading cover for ${manga.fullName}"
+      log debug s"/my-mangas/mangas/${manga.collection.standardize}"
+      log debug s"$filePath"
 
       val file = new File(filePath)
       val publicLink = FileUpload.upload(s"/my-mangas/mangas/${manga.collection.standardize}", file)

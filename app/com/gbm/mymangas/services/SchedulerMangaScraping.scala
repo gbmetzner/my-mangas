@@ -2,8 +2,8 @@ package com.gbm.mymangas.services
 
 import javax.inject.{Inject, Named, Singleton}
 
-import com.gbm.mymangas.actors.collections.CollectionManager
 import akka.actor.{ActorRef, ActorSystem}
+import com.gbm.mymangas.actors.collections.CollectionManager
 import com.typesafe.scalalogging.LazyLogging
 import play.api.Application
 
@@ -21,7 +21,7 @@ class SchedulerMangaScraping @Inject()(val app: Application,
 
   implicit val application = app
 
-  logger debug "Manga Scraping scheduling..."
+  logger info "Manga Scraping scheduling..."
 
-  system.scheduler.schedule(0.microseconds, 5.minutes, collectionManager, CollectionManager.Start)
+  system.scheduler.schedule(15.seconds, 24.hours, collectionManager, CollectionManager.Start)
 }

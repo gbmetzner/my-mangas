@@ -17,6 +17,7 @@ libraryDependencies ++= Seq(
   "com.typesafe.scala-logging" %% "scala-logging" % latestIntegration withSources(),
   "com.typesafe.play" %% "play-mailer" % latestIntegration withSources(),
   "com.typesafe" % "config" % latestIntegration withSources(),
+  "com.logentries" % "logentries-appender" % latestIntegration withSources(),
   "com.smartfile" % "JavaClient" % "1.0",
   "net.ruippeixotog" %% "scala-scraper" % "0.1.1"
 )

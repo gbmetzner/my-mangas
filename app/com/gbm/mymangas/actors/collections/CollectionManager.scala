@@ -8,6 +8,7 @@ import com.gbm.mymangas.models.filters.CollectionFilter
 import com.gbm.mymangas.services.CollectionService
 
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.util.{Failure, Success}
 
 /**
  * @author Gustavo Metzner on 10/17/15.
@@ -25,13 +26,28 @@ class CollectionManager @Inject()(collectionService: CollectionService,
   override def receive: Receive = {
     case CollectionManager.Start =>
 
-      log debug "Retrieving collections not completed..."
+      log info "Retrieving incomplete collections..."
 
-      collectionService.findBy(CollectionFilter(isComplete = Some(false))).foreach {
-        collections => collections.foreach {
-          collection => mangaManager ! MangaManager.StartProcess(collection.publisher, collection.name, collection.searchParam)
+      startProcess(attempt = 1)
+  }
+
+  private def startProcess(attempt: Int): Unit = {
+    if (attempt < 4) {
+      collectionService.findBy(CollectionFilter(isComplete = Some(false))).onComplete {
+        case Success(collections) =>
+          collections.foreach {
+            collection =>
+              log info s" Collection ${collection.name} is being started."
+              mangaManager ! MangaManager.StartProcess(collection.publisher, collection.name, collection.searchParam)
+          }
+        case Failure(error) => {
+          log error error.getMessage
+          startProcess(attempt + 1)
         }
       }
+    } else {
+      log warning s"Something went wrong. $attempt attempts was made. See logs, please."
+    }
   }
 }
 
