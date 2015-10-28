@@ -2,7 +2,6 @@ package com.gbm.mymangas.actors.mangas
 
 import javax.inject.{Inject, Singleton}
 
-import akka.actor.SupervisorStrategy.{Decider, Restart, Stop}
 import akka.actor._
 import com.gbm.mymangas.actors.covers.CoverManager
 import com.gbm.mymangas.actors.scrapings.ScrapingActor
@@ -49,6 +48,8 @@ class MangaManager @Inject()(mangaService: MangaService) extends Actor with Acto
       val mangasSize = mangas.size
 
       log debug s"Scraping done. $mangasSize mangas has been found"
+
+      mangas.foreach(println)
 
       killScrapingActor(collection)
 

@@ -32,7 +32,7 @@ class PaniniScraping(override val collection: String,
       case None => acc
       case Some(document) =>
         if (extractQuantity(document) > 0) extract(page + 1, acc ++ extractMangasLinks(document) {
-          document => document >> extractor("h3 a", attrs("href"))
+          document => Seq(document >> extractor("h3 a", attr("href")))
         })
         else acc
     }
