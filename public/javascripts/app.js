@@ -1,1 +1,0 @@
-angular.module('myMangas', ['ui.bootstrap','myMangas.controllers', 'myMangas.services']);

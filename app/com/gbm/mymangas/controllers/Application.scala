@@ -4,8 +4,8 @@ import play.api.mvc._
 
 class Application extends Controller {
 
-  def index = Action {
-    Ok("Ok")
+  def main(any: String) = Action {
+    Ok(views.html.main())
   }
 
 }

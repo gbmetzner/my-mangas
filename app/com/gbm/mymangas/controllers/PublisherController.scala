@@ -18,14 +18,6 @@ import scala.concurrent.Future
  */
 class PublisherController @Inject()(publisherService: PublisherService) extends BaseController {
 
-  def newPublisherPage = Action.async {
-    Future.successful(Ok(views.html.publishers.new_publisher()))
-  }
-
-  def searchPublisherPage = Action.async {
-    Future.successful(Ok(views.html.publishers.list_publisher()))
-  }
-
   def create = Action.async(parse.json) {
     request =>
 
@@ -58,8 +50,29 @@ class PublisherController @Inject()(publisherService: PublisherService) extends 
     logger debug s"Find by id = $id"
 
     publisherService.findOneBy(PublisherFilter(id = Some(id))).map {
-      case Some(publisher) => Ok(views.html.publishers.update_publisher(publisher))
-      case None => NotFound("")
+      case Some(publisher) => Ok(Json.obj("publisher" -> Json.toJson(publisher)))
+      case None => NotFound(Json.obj("msg" -> "publisher.not.found"))
+    }
+  }
+
+  def update(id: UUID) = Action.async(parse.json) {
+    request =>
+      logger debug s"Update a Publisher = $request"
+
+      request.body.validate[Publisher].map {
+        publisher => publisherService.update(id, publisher).map {
+          case Left(error) => BadRequest(Json.obj("msg" -> error.message))
+          case Right(success) => Ok(Json.obj("msg" -> success.message))
+        }
+      }.getOrElse(Future.successful(BadRequest("invalid json")))
+  }
+
+  def remove(id: UUID) = Action.async {
+    logger debug s"Removing id = $id"
+
+    publisherService.remove(id).map {
+      case Left(error) => BadRequest(Json.obj("msg" -> error.message))
+      case Right(success) => Ok(Json.obj("msg" -> success.message))
     }
   }
 }

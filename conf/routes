@@ -3,26 +3,28 @@
 # ~~~~
 
 # Home page
-GET         /                                            com.gbm.mymangas.controllers.Application.index
+GET           /                                                com.gbm.mymangas.controllers.Application.main(any = "none")
 
 # Publishers
-POST        /publishers                                  com.gbm.mymangas.controllers.PublisherController.create
-GET         /publishers/new-page                         com.gbm.mymangas.controllers.PublisherController.newPublisherPage
-GET         /publishers/search-page                      com.gbm.mymangas.controllers.PublisherController.searchPublisherPage
-GET         /publishers/search                           com.gbm.mymangas.controllers.PublisherController.search
-GET         /publishers/:id/edit                         com.gbm.mymangas.controllers.PublisherController.edit(id: java.util.UUID)
+POST          /api/publishers                                  com.gbm.mymangas.controllers.PublisherController.create
+PUT           /api/publishers/:id                              com.gbm.mymangas.controllers.PublisherController.update(id: java.util.UUID)
+DELETE        /api/publishers/:id                              com.gbm.mymangas.controllers.PublisherController.remove(id: java.util.UUID)
+GET           /api/publishers/search                           com.gbm.mymangas.controllers.PublisherController.search
+GET           /api/publishers/:id/edit                         com.gbm.mymangas.controllers.PublisherController.edit(id: java.util.UUID)
 
 # Collections
-POST        /collections                                 com.gbm.mymangas.controllers.CollectionController.create
-GET         /collections/:name                           com.gbm.mymangas.controllers.CollectionController.findByName(name: String)
+POST          /api/collections                                 com.gbm.mymangas.controllers.CollectionController.create
+GET           /api/collections/:name                           com.gbm.mymangas.controllers.CollectionController.findByName(name: String)
 
 # Mangas
-POST        /mangas                                      com.gbm.mymangas.controllers.MangaController.create
-POST        /mangas/cover/upload                         com.gbm.mymangas.controllers.MangaController.uploadCover
-PUT         /mangas/:id                                  com.gbm.mymangas.controllers.MangaController.update(id: java.util.UUID)
-GET         /mangas/search                               com.gbm.mymangas.controllers.MangaController.filter
-GET         /mangas/:name                                com.gbm.mymangas.controllers.MangaController.findByName(name: String)
-GET         /mangas/:collectionName/latest-number        com.gbm.mymangas.controllers.MangaController.latestNumber(collectionName: String)
+POST          /api/mangas                                      com.gbm.mymangas.controllers.MangaController.create
+POST          /api/mangas/cover/upload                         com.gbm.mymangas.controllers.MangaController.uploadCover
+PUT           /api/mangas/:id                                  com.gbm.mymangas.controllers.MangaController.update(id: java.util.UUID)
+GET           /api/mangas/search                               com.gbm.mymangas.controllers.MangaController.filter
+GET           /api/mangas/:name                                com.gbm.mymangas.controllers.MangaController.findByName(name: String)
+GET           /api/mangas/:collectionName/latest-number        com.gbm.mymangas.controllers.MangaController.latestNumber(collectionName: String)
 
 # Map static resources from the /public folder to the /assets URL path
-GET         /assets/*file                                controllers.Assets.versioned(path="/public", file: Asset)
+GET           /assets/*file                                    controllers.Assets.versioned(path="/public", file: Asset)
+
+GET           /*any                                            com.gbm.mymangas.controllers.Application.main(any)

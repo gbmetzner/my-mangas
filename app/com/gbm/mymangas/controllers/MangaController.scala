@@ -79,7 +79,7 @@ class MangaController @Inject()(mangaService: MangaService) extends BaseControll
 
           Future.successful(Ok("File uploaded"))
       }.getOrElse {
-        Future.successful(Redirect(routes.Application.index()).flashing("error" -> "Missing file"))
+        Future.successful(Redirect("/").flashing("error" -> "Missing file"))
       }
   }
 
