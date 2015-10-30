@@ -5,6 +5,8 @@ import net.ruippeixotog.scalascraper.dsl.DSL.Extract._
 import net.ruippeixotog.scalascraper.dsl.DSL._
 import org.jsoup.nodes.Document
 
+import scala.util.{Failure, Success, Try}
+
 /**
  * @author Gustavo Metzner on 10/22/15.
  */
@@ -19,8 +21,8 @@ class JBCScraping(override val collection: String,
     document >> extractor(".excerpt", text)
   }
 
-  override def extractNumber(document: Document): Int = {
-    (document >> extractor("#int_content h2", text)).split("#").last.toInt
+  override protected val extractNumberF: (Document) => Int = {
+    document => (document >> extractor("#int_content h2", text)).split("#").last.toInt
   }
 
   override def extractImgLink(document: Document): String = {

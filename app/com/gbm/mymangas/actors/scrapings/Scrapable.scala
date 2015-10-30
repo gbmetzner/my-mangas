@@ -25,8 +25,10 @@ trait Scrapable {
     }
   }
 
+  protected val extractNumberF: (Document) => Int
+
   private[scrapings] def extractManga(document: Document): Manga = {
-    Manga(collection = collection, name = extractName(document), number = extractNumber(document))
+    Manga(collection = collection, name = extractName(document), number = extractNumber(document)(extractNumberF))
   }
 
   private[scrapings] def extractMangasLinks(document: Document)(f: Document => Seq[String]): Seq[String] = {
@@ -35,7 +37,10 @@ trait Scrapable {
 
   def extractName(document: Document): String
 
-  def extractNumber(document: Document): Int
+  private def extractNumber(document: Document)(f: Document => Int): Int = Try(f(document)) match {
+    case Success(number) => number
+    case Failure(_) => 0
+  }
 
   def extractImgLink(document: Document): String
 

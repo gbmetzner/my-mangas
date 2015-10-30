@@ -14,8 +14,8 @@ class PaniniScraping(override val collection: String,
 
   override val baseURL: String = "http://www.paninicomics.com.br"
 
-  override def extractNumber(document: Document): Int = {
-    (document >> extractor(".title h3", text)).toLowerCase.split("ed.").last.trim().toInt
+  override protected val extractNumberF: (Document) => Int = {
+    document => (document >> extractor(".title h3", text)).toLowerCase.split("ed.").last.trim().toInt
   }
 
   override def extractLinks: Seq[String] = {

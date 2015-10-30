@@ -11,7 +11,10 @@ class FairyTailScraping(override val collection: String,
                         override val latestNumber: Int,
                         override val searchParam: String) extends JBCScraping(collection, latestNumber, searchParam) {
 
-  override def extractNumber(document: Document): Int = (document >> extractor(".txt h1", text)).split("#").last.toInt
+
+  override protected val extractNumberF: (Document) => Int = {
+    document => (document >> extractor(".txt h1", text)).split("#").last.toInt
+  }
 
   override def extractImgLink(document: Document): String = document >> extractor(".imgCapa", attr("src"))
 
