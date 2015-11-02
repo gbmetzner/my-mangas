@@ -1,4 +1,4 @@
-angular.module('myMangas.routes', ['myMangas.controllers'])
+angular.module('publisher.routes', ['publisher.controllers'])
     .config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
         $routeProvider
             .when('/views/publisher', {

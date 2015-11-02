@@ -1,2 +1,9 @@
-angular.module('myMangas', ['ngRoute', 'ui.bootstrap', 'myMangas.controllers',
-    'myMangas.services', 'myMangas.routes']);
+angular.module('myMangas',
+    ['ngRoute',
+        'ui.bootstrap',
+        'publisher.controllers',
+        'publisher.services',
+        'publisher.routes',
+        'collection.controllers',
+        'collection.services',
+        'collection.routes']);

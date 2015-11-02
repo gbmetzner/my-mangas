@@ -1,14 +1,22 @@
-angular.module('publisher.controllers', ['publisher.services', 'ngDialog'])
-    .controller('NewPublisherController', ['$scope', 'PublisherService',
-        function ($scope, PublisherService) {
+angular.module('collection.controllers', ['collection.services', 'publisher.services', 'ngDialog'])
+    .controller('NewCollectionController', ['$scope', 'CollectionService', 'PublisherService',
+        function ($scope, CollectionService, PublisherService) {
 
             $scope.alerts = [];
 
-            $scope.legend = "Add New Publisher";
+            $scope.getPublishers = function (name) {
+                return PublisherService.findByName(name).then(function (response) {
+                    return response.data.items.map(function (item) {
+                        return item.name;
+                    });
+                });
+            };
 
-            $scope.save = function (publisher) {
-                if ($scope.publisherForm.$valid) {
-                    PublisherService.save(publisher).then(function (response) {
+            $scope.legend = "Add New Collection";
+
+            $scope.save = function (collection) {
+                if ($scope.collectionForm.$valid) {
+                    CollectionService.save(collection).then(function (response) {
                         $scope.reset();
                         $scope.alerts.push({type: 'success', msg: response.data.msg});
                     }, function (response) {
@@ -18,8 +26,11 @@ angular.module('publisher.controllers', ['publisher.services', 'ngDialog'])
             };
 
             $scope.reset = function () {
-                $scope.publisher = {
-                    name: ""
+                $scope.collection = {
+                    publisher: "",
+                    name: "",
+                    searchParam: "",
+                    isComplete: false
                 };
             };
 
@@ -27,8 +38,8 @@ angular.module('publisher.controllers', ['publisher.services', 'ngDialog'])
                 $scope.alerts.splice(index, 1);
             };
 
-        }]).controller('ListPublisherController', ['$scope', '$route', '$timeout', 'PublisherService', 'ngDialog',
-        function ($scope, $route, $timeout, PublisherService, ngDialog) {
+        }]).controller('ListCollectionController', ['$scope', '$timeout', 'CollectionService', 'ngDialog',
+        function ($scope, $timeout, CollectionService, ngDialog) {
 
             var name = '';
 
@@ -40,19 +51,20 @@ angular.module('publisher.controllers', ['publisher.services', 'ngDialog'])
                     if (timeout) $timeout.cancel(timeout);
                     timeout = $timeout(function () {
                         name = newVal;
+                        alert(name);
                         paginate(1, 0);
                     }, 350);
                 }
             });
 
-            $scope.openRemoveDialog = function (publisher) {
-                $scope.publisherToRemove = publisher;
+            $scope.openRemoveDialog = function (collection) {
+                $scope.collectionToRemove = collection;
                 ngDialog.openConfirm({
-                    template: 'removePublisherTemplate',
+                    template: 'removeCollectionTemplate',
                     className: 'ngdialog-theme-default',
                     scope: $scope
-                }).then(function (publisherID) {
-                    PublisherService.remove(publisherID).then(function (response) {
+                }).then(function (collectionID) {
+                    CollectionService.remove(collectionID).then(function (response) {
                         paginate($scope.bigCurrentPage, $scope.itemsPerPage * ($scope.bigCurrentPage - 1));
                         $scope.alerts.push({type: 'success', msg: response.data.msg});
                     }, function (response) {
@@ -68,7 +80,7 @@ angular.module('publisher.controllers', ['publisher.services', 'ngDialog'])
                 $scope.maxSize = 5;
                 $scope.bigCurrentPage = currentPage;
 
-                PublisherService.paginate({
+                CollectionService.paginate({
                     'name': name,
                     'limit': $scope.itemsPerPage,
                     'skip': skip
@@ -94,19 +106,19 @@ angular.module('publisher.controllers', ['publisher.services', 'ngDialog'])
                 $scope.alerts.splice(index, 1);
             };
 
-        }]).controller('UpdatePublisherController', ['$scope', '$routeParams', 'PublisherService',
-        function ($scope, $routeParams, PublisherService) {
+        }]).controller('UpdateCollectionController', ['$scope', '$routeParams', 'CollectionService',
+        function ($scope, $routeParams, CollectionService) {
 
             $scope.alerts = [];
 
-            $scope.legend = "Update Publisher";
+            $scope.legend = "Update Collection";
 
-            var oldPublisher = null;
+            var oldCollection = null;
 
             var updateModel = function () {
-                PublisherService.edit($routeParams.id).then(function (response) {
-                    $scope.publisher = response.data.publisher;
-                    oldPublisher = angular.copy($scope.publisher);
+                CollectionService.edit($routeParams.id).then(function (response) {
+                    $scope.collection = response.data.collection;
+                    oldCollection = angular.copy($scope.collection);
                 }, function (response) {
                     $scope.alerts.push({type: 'warning', msg: response.data.msg});
                 });
@@ -114,10 +126,10 @@ angular.module('publisher.controllers', ['publisher.services', 'ngDialog'])
 
             updateModel();
 
-            $scope.save = function (publisher) {
-                if ($scope.publisherForm.$valid) {
-                    PublisherService.update(publisher).then(function (response) {
-                        oldPublisher = angular.copy($scope.publisher);
+            $scope.save = function (collection) {
+                if ($scope.collectionForm.$valid) {
+                    CollectionService.update(collection).then(function (response) {
+                        oldCollection = angular.copy($scope.collection);
                         $scope.alerts.push({type: 'success', msg: response.data.msg});
                     }, function (response) {
                         $scope.alerts.push({type: 'warning', msg: response.data.msg});

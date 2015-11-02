@@ -1,4 +1,4 @@
-angular.module('publisher.services', []).factory('PublisherService', ['$http', function ($http) {
+angular.module('collection.services', []).factory('CollectionService', ['$http', function ($http) {
 
     var doPost = function (url, publisher) {
         return $http({
@@ -32,22 +32,19 @@ angular.module('publisher.services', []).factory('PublisherService', ['$http', f
     };
     return {
         save: function (publisher) {
-            return doPost('/api/publishers', publisher);
+            return doPost('/api/collections', publisher);
         },
         edit: function (publisherID) {
-            return doGet('/api/publishers/' + publisherID + '/edit');
+            return doGet('/api/collections/' + publisherID + '/edit');
         },
         update: function (publisher) {
-            return doPut('/api/publishers/' + publisher.id, publisher);
+            return doPut('/api/collections/' + publisher.id, publisher);
         },
         remove: function (publisherID) {
-            return doDelete('/api/publishers/' + publisherID);
-        },
-        findByName: function (name) {
-            return doGet('/api/publishers/search?name=' + name + '&limit=10&skip=0');
+            return doDelete('/api/collections/' + publisherID);
         },
         paginate: function (publisherFilter) {
-            var url = '/api/publishers/search?';
+            var url = '/api/collections/search?';
             if (publisherFilter.limit !== null) {
                 url = url + 'limit=' + publisherFilter.limit;
             }

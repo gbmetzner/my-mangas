@@ -1,0 +1,83 @@
+<div class="col-sm-12">
+    <div class="col-md-10">
+
+        <uib-alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
+            {{alert.msg}}
+        </uib-alert>
+
+        <form class="form-horizontal">
+            <fieldset>
+                <legend>Search:</legend>
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="name">Collection</label>
+
+                    <div class="col-md-4">
+                        <input id="name" name="name" type="text" ng-model="name"
+                               placeholder="Collection's name" class="form-control input-md">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="publisher">Publisher</label>
+
+                    <div class="col-md-4">
+                        <input id="publisher" name="publisher" type="text" ng-model="publisher"
+                               placeholder="Publisher's name" class="form-control input-md">
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+
+        <fieldset>
+            <legend>Collections</legend>
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Publisher</th>
+                    <th>Is Complete?</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="item in items">
+                    <td>{{item.name}}</td>
+                    <td>{{item.publisher}}</td>
+                    <td>{{item.isComplete ? Yes : No}}</td>
+                    <td>
+                        <button ng-click="openRemoveDialog(item)" class="btn btn-danger pull-right"
+                                id="btn_delete">Remove
+                        </button>
+                        <a ng-href="/views/collection/{{item.id}}/edit" class="btn btn-success pull-right"
+                           id="btn_update">Edit</a>
+                    </td>
+                </tr>
+                </tbody>
+                <tfoot>
+                <tr>
+                    <td>
+                        <uib-pagination total-items="bigTotalItems" ng-model="bigCurrentPage" max-size="maxSize"
+                                        class="pagination-sm" items-per-page="itemsPerPage" boundary-links="true"
+                                        rotate="false" num-pages="numPages" ng-change="pageChanged()">
+                        </uib-pagination>
+                    </td>
+                </tr>
+                </tfoot>
+            </table>
+        </fieldset>
+    </div>
+    <script type="text/ng-template" id="removeCollectionTemplate">
+        <div class="ngdialog-message">
+            <h3>Remove Collection</h3>
+
+            <p>Are you sure you want to remove the Collection: {{collectionToRemove.name}}?</p>
+        </div>
+        <div class="ngdialog-buttons">
+            <button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog()">
+                Cancel
+            </button>
+            <button type="button" class="ngdialog-button ngdialog-button-primary"
+                    ng-click="confirm(collectionToRemove.id)">Save
+            </button>
+        </div>
+    </script>
+</div>

@@ -14,7 +14,10 @@ GET           /api/publishers/:id/edit                         com.gbm.mymangas.
 
 # Collections
 POST          /api/collections                                 com.gbm.mymangas.controllers.CollectionController.create
-GET           /api/collections/:name                           com.gbm.mymangas.controllers.CollectionController.findByName(name: String)
+PUT           /api/collections/:id                             com.gbm.mymangas.controllers.CollectionController.update(id: java.util.UUID)
+DELETE        /api/collections/:id                             com.gbm.mymangas.controllers.CollectionController.remove(id: java.util.UUID)
+GET           /api/collections/search                          com.gbm.mymangas.controllers.CollectionController.search
+GET           /api/collections/:id/edit                        com.gbm.mymangas.controllers.CollectionController.edit(id: java.util.UUID)
 
 # Mangas
 POST          /api/mangas                                      com.gbm.mymangas.controllers.MangaController.create
