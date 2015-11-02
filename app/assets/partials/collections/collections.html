@@ -9,19 +9,19 @@
             <fieldset>
                 <legend>Search:</legend>
                 <div class="form-group">
-                    <label class="col-md-4 control-label" for="name">Collection</label>
-
-                    <div class="col-md-4">
-                        <input id="name" name="name" type="text" ng-model="name"
-                               placeholder="Collection's name" class="form-control input-md">
-                    </div>
-                </div>
-                <div class="form-group">
                     <label class="col-md-4 control-label" for="publisher">Publisher</label>
 
                     <div class="col-md-4">
-                        <input id="publisher" name="publisher" type="text" ng-model="publisher"
+                        <input id="publisher" name="publisher" type="text" ng-model="collection.publisher"
                                placeholder="Publisher's name" class="form-control input-md">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="collection">Collection</label>
+
+                    <div class="col-md-4">
+                        <input id="collection" name="collection" type="text" ng-model="collection.name"
+                               placeholder="Collection's name" class="form-control input-md">
                     </div>
                 </div>
             </fieldset>
@@ -42,7 +42,7 @@
                 <tr ng-repeat="item in items">
                     <td>{{item.name}}</td>
                     <td>{{item.publisher}}</td>
-                    <td>{{item.isComplete ? Yes : No}}</td>
+                    <td>{{item.isComplete ? 'Yes' : 'No'}}</td>
                     <td>
                         <button ng-click="openRemoveDialog(item)" class="btn btn-danger pull-right"
                                 id="btn_delete">Remove

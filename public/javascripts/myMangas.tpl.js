@@ -62,7 +62,7 @@ module.run(['$templateCache', function($templateCache) {
     '\n' +
     '                    <div class="col-md-4">\n' +
     '                        <input id="isComplete" name="isComplete" type="checkbox" class="btn btn-success"\n' +
-    '                               ng-model="collection.isComplete">\n' +
+    '                               ng-model="collection.isComplete" ng-true-value="true" ng-false-value="false">\n' +
     '                    </div>\n' +
     '                </div>\n' +
     '\n' +
@@ -103,19 +103,19 @@ module.run(['$templateCache', function($templateCache) {
     '            <fieldset>\n' +
     '                <legend>Search:</legend>\n' +
     '                <div class="form-group">\n' +
-    '                    <label class="col-md-4 control-label" for="name">Collection</label>\n' +
-    '\n' +
-    '                    <div class="col-md-4">\n' +
-    '                        <input id="name" name="name" type="text" ng-model="name"\n' +
-    '                               placeholder="Collection\'s name" class="form-control input-md">\n' +
-    '                    </div>\n' +
-    '                </div>\n' +
-    '                <div class="form-group">\n' +
     '                    <label class="col-md-4 control-label" for="publisher">Publisher</label>\n' +
     '\n' +
     '                    <div class="col-md-4">\n' +
-    '                        <input id="publisher" name="publisher" type="text" ng-model="publisher"\n' +
+    '                        <input id="publisher" name="publisher" type="text" ng-model="collection.publisher"\n' +
     '                               placeholder="Publisher\'s name" class="form-control input-md">\n' +
+    '                    </div>\n' +
+    '                </div>\n' +
+    '                <div class="form-group">\n' +
+    '                    <label class="col-md-4 control-label" for="collection">Collection</label>\n' +
+    '\n' +
+    '                    <div class="col-md-4">\n' +
+    '                        <input id="collection" name="collection" type="text" ng-model="collection.name"\n' +
+    '                               placeholder="Collection\'s name" class="form-control input-md">\n' +
     '                    </div>\n' +
     '                </div>\n' +
     '            </fieldset>\n' +
@@ -136,7 +136,7 @@ module.run(['$templateCache', function($templateCache) {
     '                <tr ng-repeat="item in items">\n' +
     '                    <td>{{item.name}}</td>\n' +
     '                    <td>{{item.publisher}}</td>\n' +
-    '                    <td>{{item.isComplete ? Yes : No}}</td>\n' +
+    '                    <td>{{item.isComplete ? \'Yes\' : \'No\'}}</td>\n' +
     '                    <td>\n' +
     '                        <button ng-click="openRemoveDialog(item)" class="btn btn-danger pull-right"\n' +
     '                                id="btn_delete">Remove\n' +

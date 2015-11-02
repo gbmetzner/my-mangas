@@ -50,17 +50,22 @@ angular.module('collection.controllers', ['collection.services', 'publisher.serv
         }]).controller('ListCollectionController', ['$scope', '$timeout', 'CollectionService', 'ngDialog',
         function ($scope, $timeout, CollectionService, ngDialog) {
 
-            var name = '';
+            var collection = {
+                publisher: "",
+                name: ""
+            };
 
             $scope.alerts = [];
 
             var timeout;
-            $scope.$watch('name', function (newVal) {
-                if (newVal) {
+            $scope.$watchGroup(['collection.publisher', 'collection.name'], function (newVal) {
+                if (newVal[0] || newVal[1]) {
                     if (timeout) $timeout.cancel(timeout);
                     timeout = $timeout(function () {
-                        name = newVal;
-                        alert(name);
+                        collection = {
+                            publisher: newVal[0] ? newVal[0] : '',
+                            name: newVal[1] ? newVal[1] : ''
+                        };
                         paginate(1, 0);
                     }, 350);
                 }
@@ -90,7 +95,7 @@ angular.module('collection.controllers', ['collection.services', 'publisher.serv
                 $scope.bigCurrentPage = currentPage;
 
                 CollectionService.paginate({
-                    'name': name,
+                    'collection': collection,
                     'limit': $scope.itemsPerPage,
                     'skip': skip
                 }).then(function (response) {
@@ -374,16 +379,19 @@ angular.module('collection.services', []).factory('CollectionService', ['$http',
         remove: function (publisherID) {
             return doDelete('/api/collections/' + publisherID);
         },
-        paginate: function (publisherFilter) {
+        paginate: function (collectionFilter) {
             var url = '/api/collections/search?';
-            if (publisherFilter.limit !== null) {
-                url = url + 'limit=' + publisherFilter.limit;
+            if (collectionFilter.limit !== null) {
+                url = url + 'limit=' + collectionFilter.limit;
             }
-            if (publisherFilter.skip !== null) {
-                url = url + '&skip=' + publisherFilter.skip;
+            if (collectionFilter.skip !== null) {
+                url = url + '&skip=' + collectionFilter.skip;
             }
-            if (publisherFilter.name !== "") {
-                url = url + '&name=' + publisherFilter.name;
+            if (collectionFilter.collection.publisher !== "") {
+                url = url + '&publisher=' + collectionFilter.collection.publisher;
+            }
+            if (collectionFilter.collection.name !== "") {
+                url = url + '&name=' + collectionFilter.collection.name;
             }
             return doGet(url);
         }

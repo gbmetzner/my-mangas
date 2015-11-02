@@ -43,16 +43,19 @@ angular.module('collection.services', []).factory('CollectionService', ['$http',
         remove: function (publisherID) {
             return doDelete('/api/collections/' + publisherID);
         },
-        paginate: function (publisherFilter) {
+        paginate: function (collectionFilter) {
             var url = '/api/collections/search?';
-            if (publisherFilter.limit !== null) {
-                url = url + 'limit=' + publisherFilter.limit;
+            if (collectionFilter.limit !== null) {
+                url = url + 'limit=' + collectionFilter.limit;
             }
-            if (publisherFilter.skip !== null) {
-                url = url + '&skip=' + publisherFilter.skip;
+            if (collectionFilter.skip !== null) {
+                url = url + '&skip=' + collectionFilter.skip;
             }
-            if (publisherFilter.name !== "") {
-                url = url + '&name=' + publisherFilter.name;
+            if (collectionFilter.collection.publisher !== "") {
+                url = url + '&publisher=' + collectionFilter.collection.publisher;
+            }
+            if (collectionFilter.collection.name !== "") {
+                url = url + '&name=' + collectionFilter.collection.name;
             }
             return doGet(url);
         }

@@ -41,17 +41,22 @@ angular.module('collection.controllers', ['collection.services', 'publisher.serv
         }]).controller('ListCollectionController', ['$scope', '$timeout', 'CollectionService', 'ngDialog',
         function ($scope, $timeout, CollectionService, ngDialog) {
 
-            var name = '';
+            var collection = {
+                publisher: "",
+                name: ""
+            };
 
             $scope.alerts = [];
 
             var timeout;
-            $scope.$watch('name', function (newVal) {
-                if (newVal) {
+            $scope.$watchGroup(['collection.publisher', 'collection.name'], function (newVal) {
+                if (newVal[0] || newVal[1]) {
                     if (timeout) $timeout.cancel(timeout);
                     timeout = $timeout(function () {
-                        name = newVal;
-                        alert(name);
+                        collection = {
+                            publisher: newVal[0] ? newVal[0] : '',
+                            name: newVal[1] ? newVal[1] : ''
+                        };
                         paginate(1, 0);
                     }, 350);
                 }
@@ -81,7 +86,7 @@ angular.module('collection.controllers', ['collection.services', 'publisher.serv
                 $scope.bigCurrentPage = currentPage;
 
                 CollectionService.paginate({
-                    'name': name,
+                    'collection': collection,
                     'limit': $scope.itemsPerPage,
                     'skip': skip
                 }).then(function (response) {
