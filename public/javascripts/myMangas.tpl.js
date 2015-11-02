@@ -185,6 +185,197 @@ try {
   module = angular.module('myMangas.tpl', []);
 }
 module.run(['$templateCache', function($templateCache) {
+  $templateCache.put('/partials/mangas/manga.html',
+    '<div class="col-sm-12">\n' +
+    '    <div class="col-md-10">\n' +
+    '        <form id="mangaForm" name="mangaForm" class="form-horizontal">\n' +
+    '            <input type="hidden" name="id" ng-model="manga.id">\n' +
+    '            <fieldset>\n' +
+    '\n' +
+    '                <legend>{{legend}}</legend>\n' +
+    '\n' +
+    '                <uib-alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">\n' +
+    '                    {{alert.msg}}\n' +
+    '                </uib-alert>\n' +
+    '\n' +
+    '                <div class="form-group">\n' +
+    '                    <label class="col-md-4 control-label" for="collection">Collection</label>\n' +
+    '\n' +
+    '                    <div class="col-md-4">\n' +
+    '                        <input id="collection" name="collection" type="text" ng-model="manga.collection"\n' +
+    '                               placeholder="Collection\'s name" required\n' +
+    '                               uib-typeahead="collection for collection in getCollections($viewValue)"\n' +
+    '                               typeahead-loading="loadingCollections" typeahead-no-results="noResults"\n' +
+    '                               class="form-control">\n' +
+    '                        <i ng-show="loadingCollections" class="glyphicon glyphicon-refresh"></i>\n' +
+    '\n' +
+    '                        <div ng-show="noResults">\n' +
+    '                            <i class="glyphicon glyphicon-remove"></i> No Results Found\n' +
+    '                        </div>\n' +
+    '                        <span data-ng-show="mangaForm.collection.$invalid">Please enter a valid name</span>\n' +
+    '                    </div>\n' +
+    '                </div>\n' +
+    '\n' +
+    '                <div class="form-group">\n' +
+    '                    <label class="col-md-4 control-label" for="name">Name</label>\n' +
+    '\n' +
+    '                    <div class="col-md-4">\n' +
+    '                        <input id="name" name="name" type="text" ng-model="manga.name"\n' +
+    '                               placeholder="Manga\'s name" class="form-control input-md" required\n' +
+    '                               pattern=".{2,}" title="Please type at least 2 characters">\n' +
+    '                        <span data-ng-show="mangaForm.name.$invalid">Please enter a valid name</span>\n' +
+    '                    </div>\n' +
+    '                </div>\n' +
+    '\n' +
+    '                <div class="form-group">\n' +
+    '                    <label class="col-md-4 control-label" for="number">Number</label>\n' +
+    '\n' +
+    '                    <div class="col-md-4">\n' +
+    '                        <input id="number" name="number" type="number" ng-model="manga.number"\n' +
+    '                               placeholder="Manga\'s number" class="form-control input-md" required\n' +
+    '                               title="Please type at least 2 characters">\n' +
+    '                        <span data-ng-show="mangaForm.number.$invalid">Please enter a valid number</span>\n' +
+    '                    </div>\n' +
+    '                </div>\n' +
+    '\n' +
+    '                <div class="form-group">\n' +
+    '                    <label class="col-md-4 control-label" for="doIHaveIt">Do I have it?</label>\n' +
+    '\n' +
+    '                    <div class="col-md-4">\n' +
+    '                        <input id="doIHaveIt" name="doIHaveIt" type="checkbox" class="btn btn-success"\n' +
+    '                               ng-model="manga.doIHaveIt" ng-true-value="true" ng-false-value="false">\n' +
+    '                    </div>\n' +
+    '                </div>\n' +
+    '\n' +
+    '                <div class="form-group" >\n' +
+    '                    <label class="col-md-4 control-label" for="cover">Cover</label>\n' +
+    '\n' +
+    '                    <div class="col-md-4">\n' +
+    '                        <input id="cover" type="file" ngf-select ng-model="cover" name="cover"\n' +
+    '                               accept="image/*" ngf-max-size="2MB" required>\n' +
+    '                    </div>\n' +
+    '                    <button ng-disabled="!mangaForm.$valid" ng-click="uploadCover(cover, manga)">Submit</button>\n' +
+    '                </div>\n' +
+    '\n' +
+    '                <div class="form-group">\n' +
+    '                    <label class="col-md-4 control-label" for="submit"></label>\n' +
+    '\n' +
+    '                    <div class="col-md-8">\n' +
+    '                        <button id="submit" name="submit" ng-click="save(manga)" class="btn btn-success">\n' +
+    '                            Save\n' +
+    '                        </button>\n' +
+    '                        <button id="reset" name="reset" ng-click="reset()" class="btn btn-warning">Reset</button>\n' +
+    '                    </div>\n' +
+    '                </div>\n' +
+    '\n' +
+    '            </fieldset>\n' +
+    '        </form>\n' +
+    '    </div>\n' +
+    '</div>');
+}]);
+})();
+
+(function(module) {
+try {
+  module = angular.module('myMangas.tpl');
+} catch (e) {
+  module = angular.module('myMangas.tpl', []);
+}
+module.run(['$templateCache', function($templateCache) {
+  $templateCache.put('/partials/mangas/mangas.html',
+    '<div class="col-sm-12">\n' +
+    '    <div class="col-md-10">\n' +
+    '\n' +
+    '        <uib-alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">\n' +
+    '            {{alert.msg}}\n' +
+    '        </uib-alert>\n' +
+    '\n' +
+    '        <form class="form-horizontal">\n' +
+    '            <fieldset>\n' +
+    '                <legend>Search:</legend>\n' +
+    '                <div class="form-group">\n' +
+    '                    <label class="col-md-4 control-label" for="collection">Collection</label>\n' +
+    '\n' +
+    '                    <div class="col-md-4">\n' +
+    '                        <input id="collection" name="collection" type="text" ng-model="manga.collection"\n' +
+    '                               placeholder="Collection\'s name" class="form-control input-md">\n' +
+    '                    </div>\n' +
+    '                </div>\n' +
+    '                <div class="form-group">\n' +
+    '                    <label class="col-md-4 control-label" for="name">Name</label>\n' +
+    '\n' +
+    '                    <div class="col-md-4">\n' +
+    '                        <input id="name" name="name" type="text" ng-model="manga.name"\n' +
+    '                               placeholder="Manga\'s name" class="form-control input-md">\n' +
+    '                    </div>\n' +
+    '                </div>\n' +
+    '            </fieldset>\n' +
+    '        </form>\n' +
+    '\n' +
+    '        <fieldset>\n' +
+    '            <legend>Mangas</legend>\n' +
+    '            <table class="table table-striped">\n' +
+    '                <thead>\n' +
+    '                <tr>\n' +
+    '                    <th>Name</th>\n' +
+    '                    <th>Collection</th>\n' +
+    '                    <th>Do I have it?</th>\n' +
+    '                    <th>Action</th>\n' +
+    '                </tr>\n' +
+    '                </thead>\n' +
+    '                <tbody>\n' +
+    '                <tr ng-repeat="item in items">\n' +
+    '                    <td>{{item.name}}</td>\n' +
+    '                    <td>{{item.collection}}</td>\n' +
+    '                    <td>{{item.doIHaveIt ? \'Yes\' : \'No\'}}</td>\n' +
+    '                    <td>\n' +
+    '                        <button ng-click="openRemoveDialog(item)" class="btn btn-danger pull-right"\n' +
+    '                                id="btn_delete">Remove\n' +
+    '                        </button>\n' +
+    '                        <a ng-href="/views/manga/{{item.id}}/edit" class="btn btn-success pull-right"\n' +
+    '                           id="btn_update">Edit</a>\n' +
+    '                    </td>\n' +
+    '                </tr>\n' +
+    '                </tbody>\n' +
+    '                <tfoot>\n' +
+    '                <tr>\n' +
+    '                    <td>\n' +
+    '                        <uib-pagination total-items="bigTotalItems" ng-model="bigCurrentPage" max-size="maxSize"\n' +
+    '                                        class="pagination-sm" items-per-page="itemsPerPage" boundary-links="true"\n' +
+    '                                        rotate="false" num-pages="numPages" ng-change="pageChanged()">\n' +
+    '                        </uib-pagination>\n' +
+    '                    </td>\n' +
+    '                </tr>\n' +
+    '                </tfoot>\n' +
+    '            </table>\n' +
+    '        </fieldset>\n' +
+    '    </div>\n' +
+    '    <script type="text/ng-template" id="removeMangaTemplate">\n' +
+    '        <div class="ngdialog-message">\n' +
+    '            <h3>Remove Collection</h3>\n' +
+    '\n' +
+    '            <p>Are you sure you want to remove the Manga: {{mangaToRemove.name}}?</p>\n' +
+    '        </div>\n' +
+    '        <div class="ngdialog-buttons">\n' +
+    '            <button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog()">\n' +
+    '                Cancel\n' +
+    '            </button>\n' +
+    '            <button type="button" class="ngdialog-button ngdialog-button-primary"\n' +
+    '                    ng-click="confirm(mangaToRemove.id)">Save\n' +
+    '            </button>\n' +
+    '        </div>\n' +
+    '    </script>\n' +
+    '</div>');
+}]);
+})();
+
+(function(module) {
+try {
+  module = angular.module('myMangas.tpl');
+} catch (e) {
+  module = angular.module('myMangas.tpl', []);
+}
+module.run(['$templateCache', function($templateCache) {
   $templateCache.put('/partials/publishers/publisher.html',
     '<div class="col-sm-12">\n' +
     '    <div class="col-md-10" >\n' +

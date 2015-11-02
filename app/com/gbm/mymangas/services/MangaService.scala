@@ -3,15 +3,16 @@ package com.gbm.mymangas.services
 import java.io.File
 import java.util.UUID
 import javax.inject.Inject
-import com.gbm.mymangas.models.Manga
-import com.gbm.mymangas.models.filters.{Predicate, MangaFilter}
+
+import com.gbm.mymangas.models.filters.{MangaFilter, Predicate}
+import com.gbm.mymangas.models.{Manga, Page}
+import com.gbm.mymangas.utils.FileUpload
+import com.gbm.mymangas.utils.json.MangaParser.mangaFormatterService
+import com.gbm.mymangas.utils.messages.{Error, Failed, Succeed, Warning}
 import org.joda.time.DateTime
 import play.api.libs.json.Json
 import play.modules.reactivemongo.ReactiveMongoApi
 import play.modules.reactivemongo.json._
-import com.gbm.mymangas.utils.FileUpload
-import com.gbm.mymangas.utils.json.MangaParser.mangaFormatterService
-import com.gbm.mymangas.utils.messages.{Error, Failed, Succeed, Warning}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -40,6 +41,24 @@ class MangaService @Inject()(val reactiveMongoApi: ReactiveMongoApi) extends Ser
       cursor[Manga]().collect[List]()
   }
 
+  def findOneBy(predicate: Predicate)(implicit ec: ExecutionContext): Future[Option[Manga]] = {
+    collection.find(predicate.filter).sort(predicate.sort).one[Manga]
+  }
+
+  def search(predicate: Predicate)(implicit ec: ExecutionContext): Future[Option[Page[Manga]]] = {
+    val totalRecordsFuture = collection.find(predicate.filter).cursor[Manga]().collect[List]().map {
+      records => records.size
+    }
+    val itemsFuture = collection.find(predicate.filter)
+      .options(predicate.queryOpts)
+      .sort(Json.obj("createdAt" -> -1)).cursor[Manga]().collect[List]()
+
+    for {
+      totalRecords <- totalRecordsFuture
+      items <- itemsFuture
+    } yield Option(Page(totalRecords = totalRecords, items = items))
+  }
+
   def update(manga: Manga)(implicit ec: ExecutionContext): Future[Either[Failed, Succeed]] = {
     findBy(MangaFilter(id = Option(manga.id))).flatMap {
       mangas => if (mangas.nonEmpty) {
@@ -51,14 +70,14 @@ class MangaService @Inject()(val reactiveMongoApi: ReactiveMongoApi) extends Ser
     }
   }
 
-  def remove(manga: Manga)(implicit ec: ExecutionContext): Future[Either[Failed, Succeed]] = {
-    findBy(MangaFilter(id = Option(manga.id))).flatMap {
-      mangas => if (mangas.nonEmpty) {
-        collection.update(Json.obj("id" -> manga.id), manga.copy(createdAt = mangas.head.createdAt, updatedAt = DateTime.now())).map {
-          lastError => if (lastError.hasErrors) Left(Error(lastError.message)) else Right(Succeed("manga.removed"))
-        }
+  def remove(id: UUID)(implicit ec: ExecutionContext): Future[Either[Failed, Succeed]] = {
+    findOneBy(MangaFilter(id = Option(id))).flatMap {
+      case Some(_) => collection.remove(Json.obj("id" -> id)).map {
+        lastError =>
+          if (lastError.hasErrors) Left(Error(lastError.message))
+          else Right(Succeed("manga.removed"))
       }
-      else Future.successful(Left(Warning("manga.not.found")))
+      case None => Future.successful(Left(Error("manga.not.found")))
     }
   }
 

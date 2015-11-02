@@ -19,12 +19,14 @@ DELETE        /api/collections/:id                             com.gbm.mymangas.
 GET           /api/collections/search                          com.gbm.mymangas.controllers.CollectionController.search
 GET           /api/collections/:id/edit                        com.gbm.mymangas.controllers.CollectionController.edit(id: java.util.UUID)
 
+
 # Mangas
 POST          /api/mangas                                      com.gbm.mymangas.controllers.MangaController.create
 POST          /api/mangas/cover/upload                         com.gbm.mymangas.controllers.MangaController.uploadCover
 PUT           /api/mangas/:id                                  com.gbm.mymangas.controllers.MangaController.update(id: java.util.UUID)
-GET           /api/mangas/search                               com.gbm.mymangas.controllers.MangaController.filter
-GET           /api/mangas/:name                                com.gbm.mymangas.controllers.MangaController.findByName(name: String)
+DELETE        /api/mangas/:id                                  com.gbm.mymangas.controllers.MangaController.remove(id: java.util.UUID)
+GET           /api/mangas/search                               com.gbm.mymangas.controllers.MangaController.search
+GET           /api/mangas/:id/edit                             com.gbm.mymangas.controllers.MangaController.edit(id: java.util.UUID)
 GET           /api/mangas/:collectionName/latest-number        com.gbm.mymangas.controllers.MangaController.latestNumber(collectionName: String)
 
 # Map static resources from the /public folder to the /assets URL path

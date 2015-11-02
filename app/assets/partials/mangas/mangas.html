@@ -1,0 +1,83 @@
+<div class="col-sm-12">
+    <div class="col-md-10">
+
+        <uib-alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
+            {{alert.msg}}
+        </uib-alert>
+
+        <form class="form-horizontal">
+            <fieldset>
+                <legend>Search:</legend>
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="collection">Collection</label>
+
+                    <div class="col-md-4">
+                        <input id="collection" name="collection" type="text" ng-model="manga.collection"
+                               placeholder="Collection's name" class="form-control input-md">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="name">Name</label>
+
+                    <div class="col-md-4">
+                        <input id="name" name="name" type="text" ng-model="manga.name"
+                               placeholder="Manga's name" class="form-control input-md">
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+
+        <fieldset>
+            <legend>Mangas</legend>
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Collection</th>
+                    <th>Do I have it?</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="item in items">
+                    <td>{{item.name}}</td>
+                    <td>{{item.collection}}</td>
+                    <td>{{item.doIHaveIt ? 'Yes' : 'No'}}</td>
+                    <td>
+                        <button ng-click="openRemoveDialog(item)" class="btn btn-danger pull-right"
+                                id="btn_delete">Remove
+                        </button>
+                        <a ng-href="/views/manga/{{item.id}}/edit" class="btn btn-success pull-right"
+                           id="btn_update">Edit</a>
+                    </td>
+                </tr>
+                </tbody>
+                <tfoot>
+                <tr>
+                    <td>
+                        <uib-pagination total-items="bigTotalItems" ng-model="bigCurrentPage" max-size="maxSize"
+                                        class="pagination-sm" items-per-page="itemsPerPage" boundary-links="true"
+                                        rotate="false" num-pages="numPages" ng-change="pageChanged()">
+                        </uib-pagination>
+                    </td>
+                </tr>
+                </tfoot>
+            </table>
+        </fieldset>
+    </div>
+    <script type="text/ng-template" id="removeMangaTemplate">
+        <div class="ngdialog-message">
+            <h3>Remove Collection</h3>
+
+            <p>Are you sure you want to remove the Manga: {{mangaToRemove.name}}?</p>
+        </div>
+        <div class="ngdialog-buttons">
+            <button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog()">
+                Cancel
+            </button>
+            <button type="button" class="ngdialog-button ngdialog-button-primary"
+                    ng-click="confirm(mangaToRemove.id)">Save
+            </button>
+        </div>
+    </script>
+</div>

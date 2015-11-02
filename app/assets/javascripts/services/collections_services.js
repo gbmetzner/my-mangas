@@ -43,6 +43,9 @@ angular.module('collection.services', []).factory('CollectionService', ['$http',
         remove: function (publisherID) {
             return doDelete('/api/collections/' + publisherID);
         },
+        findByName: function (name) {
+            return doGet('/api/collections/search?name=' + name + '&limit=10&skip=0');
+        },
         paginate: function (collectionFilter) {
             var url = '/api/collections/search?';
             if (collectionFilter.limit !== null) {
@@ -60,5 +63,6 @@ angular.module('collection.services', []).factory('CollectionService', ['$http',
             return doGet(url);
         }
     };
-}]);
+}])
+;
 
