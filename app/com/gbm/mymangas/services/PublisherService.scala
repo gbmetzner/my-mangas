@@ -86,7 +86,7 @@ class PublisherService @Inject()(val reactiveMongoApi: ReactiveMongoApi) extends
     }
     val itemsFuture = collection.find(predicate.filter)
       .options(predicate.queryOpts)
-      .sort(Json.obj("createdAt" -> -1)).cursor[Publisher]().collect[List]()
+      .sort(predicate.sort).cursor[Publisher]().collect[List](predicate.queryOpts.batchSizeN)
 
     for {
       totalRecords <- totalRecordsFuture

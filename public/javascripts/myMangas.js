@@ -174,7 +174,7 @@ angular.module('manga.controllers', ['manga.services', 'collection.services', 'n
 
             $scope.legend = "Add New Manga";
 
-            $scope.uploadCover = false;
+            $scope.showUploadCover = false;
 
             $scope.getCollections = function (name) {
                 return CollectionService.findByName(name).then(function (response) {
@@ -287,7 +287,7 @@ angular.module('manga.controllers', ['manga.services', 'collection.services', 'n
 
             $scope.alerts = [];
 
-            $scope.uploadCover = true;
+            $scope.showUploadCover = true;
 
             $scope.legend = "Update Manga";
 
@@ -367,7 +367,7 @@ angular.module('manga.controllers', ['manga.services', 'collection.services', 'n
                    });
 
                    var paginate = function (currentPage, skip) {
-                       $scope.itemsPerPage = 30;
+                       $scope.itemsPerPage = 20;
                        $scope.maxSize = 5;
                        $scope.bigCurrentPage = currentPage;
 
@@ -665,66 +665,35 @@ angular.module('collection.services', []).factory('CollectionService', ['$http',
 
 
 angular.module('manga.services', []).factory('MangaService', ['$http', function ($http) {
-
-    var doPost = function (url, manga) {
-        return $http({
-            method: 'POST',
-            data: manga,
-            headers: {'Content-Type': 'application/json'},
-            url: url
-        });
-    };
-    var doPut = function (url, manga) {
-        return $http({
-            method: 'PUT',
-            data: manga,
-            headers: {'Content-Type': 'application/json'},
-            url: url
-        });
-    };
-    var doGet = function (url) {
-        return $http({
-            method: 'GET',
-            headers: {'Content-Type': 'application/json'},
-            url: url
-        });
-    };
-    var doDelete = function (url) {
-        return $http({
-            method: 'DELETE',
-            headers: {'Content-Type': 'application/json'},
-            url: url
-        });
-    };
+    var baseURL = '/api/mangas';
     return {
         save: function (manga) {
-            alert(manga.name);
-            return doPost('/api/mangas', manga);
+            return $http.post(baseURL,manga);
         },
         edit: function (mangaID) {
-            return doGet('/api/mangas/' + mangaID + '/edit');
+            return $http.get(baseURL + '/' + mangaID + '/edit');
         },
         update: function (manga) {
-            return doPut('/api/mangas/' + manga.id, manga);
+            return $http.put(baseURL + '/' + manga.id, manga);
         },
         remove: function (mangaID) {
-            return doDelete('/api/mangas/' + mangaID);
+            return $http.delete(baseURL + '/' + mangaID);
         },
         paginate: function (mangaFilter) {
-            var url = '/api/mangas/search?';
-            if (mangaFilter.limit !== null) {
+            var url = '/search?';
+            if (mangaFilter.limit) {
                 url = url + 'limit=' + mangaFilter.limit;
             }
-            if (mangaFilter.skip !== null) {
+            if (mangaFilter.skip) {
                 url = url + '&skip=' + mangaFilter.skip;
             }
-            if (mangaFilter.manga.collection !== "") {
+            if (mangaFilter.manga.collection) {
                 url = url + '&collection=' + mangaFilter.manga.collection;
             }
-            if (mangaFilter.manga.name !== "") {
+            if (mangaFilter.manga.name) {
                 url = url + '&name=' + mangaFilter.manga.name;
             }
-            return doGet(url);
+            return $http.get(baseURL + url);
         }
     };
 }]);

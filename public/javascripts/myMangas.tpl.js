@@ -231,12 +231,12 @@ module.run(['$templateCache', function($templateCache) {
     '                </div>\n' +
     '            </div>\n' +
     '\n' +
-    '            <div>\n' +
+    '            <div data-ng-show="{{showUploadCover}}">\n' +
     '                <label for="cover">Cover</label>\n' +
     '\n' +
     '                <div>\n' +
     '                    <input id="cover" type="file" ngf-select ng-model="cover" name="cover"\n' +
-    '                           accept="image/*" ngf-max-size="2MB" required>\n' +
+    '                           accept="image/*" ngf-max-size="2MB">\n' +
     '                </div>\n' +
     '                <button ng-disabled="!mangaForm.$valid" ng-click="uploadCover(cover, manga)">Submit</button>\n' +
     '            </div>\n' +
@@ -327,6 +327,9 @@ module.run(['$templateCache', function($templateCache) {
     '                                    rotate="false" num-pages="numPages" ng-change="pageChanged()">\n' +
     '                    </uib-pagination>\n' +
     '                </td>\n' +
+    '            </tr>\n' +
+    '            <tr>\n' +
+    '                <td><span>Total of {{bigTotalItems}} mangas</span></td>\n' +
     '            </tr>\n' +
     '            </tfoot>\n' +
     '        </table>\n' +

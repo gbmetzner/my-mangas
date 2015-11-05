@@ -50,7 +50,7 @@ class MangaController @Inject()(mangaService: MangaService) extends BaseControll
 
       val predicate = queryString2Predicate(request)
 
-      logger debug s"Search by request = $request"
+      logger debug s"Search by predicate = $predicate"
 
       mangaService.search(predicate).map {
         case Some(page) => Ok(Json.obj("totalRecords" -> page.totalRecords, "items" -> Json.toJson(page.items)))

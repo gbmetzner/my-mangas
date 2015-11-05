@@ -60,12 +60,12 @@
                 </div>
             </div>
 
-            <div>
+            <div data-ng-show="{{showUploadCover}}">
                 <label for="cover">Cover</label>
 
                 <div>
                     <input id="cover" type="file" ngf-select ng-model="cover" name="cover"
-                           accept="image/*" ngf-max-size="2MB" required>
+                           accept="image/*" ngf-max-size="2MB">
                 </div>
                 <button ng-disabled="!mangaForm.$valid" ng-click="uploadCover(cover, manga)">Submit</button>
             </div>

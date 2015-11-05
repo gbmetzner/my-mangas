@@ -6,7 +6,7 @@ angular.module('manga.controllers', ['manga.services', 'collection.services', 'n
 
             $scope.legend = "Add New Manga";
 
-            $scope.uploadCover = false;
+            $scope.showUploadCover = false;
 
             $scope.getCollections = function (name) {
                 return CollectionService.findByName(name).then(function (response) {
@@ -119,7 +119,7 @@ angular.module('manga.controllers', ['manga.services', 'collection.services', 'n
 
             $scope.alerts = [];
 
-            $scope.uploadCover = true;
+            $scope.showUploadCover = true;
 
             $scope.legend = "Update Manga";
 
@@ -199,7 +199,7 @@ angular.module('manga.controllers', ['manga.services', 'collection.services', 'n
                    });
 
                    var paginate = function (currentPage, skip) {
-                       $scope.itemsPerPage = 30;
+                       $scope.itemsPerPage = 20;
                        $scope.maxSize = 5;
                        $scope.bigCurrentPage = currentPage;
 

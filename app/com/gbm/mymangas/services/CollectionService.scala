@@ -84,9 +84,10 @@ class CollectionService @Inject()(val reactiveMongoApi: ReactiveMongoApi) extend
     val totalRecordsFuture = collection.find(predicate.filter).cursor[Collection]().collect[List]().map {
       records => records.size
     }
+
     val itemsFuture = collection.find(predicate.filter)
       .options(predicate.queryOpts)
-      .sort(Json.obj("createdAt" -> -1)).cursor[Collection]().collect[List]()
+      .sort(predicate.sort).cursor[Collection]().collect[List](predicate.queryOpts.batchSizeN)
 
     for {
       totalRecords <- totalRecordsFuture

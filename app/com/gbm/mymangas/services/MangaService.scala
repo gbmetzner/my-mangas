@@ -17,8 +17,8 @@ import play.modules.reactivemongo.json._
 import scala.concurrent.{ExecutionContext, Future}
 
 /**
- * @author Gustavo Metzner on 10/13/15.
- */
+  * @author Gustavo Metzner on 10/13/15.
+  */
 class MangaService @Inject()(val reactiveMongoApi: ReactiveMongoApi) extends Service {
 
   override protected[services] val collectionName: String = "mangas"
@@ -49,9 +49,10 @@ class MangaService @Inject()(val reactiveMongoApi: ReactiveMongoApi) extends Ser
     val totalRecordsFuture = collection.find(predicate.filter).cursor[Manga]().collect[List]().map {
       records => records.size
     }
+
     val itemsFuture = collection.find(predicate.filter)
       .options(predicate.queryOpts)
-      .sort(Json.obj("createdAt" -> -1)).cursor[Manga]().collect[List]()
+      .sort(predicate.sort).cursor[Manga]().collect[List](predicate.queryOpts.batchSizeN)
 
     for {
       totalRecords <- totalRecordsFuture
