@@ -6,7 +6,7 @@ import javax.inject.Inject
 
 import com.gbm.mymangas.models.filters.{MangaFilter, Predicate}
 import com.gbm.mymangas.models.{Manga, Page}
-import com.gbm.mymangas.utils.FileUpload
+import com.gbm.mymangas.utils.{Config, FileUpload}
 import com.gbm.mymangas.utils.json.MangaParser.mangaFormatterService
 import com.gbm.mymangas.utils.messages.{Error, Failed, Succeed, Warning}
 import org.joda.time.DateTime
@@ -61,13 +61,18 @@ class MangaService @Inject()(val reactiveMongoApi: ReactiveMongoApi) extends Ser
   }
 
   def update(manga: Manga)(implicit ec: ExecutionContext): Future[Either[Failed, Succeed]] = {
-    findBy(MangaFilter(id = Option(manga.id))).flatMap {
-      mangas => if (mangas.nonEmpty) {
-        collection.update(Json.obj("id" -> manga.id), manga.copy(createdAt = mangas.head.createdAt, updatedAt = DateTime.now())).map {
+    findOneBy(MangaFilter(id = Option(manga.id))).flatMap {
+      case Some(m) =>
+
+        val link = manga.publicLink match {
+          case Config.defaultCover => m.publicLink
+          case _ => manga.publicLink
+        }
+
+        collection.update(Json.obj("id" -> manga.id), manga.copy(publicLink = link, createdAt = m.createdAt, updatedAt = DateTime.now())).map {
           lastError => if (lastError.hasErrors) Left(Error(lastError.message)) else Right(Succeed("manga.updated"))
         }
-      }
-      else Future.successful(Left(Warning("manga.not.found")))
+      case None => Future.successful(Left(Warning("manga.not.found")))
     }
   }
 

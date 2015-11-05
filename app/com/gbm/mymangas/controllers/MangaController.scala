@@ -15,8 +15,8 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 /**
- * @author Gustavo Metzner on 10/13/15.
- */
+  * @author Gustavo Metzner on 10/13/15.
+  */
 class MangaController @Inject()(mangaService: MangaService) extends BaseController {
 
   def create = Action.async(parse.json) {
@@ -35,7 +35,7 @@ class MangaController @Inject()(mangaService: MangaService) extends BaseControll
   def update(id: UUID) = Action.async(parse.json) {
     request =>
 
-      logger info s"Update manga = ($request)"
+      logger info s"Update manga = $request"
 
       request.body.validate[Manga].map {
         manga => mangaService.update(manga.copy(id = id)).map {
