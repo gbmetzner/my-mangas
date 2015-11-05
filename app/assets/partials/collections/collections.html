@@ -1,4 +1,4 @@
-<div>
+<div class="col-sm-12">
 
     <uib-alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
         {{alert.msg}}
@@ -6,23 +6,27 @@
 
     <fieldset>
 
-        <legend>Search</legend>
+        <legend>
+            <h3>
+                <small>Search</small>
+            </h3>
+        </legend>
 
-        <form>
-            <div>
-                <label for="publisher">Publisher</label>
+        <form id="collectionsForm" name="collectionsForm" class="form-horizontal">
+            <div class="form-group">
+                <label for="publisher" class="col-sm-2 control-label">Publisher</label>
 
-                <div>
-                    <input id="publisher" name="publisher" type="text" ng-model="collection.publisher"
-                           placeholder="Publisher's name">
+                <div class="col-sm-3">
+                    <input id="publisher" name="publisher" type="text" data-ng-model="collection.publisher"
+                           placeholder="Publisher's name" class="form-control">
                 </div>
             </div>
-            <div>
-                <label for="collection">Collection</label>
+            <div class="form-group">
+                <label for="collection" class="col-sm-2 control-label">Collection</label>
 
-                <div>
-                    <input id="collection" name="collection" type="text" ng-model="collection.name"
-                           placeholder="Collection's name">
+                <div class="col-sm-3">
+                    <input id="collection" name="collection" type="text" data-ng-model="collection.name"
+                           placeholder="Collection's name" class="form-control">
                 </div>
             </div>
 
@@ -30,38 +34,46 @@
     </fieldset>
 
     <fieldset>
-        <legend>Collections</legend>
-        <table>
+        <legend>
+            <h3>
+                <small>Collections</small>
+            </h3>
+        </legend>
+
+        <table class="table table-striped table-bordered text-center">
             <thead>
             <tr>
-                <th>Name</th>
-                <th>Publisher</th>
-                <th>Is Complete?</th>
-                <th>Action</th>
+                <th class="text-center">Name</th>
+                <th class="text-center">Publisher</th>
+                <th class="text-center">Is Complete?</th>
+                <th class="text-center">Action</th>
             </tr>
             </thead>
-            <tbody>
-            <tr ng-repeat="item in items">
-                <td>{{item.name}}</td>
-                <td>{{item.publisher}}</td>
-                <td>{{item.isComplete ? 'Yes' : 'No'}}</td>
-                <td>
-                    <button ng-click="openRemoveDialog(item)"
-                            id="btn_delete">Remove
+            <tbody class="text-center">
+            <tr data-ng-repeat="collection in collections">
+                <td>{{collection.name}}</td>
+                <td>{{collection.publisher}}</td>
+                <td width="15%">{{collection.isComplete ? 'Yes' : 'No'}}</td>
+                <td width="20%">
+                    <a data-ng-href="/views/collection/{{collection.id}}/edit" id="update" class="btn btn-primary">
+                        Edit
+                    </a>
+                    <button data-ng-click="openRemoveDialog(collection)" id="delete" class="btn btn-warning">
+                        Remove
                     </button>
-                    <a ng-href="/views/collection/{{item.id}}/edit"
-                       id="btn_update">Edit</a>
                 </td>
             </tr>
             </tbody>
             <tfoot>
             <tr>
-                <td>
-                    <uib-pagination total-items="bigTotalItems" ng-model="bigCurrentPage" max-size="maxSize"
-                                    class="pagination-sm" items-per-page="itemsPerPage" boundary-links="true"
-                                    rotate="false" num-pages="numPages" ng-change="pageChanged()">
-                    </uib-pagination>
-                </td>
+                <div class="text-center">
+                    <td colspan="4">
+                        <uib-pagination total-items="bigTotalItems" ng-model="bigCurrentPage" max-size="maxSize"
+                                        class="pagination" items-per-page="itemsPerPage" boundary-links="true"
+                                        rotate="false" num-pages="numPages" ng-change="pageChanged()">
+                        </uib-pagination>
+                    </td>
+                </div>
             </tr>
             </tfoot>
         </table>

@@ -1,4 +1,4 @@
-<div>
+<div class="col-sm-12">
 
     <uib-alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
         {{alert.msg}}
@@ -6,65 +6,84 @@
 
     <fieldset>
 
-        <legend>{{legend}}</legend>
+        <legend>
+            <h3>
+                <small>{{legend}}</small>
+            </h3>
+        </legend>
 
-        <form id="collectionForm" name="collectionForm">
+        <form id="collectionForm" name="collectionForm" class="form-horizontal">
 
-            <input type="hidden" name="id" ng-model="collection.id">
+            <input type="hidden" name="id" data-ng-model="collection.id">
 
-            <div>
-                <label for="publisher">Publisher</label>
+            <div class="form-group">
+                <label for="publisher" class="col-sm-2 control-label">Publisher</label>
 
-                <div>
-                    <input id="publisher" name="publisher" type="text" ng-model="collection.publisher"
-                           placeholder="Publisher's name"
+                <div class="col-sm-3">
+                    <input id="publisher" name="publisher" type="text" data-ng-model="collection.publisher"
+                           placeholder="Publisher's name" required class="form-control"
                            uib-typeahead="publisher for publisher in getPublishers($viewValue)"
                            typeahead-loading="loadingLocations" typeahead-no-results="noResults">
-                    <i ng-show="loadingLocations" class="glyphicon glyphicon-refresh"></i>
+                    <i data-ng-show="loadingLocations" class="glyphicon glyphicon-refresh"></i>
 
-                    <div ng-show="noResults">
+                    <div data-ng-show="noResults">
                         <i class="glyphicon glyphicon-remove"></i> No Results Found
                     </div>
-                    <span data-ng-show="collectionForm.publisher.$invalid">Please enter a valid name</span>
+                    <span data-ng-show="collectionForm.publisher.$invalid">
+                        <small>Please enter a valid publisher</small>
+                    </span>
                 </div>
             </div>
 
-            <div>
-                <label for="name">Name</label>
+            <div class="form-group">
+                <label for="name" class="col-sm-2 control-label">Name</label>
 
-                <div>
-                    <input id="name" name="name" type="text" ng-model="collection.name"
-                           placeholder="Collection's name" required
+                <div class="col-sm-3">
+                    <input id="name" name="name" type="text" data-ng-model="collection.name"
+                           placeholder="Collection's name" required class="form-control"
                            pattern=".{2,}" title="Please type at least 2 characters">
-                    <span data-ng-show="collectionForm.name.$invalid">Please enter a valid name</span>
+                    <span data-ng-show="collectionForm.name.$invalid">
+                        <small>Please enter a valid name</small>
+                    </span>
                 </div>
             </div>
 
-            <div>
-                <label for="searchParameter">Search Parameter</label>
+            <div class="form-group">
+                <label for="searchParameter" class="col-sm-2 control-label">Search Parameter</label>
 
-                <div>
-                    <input id="searchParameter" name="searchParameter" type="text" ng-model="collection.searchParam"
+                <div class="col-sm-3">
+                    <input id="searchParameter" name="searchParameter" type="text"
+                           data-ng-model="collection.searchParam" class="form-control"
                            placeholder="Search's parameter" required
                            pattern=".{2,}" title="Please type at least 2 characters">
-                    <span data-ng-show="collectionForm.searchParameter.$invalid">Please enter a valid name</span>
+                    <span data-ng-show="collectionForm.searchParameter.$invalid">
+                        <small>Please enter a valid param</small>
+                    </span>
                 </div>
             </div>
 
-            <div>
-                <label for="isComplete">Is Complete</label>
-
-                <div>
-                    <input id="isComplete" name="isComplete" type="checkbox"
-                           ng-model="collection.isComplete" ng-true-value="true" ng-false-value="false">
+            <div class="form-group">
+                <label for="isComplete" class="col-sm-2 control-label">Is Complete?</label>
+                <div class="checkbox">
+                    <label>
+                        <input id="isComplete" name="isComplete" type="checkbox"
+                               data-ng-model="collection.isComplete" data-ng-true-value="true"
+                               data-ng-false-value="false">
+                    </label>
                 </div>
             </div>
 
-            <div>
-                <button id="submit" name="submit" ng-click="save(collection)">
-                    Save
-                </button>
-                <button id="reset" name="reset" ng-click="reset()">Reset</button>
+            <div class="form-group">
+                <label for="submit" class="col-sm-3 control-label"></label>
+
+                <div class="col-md-6">
+                    <button id="submit" name="submit" data-ng-click="save(collection)" class="btn btn-primary">
+                        Submit
+                    </button>
+                    <button id="reset" name="reset" data-ng-click="reset()" class="btn btn-default">
+                        Reset
+                    </button>
+                </div>
             </div>
         </form>
 

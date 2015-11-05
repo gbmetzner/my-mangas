@@ -91,7 +91,7 @@ angular.module('collection.controllers', ['collection.services', 'publisher.serv
                     'limit': $scope.itemsPerPage,
                     'skip': skip
                 }).then(function (response) {
-                    $scope.items = response.data.items;
+                    $scope.collections = response.data.items;
                     $scope.bigTotalItems = response.data.totalRecords;
                 }, function (response) {
 

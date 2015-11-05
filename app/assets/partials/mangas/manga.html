@@ -1,4 +1,4 @@
-<div>
+<div class="col-sm-12">
 
     <uib-alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
         {{alert.msg}}
@@ -6,76 +6,96 @@
 
     <fieldset>
 
-        <legend>{{legend}}</legend>
+        <legend>
+            <h3>
+                <small>{{legend}}</small>
+            </h3>
+        </legend>
 
-        <form id="mangaForm" name="mangaForm">
-            <input type="hidden" name="id" ng-model="manga.id">
+        <form id="mangaForm" name="mangaForm" class="form-horizontal">
+            <input type="hidden" name="id" data-ng-model="manga.id">
 
-            <div>
-                <label for="collection">Collection</label>
+            <div class="form-group">
+                <label for="collection" class="col-sm-2 control-label">Collection</label>
 
-                <div>
-                    <input id="collection" name="collection" type="text" ng-model="manga.collection"
+                <div class="col-sm-3">
+                    <input id="collection" name="collection" type="text" data-ng-model="manga.collection"
                            placeholder="Collection's name" required
                            uib-typeahead="collection for collection in getCollections($viewValue)"
                            typeahead-loading="loadingCollections" typeahead-no-results="noResults"
-                    >
-                    <i ng-show="loadingCollections" class="glyphicon glyphicon-refresh"></i>
+                           class="form-control">
+                    <i data-ng-show="loadingCollections" class="glyphicon glyphicon-refresh"></i>
 
-                    <div ng-show="noResults">
+                    <div data-ng-show="noResults">
                         <i class="glyphicon glyphicon-remove"></i> No Results Found
                     </div>
-                    <span data-ng-show="mangaForm.collection.$invalid">Please enter a valid name</span>
+                    <span data-ng-show="mangaForm.collection.$invalid">
+                        <small>Please enter a valid collection</small>
+                    </span>
                 </div>
             </div>
 
-            <div>
-                <label for="name">Name</label>
+            <div class="form-group">
+                <label for="name" class="col-sm-2 control-label">Name</label>
 
-                <div>
-                    <input id="name" name="name" type="text" ng-model="manga.name"
-                           placeholder="Manga's name" required
+                <div class="col-sm-3">
+                    <input id="name" name="name" type="text" data-ng-model="manga.name"
+                           placeholder="Manga's name" required class="form-control"
                            pattern=".{2,}" title="Please type at least 2 characters">
-                    <span data-ng-show="mangaForm.name.$invalid">Please enter a valid name</span>
+                    <span data-ng-show="mangaForm.name.$invalid">
+                        <small>Please enter a valid name</small>
+                    </span>
                 </div>
             </div>
 
-            <div>
-                <label for="number">Number</label>
+            <div class="form-group">
+                <label for="number" class="col-sm-2 control-label">Number</label>
 
-                <div>
-                    <input id="number" name="number" type="number" ng-model="manga.number"
-                           placeholder="Manga's number" required
-                           title="Please type at least 2 characters">
-                    <span data-ng-show="mangaForm.number.$invalid">Please enter a valid number</span>
+                <div class="col-sm-3">
+                    <input id="number" name="number" type="number" data-ng-model="manga.number"
+                           placeholder="Manga's number" required class="form-control"
+                           title="Please type at least 1 characters" min="1">
+                    <span data-ng-show="mangaForm.number.$invalid">
+                       <small>Please enter a valid number</small>
+                    </span>
                 </div>
             </div>
 
-            <div>
-                <label for="doIHaveIt">Do I have it?</label>
+            <div class="form-group">
+                <label for="doIHaveIt" class="col-sm-2 control-label">Do I have it?</label>
 
-                <div>
-                    <input id="doIHaveIt" name="doIHaveIt" type="checkbox"
-                           ng-model="manga.doIHaveIt" ng-true-value="true" ng-false-value="false">
+                <div class="checkbox">
+                    <label>
+                        <input id="doIHaveIt" name="doIHaveIt" type="checkbox"
+                               data-ng-model="manga.doIHaveIt" data-ng-true-value="true"
+                               data-ng-false-value="false">
+                    </label>
                 </div>
             </div>
 
-            <div data-ng-show="{{showUploadCover}}">
-                <label for="cover">Cover</label>
+            <div data-ng-show="{{showUploadCover}}" class="form-group">
+                <label for="cover" class="col-sm-2 control-label">Cover</label>
 
-                <div>
-                    <input id="cover" type="file" ngf-select ng-model="cover" name="cover"
-                           accept="image/*" ngf-max-size="2MB">
+                <div class="col-sm-3">
+                    <input id="cover" type="file" data-ngf-select data-ng-model="cover" name="cover"
+                           class="form-control"
+                           accept="image/jpeg" data-ngf-max-size="2MB">
                 </div>
-                <button ng-disabled="!mangaForm.$valid" ng-click="uploadCover(cover, manga)">Submit</button>
+                <button data-ng-disabled="!mangaForm.$valid" data-ng-click="uploadCover(cover, manga)">Submit</button>
             </div>
 
 
-            <div>
-                <button id="submit" name="submit" ng-click="save(manga)">
-                    Save
-                </button>
-                <button id="reset" name="reset" ng-click="reset()">Reset</button>
+            <div class="form-group">
+                <label for="submit" class="col-sm-3 control-label"></label>
+
+                <div class="col-md-6">
+                    <button id="submit" name="submit" data-ng-click="save(manga)" class="btn btn-primary">
+                        Save
+                    </button>
+                    <button id="reset" name="reset" data-ng-click="reset()" class="btn btn-default">
+                        Reset
+                    </button>
+                </div>
             </div>
         </form>
     </fieldset>

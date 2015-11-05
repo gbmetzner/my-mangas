@@ -1,4 +1,4 @@
-<div>
+<div class="col-sm-12">
 
     <uib-alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
         {{alert.msg}}
@@ -6,27 +6,35 @@
 
     <fieldset>
 
-        <legend>{{legend}}</legend>
+        <legend>
+            <h3>
+                <small>{{legend}}</small>
+            </h3>
+        </legend>
 
-        <form id="publisherForm" name="publisherForm">
-            <input type="hidden" name="id" ng-model="publisher.id">
+        <form id="publisherForm" name="publisherForm" class="form-horizontal">
+            <input type="hidden" name="id" data-ng-model="publisher.id">
 
-            <div>
-                <label for="name">Name</label>
+            <div class="form-group">
+                <label for="name" class="col-sm-2 control-label">Name</label>
 
-                <div>
-                    <input id="name" name="name" type="text" ng-model="publisher.name"
-                           placeholder="Publisher's name" required
-                           pattern=".{2,}" title="Please type at least 2 characters">
-                    <span data-ng-show="publisherForm.name.$invalid">Please enter a valid name</span>
+                <div class="col-sm-3">
+                    <input id="name" name="name" type="text" data-ng-model="publisher.name"
+                           class="form-control" placeholder="Publisher's name"
+                           required pattern=".{2,}" title="Please type at least 2 characters">
+                    <span data-ng-show="publisherForm.name.$invalid"><small>Please enter a valid name</small></span>
                 </div>
             </div>
 
-            <div>
-                <button id="submit" name="submit" ng-click="save(publisher)">
-                    Save
-                </button>
-                <button id="reset" name="reset" ng-click="reset()">Reset</button>
+            <div class="form-group">
+                <label for="submit" class="col-sm-3 control-label"></label>
+
+                <div class="col-md-6">
+                    <button id="submit" name="submit" data-ng-click="save(publisher)" class="btn btn-primary">
+                        Submit
+                    </button>
+                    <button id="reset" name="reset" data-ng-click="reset()" class="btn btn-default">Reset</button>
+                </div>
             </div>
         </form>
     </fieldset>

@@ -93,7 +93,7 @@ angular.module('manga.controllers', ['manga.services', 'collection.services', 'n
                     'limit': $scope.itemsPerPage,
                     'skip': skip
                 }).then(function (response) {
-                    $scope.items = response.data.items;
+                    $scope.mangas = response.data.items;
                     $scope.bigTotalItems = response.data.totalRecords;
                 }, function (response) {
 

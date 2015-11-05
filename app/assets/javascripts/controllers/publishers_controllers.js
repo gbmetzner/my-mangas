@@ -75,7 +75,7 @@ angular.module('publisher.controllers', ['publisher.services', 'ngDialog'])
                     'limit': $scope.itemsPerPage,
                     'skip': skip
                 }).then(function (response) {
-                    $scope.items = response.data.items;
+                    $scope.publishers = response.data.items;
                     $scope.bigTotalItems = response.data.totalRecords;
                 }, function (response) {
 

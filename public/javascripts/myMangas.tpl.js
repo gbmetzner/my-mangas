@@ -6,7 +6,7 @@ try {
 }
 module.run(['$templateCache', function($templateCache) {
   $templateCache.put('/partials/collections/collection.html',
-    '<div>\n' +
+    '<div class="col-sm-12">\n' +
     '\n' +
     '    <uib-alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">\n' +
     '        {{alert.msg}}\n' +
@@ -14,65 +14,84 @@ module.run(['$templateCache', function($templateCache) {
     '\n' +
     '    <fieldset>\n' +
     '\n' +
-    '        <legend>{{legend}}</legend>\n' +
+    '        <legend>\n' +
+    '            <h3>\n' +
+    '                <small>{{legend}}</small>\n' +
+    '            </h3>\n' +
+    '        </legend>\n' +
     '\n' +
-    '        <form id="collectionForm" name="collectionForm">\n' +
+    '        <form id="collectionForm" name="collectionForm" class="form-horizontal">\n' +
     '\n' +
-    '            <input type="hidden" name="id" ng-model="collection.id">\n' +
+    '            <input type="hidden" name="id" data-ng-model="collection.id">\n' +
     '\n' +
-    '            <div>\n' +
-    '                <label for="publisher">Publisher</label>\n' +
+    '            <div class="form-group">\n' +
+    '                <label for="publisher" class="col-sm-2 control-label">Publisher</label>\n' +
     '\n' +
-    '                <div>\n' +
-    '                    <input id="publisher" name="publisher" type="text" ng-model="collection.publisher"\n' +
-    '                           placeholder="Publisher\'s name"\n' +
+    '                <div class="col-sm-3">\n' +
+    '                    <input id="publisher" name="publisher" type="text" data-ng-model="collection.publisher"\n' +
+    '                           placeholder="Publisher\'s name" required class="form-control"\n' +
     '                           uib-typeahead="publisher for publisher in getPublishers($viewValue)"\n' +
     '                           typeahead-loading="loadingLocations" typeahead-no-results="noResults">\n' +
-    '                    <i ng-show="loadingLocations" class="glyphicon glyphicon-refresh"></i>\n' +
+    '                    <i data-ng-show="loadingLocations" class="glyphicon glyphicon-refresh"></i>\n' +
     '\n' +
-    '                    <div ng-show="noResults">\n' +
+    '                    <div data-ng-show="noResults">\n' +
     '                        <i class="glyphicon glyphicon-remove"></i> No Results Found\n' +
     '                    </div>\n' +
-    '                    <span data-ng-show="collectionForm.publisher.$invalid">Please enter a valid name</span>\n' +
+    '                    <span data-ng-show="collectionForm.publisher.$invalid">\n' +
+    '                        <small>Please enter a valid publisher</small>\n' +
+    '                    </span>\n' +
     '                </div>\n' +
     '            </div>\n' +
     '\n' +
-    '            <div>\n' +
-    '                <label for="name">Name</label>\n' +
+    '            <div class="form-group">\n' +
+    '                <label for="name" class="col-sm-2 control-label">Name</label>\n' +
     '\n' +
-    '                <div>\n' +
-    '                    <input id="name" name="name" type="text" ng-model="collection.name"\n' +
-    '                           placeholder="Collection\'s name" required\n' +
+    '                <div class="col-sm-3">\n' +
+    '                    <input id="name" name="name" type="text" data-ng-model="collection.name"\n' +
+    '                           placeholder="Collection\'s name" required class="form-control"\n' +
     '                           pattern=".{2,}" title="Please type at least 2 characters">\n' +
-    '                    <span data-ng-show="collectionForm.name.$invalid">Please enter a valid name</span>\n' +
+    '                    <span data-ng-show="collectionForm.name.$invalid">\n' +
+    '                        <small>Please enter a valid name</small>\n' +
+    '                    </span>\n' +
     '                </div>\n' +
     '            </div>\n' +
     '\n' +
-    '            <div>\n' +
-    '                <label for="searchParameter">Search Parameter</label>\n' +
+    '            <div class="form-group">\n' +
+    '                <label for="searchParameter" class="col-sm-2 control-label">Search Parameter</label>\n' +
     '\n' +
-    '                <div>\n' +
-    '                    <input id="searchParameter" name="searchParameter" type="text" ng-model="collection.searchParam"\n' +
+    '                <div class="col-sm-3">\n' +
+    '                    <input id="searchParameter" name="searchParameter" type="text"\n' +
+    '                           data-ng-model="collection.searchParam" class="form-control"\n' +
     '                           placeholder="Search\'s parameter" required\n' +
     '                           pattern=".{2,}" title="Please type at least 2 characters">\n' +
-    '                    <span data-ng-show="collectionForm.searchParameter.$invalid">Please enter a valid name</span>\n' +
+    '                    <span data-ng-show="collectionForm.searchParameter.$invalid">\n' +
+    '                        <small>Please enter a valid param</small>\n' +
+    '                    </span>\n' +
     '                </div>\n' +
     '            </div>\n' +
     '\n' +
-    '            <div>\n' +
-    '                <label for="isComplete">Is Complete</label>\n' +
-    '\n' +
-    '                <div>\n' +
-    '                    <input id="isComplete" name="isComplete" type="checkbox"\n' +
-    '                           ng-model="collection.isComplete" ng-true-value="true" ng-false-value="false">\n' +
+    '            <div class="form-group">\n' +
+    '                <label for="isComplete" class="col-sm-2 control-label">Is Complete?</label>\n' +
+    '                <div class="checkbox">\n' +
+    '                    <label>\n' +
+    '                        <input id="isComplete" name="isComplete" type="checkbox"\n' +
+    '                               data-ng-model="collection.isComplete" data-ng-true-value="true"\n' +
+    '                               data-ng-false-value="false">\n' +
+    '                    </label>\n' +
     '                </div>\n' +
     '            </div>\n' +
     '\n' +
-    '            <div>\n' +
-    '                <button id="submit" name="submit" ng-click="save(collection)">\n' +
-    '                    Save\n' +
-    '                </button>\n' +
-    '                <button id="reset" name="reset" ng-click="reset()">Reset</button>\n' +
+    '            <div class="form-group">\n' +
+    '                <label for="submit" class="col-sm-3 control-label"></label>\n' +
+    '\n' +
+    '                <div class="col-md-6">\n' +
+    '                    <button id="submit" name="submit" data-ng-click="save(collection)" class="btn btn-primary">\n' +
+    '                        Submit\n' +
+    '                    </button>\n' +
+    '                    <button id="reset" name="reset" data-ng-click="reset()" class="btn btn-default">\n' +
+    '                        Reset\n' +
+    '                    </button>\n' +
+    '                </div>\n' +
     '            </div>\n' +
     '        </form>\n' +
     '\n' +
@@ -89,7 +108,7 @@ try {
 }
 module.run(['$templateCache', function($templateCache) {
   $templateCache.put('/partials/collections/collections.html',
-    '<div>\n' +
+    '<div class="col-sm-12">\n' +
     '\n' +
     '    <uib-alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">\n' +
     '        {{alert.msg}}\n' +
@@ -97,23 +116,27 @@ module.run(['$templateCache', function($templateCache) {
     '\n' +
     '    <fieldset>\n' +
     '\n' +
-    '        <legend>Search</legend>\n' +
+    '        <legend>\n' +
+    '            <h3>\n' +
+    '                <small>Search</small>\n' +
+    '            </h3>\n' +
+    '        </legend>\n' +
     '\n' +
-    '        <form>\n' +
-    '            <div>\n' +
-    '                <label for="publisher">Publisher</label>\n' +
+    '        <form id="collectionsForm" name="collectionsForm" class="form-horizontal">\n' +
+    '            <div class="form-group">\n' +
+    '                <label for="publisher" class="col-sm-2 control-label">Publisher</label>\n' +
     '\n' +
-    '                <div>\n' +
-    '                    <input id="publisher" name="publisher" type="text" ng-model="collection.publisher"\n' +
-    '                           placeholder="Publisher\'s name">\n' +
+    '                <div class="col-sm-3">\n' +
+    '                    <input id="publisher" name="publisher" type="text" data-ng-model="collection.publisher"\n' +
+    '                           placeholder="Publisher\'s name" class="form-control">\n' +
     '                </div>\n' +
     '            </div>\n' +
-    '            <div>\n' +
-    '                <label for="collection">Collection</label>\n' +
+    '            <div class="form-group">\n' +
+    '                <label for="collection" class="col-sm-2 control-label">Collection</label>\n' +
     '\n' +
-    '                <div>\n' +
-    '                    <input id="collection" name="collection" type="text" ng-model="collection.name"\n' +
-    '                           placeholder="Collection\'s name">\n' +
+    '                <div class="col-sm-3">\n' +
+    '                    <input id="collection" name="collection" type="text" data-ng-model="collection.name"\n' +
+    '                           placeholder="Collection\'s name" class="form-control">\n' +
     '                </div>\n' +
     '            </div>\n' +
     '\n' +
@@ -121,38 +144,46 @@ module.run(['$templateCache', function($templateCache) {
     '    </fieldset>\n' +
     '\n' +
     '    <fieldset>\n' +
-    '        <legend>Collections</legend>\n' +
-    '        <table>\n' +
+    '        <legend>\n' +
+    '            <h3>\n' +
+    '                <small>Collections</small>\n' +
+    '            </h3>\n' +
+    '        </legend>\n' +
+    '\n' +
+    '        <table class="table table-striped table-bordered text-center">\n' +
     '            <thead>\n' +
     '            <tr>\n' +
-    '                <th>Name</th>\n' +
-    '                <th>Publisher</th>\n' +
-    '                <th>Is Complete?</th>\n' +
-    '                <th>Action</th>\n' +
+    '                <th class="text-center">Name</th>\n' +
+    '                <th class="text-center">Publisher</th>\n' +
+    '                <th class="text-center">Is Complete?</th>\n' +
+    '                <th class="text-center">Action</th>\n' +
     '            </tr>\n' +
     '            </thead>\n' +
-    '            <tbody>\n' +
-    '            <tr ng-repeat="item in items">\n' +
-    '                <td>{{item.name}}</td>\n' +
-    '                <td>{{item.publisher}}</td>\n' +
-    '                <td>{{item.isComplete ? \'Yes\' : \'No\'}}</td>\n' +
-    '                <td>\n' +
-    '                    <button ng-click="openRemoveDialog(item)"\n' +
-    '                            id="btn_delete">Remove\n' +
+    '            <tbody class="text-center">\n' +
+    '            <tr data-ng-repeat="collection in collections">\n' +
+    '                <td>{{collection.name}}</td>\n' +
+    '                <td>{{collection.publisher}}</td>\n' +
+    '                <td width="15%">{{collection.isComplete ? \'Yes\' : \'No\'}}</td>\n' +
+    '                <td width="20%">\n' +
+    '                    <a data-ng-href="/views/collection/{{collection.id}}/edit" id="update" class="btn btn-primary">\n' +
+    '                        Edit\n' +
+    '                    </a>\n' +
+    '                    <button data-ng-click="openRemoveDialog(collection)" id="delete" class="btn btn-warning">\n' +
+    '                        Remove\n' +
     '                    </button>\n' +
-    '                    <a ng-href="/views/collection/{{item.id}}/edit"\n' +
-    '                       id="btn_update">Edit</a>\n' +
     '                </td>\n' +
     '            </tr>\n' +
     '            </tbody>\n' +
     '            <tfoot>\n' +
     '            <tr>\n' +
-    '                <td>\n' +
-    '                    <uib-pagination total-items="bigTotalItems" ng-model="bigCurrentPage" max-size="maxSize"\n' +
-    '                                    class="pagination-sm" items-per-page="itemsPerPage" boundary-links="true"\n' +
-    '                                    rotate="false" num-pages="numPages" ng-change="pageChanged()">\n' +
-    '                    </uib-pagination>\n' +
-    '                </td>\n' +
+    '                <div class="text-center">\n' +
+    '                    <td colspan="4">\n' +
+    '                        <uib-pagination total-items="bigTotalItems" ng-model="bigCurrentPage" max-size="maxSize"\n' +
+    '                                        class="pagination" items-per-page="itemsPerPage" boundary-links="true"\n' +
+    '                                        rotate="false" num-pages="numPages" ng-change="pageChanged()">\n' +
+    '                        </uib-pagination>\n' +
+    '                    </td>\n' +
+    '                </div>\n' +
     '            </tr>\n' +
     '            </tfoot>\n' +
     '        </table>\n' +
@@ -169,7 +200,7 @@ try {
 }
 module.run(['$templateCache', function($templateCache) {
   $templateCache.put('/partials/mangas/manga.html',
-    '<div>\n' +
+    '<div class="col-sm-12">\n' +
     '\n' +
     '    <uib-alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">\n' +
     '        {{alert.msg}}\n' +
@@ -177,76 +208,96 @@ module.run(['$templateCache', function($templateCache) {
     '\n' +
     '    <fieldset>\n' +
     '\n' +
-    '        <legend>{{legend}}</legend>\n' +
+    '        <legend>\n' +
+    '            <h3>\n' +
+    '                <small>{{legend}}</small>\n' +
+    '            </h3>\n' +
+    '        </legend>\n' +
     '\n' +
-    '        <form id="mangaForm" name="mangaForm">\n' +
-    '            <input type="hidden" name="id" ng-model="manga.id">\n' +
+    '        <form id="mangaForm" name="mangaForm" class="form-horizontal">\n' +
+    '            <input type="hidden" name="id" data-ng-model="manga.id">\n' +
     '\n' +
-    '            <div>\n' +
-    '                <label for="collection">Collection</label>\n' +
+    '            <div class="form-group">\n' +
+    '                <label for="collection" class="col-sm-2 control-label">Collection</label>\n' +
     '\n' +
-    '                <div>\n' +
-    '                    <input id="collection" name="collection" type="text" ng-model="manga.collection"\n' +
+    '                <div class="col-sm-3">\n' +
+    '                    <input id="collection" name="collection" type="text" data-ng-model="manga.collection"\n' +
     '                           placeholder="Collection\'s name" required\n' +
     '                           uib-typeahead="collection for collection in getCollections($viewValue)"\n' +
     '                           typeahead-loading="loadingCollections" typeahead-no-results="noResults"\n' +
-    '                    >\n' +
-    '                    <i ng-show="loadingCollections" class="glyphicon glyphicon-refresh"></i>\n' +
+    '                           class="form-control">\n' +
+    '                    <i data-ng-show="loadingCollections" class="glyphicon glyphicon-refresh"></i>\n' +
     '\n' +
-    '                    <div ng-show="noResults">\n' +
+    '                    <div data-ng-show="noResults">\n' +
     '                        <i class="glyphicon glyphicon-remove"></i> No Results Found\n' +
     '                    </div>\n' +
-    '                    <span data-ng-show="mangaForm.collection.$invalid">Please enter a valid name</span>\n' +
+    '                    <span data-ng-show="mangaForm.collection.$invalid">\n' +
+    '                        <small>Please enter a valid collection</small>\n' +
+    '                    </span>\n' +
     '                </div>\n' +
     '            </div>\n' +
     '\n' +
-    '            <div>\n' +
-    '                <label for="name">Name</label>\n' +
+    '            <div class="form-group">\n' +
+    '                <label for="name" class="col-sm-2 control-label">Name</label>\n' +
     '\n' +
-    '                <div>\n' +
-    '                    <input id="name" name="name" type="text" ng-model="manga.name"\n' +
-    '                           placeholder="Manga\'s name" required\n' +
+    '                <div class="col-sm-3">\n' +
+    '                    <input id="name" name="name" type="text" data-ng-model="manga.name"\n' +
+    '                           placeholder="Manga\'s name" required class="form-control"\n' +
     '                           pattern=".{2,}" title="Please type at least 2 characters">\n' +
-    '                    <span data-ng-show="mangaForm.name.$invalid">Please enter a valid name</span>\n' +
+    '                    <span data-ng-show="mangaForm.name.$invalid">\n' +
+    '                        <small>Please enter a valid name</small>\n' +
+    '                    </span>\n' +
     '                </div>\n' +
     '            </div>\n' +
     '\n' +
-    '            <div>\n' +
-    '                <label for="number">Number</label>\n' +
+    '            <div class="form-group">\n' +
+    '                <label for="number" class="col-sm-2 control-label">Number</label>\n' +
     '\n' +
-    '                <div>\n' +
-    '                    <input id="number" name="number" type="number" ng-model="manga.number"\n' +
-    '                           placeholder="Manga\'s number" required\n' +
-    '                           title="Please type at least 2 characters">\n' +
-    '                    <span data-ng-show="mangaForm.number.$invalid">Please enter a valid number</span>\n' +
+    '                <div class="col-sm-3">\n' +
+    '                    <input id="number" name="number" type="number" data-ng-model="manga.number"\n' +
+    '                           placeholder="Manga\'s number" required class="form-control"\n' +
+    '                           title="Please type at least 1 characters" min="1">\n' +
+    '                    <span data-ng-show="mangaForm.number.$invalid">\n' +
+    '                       <small>Please enter a valid number</small>\n' +
+    '                    </span>\n' +
     '                </div>\n' +
     '            </div>\n' +
     '\n' +
-    '            <div>\n' +
-    '                <label for="doIHaveIt">Do I have it?</label>\n' +
+    '            <div class="form-group">\n' +
+    '                <label for="doIHaveIt" class="col-sm-2 control-label">Do I have it?</label>\n' +
     '\n' +
-    '                <div>\n' +
-    '                    <input id="doIHaveIt" name="doIHaveIt" type="checkbox"\n' +
-    '                           ng-model="manga.doIHaveIt" ng-true-value="true" ng-false-value="false">\n' +
+    '                <div class="checkbox">\n' +
+    '                    <label>\n' +
+    '                        <input id="doIHaveIt" name="doIHaveIt" type="checkbox"\n' +
+    '                               data-ng-model="manga.doIHaveIt" data-ng-true-value="true"\n' +
+    '                               data-ng-false-value="false">\n' +
+    '                    </label>\n' +
     '                </div>\n' +
     '            </div>\n' +
     '\n' +
-    '            <div data-ng-show="{{showUploadCover}}">\n' +
-    '                <label for="cover">Cover</label>\n' +
+    '            <div data-ng-show="{{showUploadCover}}" class="form-group">\n' +
+    '                <label for="cover" class="col-sm-2 control-label">Cover</label>\n' +
     '\n' +
-    '                <div>\n' +
-    '                    <input id="cover" type="file" ngf-select ng-model="cover" name="cover"\n' +
-    '                           accept="image/*" ngf-max-size="2MB">\n' +
+    '                <div class="col-sm-3">\n' +
+    '                    <input id="cover" type="file" data-ngf-select data-ng-model="cover" name="cover"\n' +
+    '                           class="form-control"\n' +
+    '                           accept="image/jpeg" data-ngf-max-size="2MB">\n' +
     '                </div>\n' +
-    '                <button ng-disabled="!mangaForm.$valid" ng-click="uploadCover(cover, manga)">Submit</button>\n' +
+    '                <button data-ng-disabled="!mangaForm.$valid" data-ng-click="uploadCover(cover, manga)">Submit</button>\n' +
     '            </div>\n' +
     '\n' +
     '\n' +
-    '            <div>\n' +
-    '                <button id="submit" name="submit" ng-click="save(manga)">\n' +
-    '                    Save\n' +
-    '                </button>\n' +
-    '                <button id="reset" name="reset" ng-click="reset()">Reset</button>\n' +
+    '            <div class="form-group">\n' +
+    '                <label for="submit" class="col-sm-3 control-label"></label>\n' +
+    '\n' +
+    '                <div class="col-md-6">\n' +
+    '                    <button id="submit" name="submit" data-ng-click="save(manga)" class="btn btn-primary">\n' +
+    '                        Save\n' +
+    '                    </button>\n' +
+    '                    <button id="reset" name="reset" data-ng-click="reset()" class="btn btn-default">\n' +
+    '                        Reset\n' +
+    '                    </button>\n' +
+    '                </div>\n' +
     '            </div>\n' +
     '        </form>\n' +
     '    </fieldset>\n' +
@@ -262,7 +313,7 @@ try {
 }
 module.run(['$templateCache', function($templateCache) {
   $templateCache.put('/partials/mangas/mangas.html',
-    '<div>\n' +
+    '<div class="col-sm-12">\n' +
     '\n' +
     '    <uib-alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">\n' +
     '        {{alert.msg}}\n' +
@@ -270,66 +321,80 @@ module.run(['$templateCache', function($templateCache) {
     '\n' +
     '    <fieldset>\n' +
     '\n' +
-    '        <legend>Search</legend>\n' +
+    '        <legend>\n' +
+    '            <h3>\n' +
+    '                <small>Search</small>\n' +
+    '            </h3>\n' +
+    '        </legend>\n' +
     '\n' +
-    '        <form>\n' +
-    '            <div>\n' +
-    '                <label for="collection">Collection</label>\n' +
+    '        <form id="mangasForm" name="mangasForm" class="form-horizontal">\n' +
+    '            <div class="form-group">\n' +
+    '                <label for="collection" class="col-sm-2 control-label">Collection</label>\n' +
     '\n' +
-    '                <div>\n' +
-    '                    <input id="collection" name="collection" type="text" ng-model="manga.collection"\n' +
-    '                           placeholder="Collection\'s name">\n' +
+    '                <div class="col-sm-3">\n' +
+    '                    <input id="collection" name="collection" type="text" data-ng-model="manga.collection"\n' +
+    '                           placeholder="Collection\'s name" class="form-control">\n' +
     '                </div>\n' +
     '            </div>\n' +
-    '            <div>\n' +
-    '                <label for="name">Name</label>\n' +
     '\n' +
-    '                <div>\n' +
-    '                    <input id="name" name="name" type="text" ng-model="manga.name"\n' +
-    '                           placeholder="Manga\'s name">\n' +
+    '            <div class="form-group">\n' +
+    '                <label for="name" class="col-sm-2 control-label">Name</label>\n' +
+    '\n' +
+    '                <div class="col-sm-3">\n' +
+    '                    <input id="name" name="name" type="text" data-ng-model="manga.name"\n' +
+    '                           placeholder="Manga\'s name" class="form-control">\n' +
     '                </div>\n' +
     '            </div>\n' +
     '        </form>\n' +
     '    </fieldset>\n' +
     '\n' +
     '    <fieldset>\n' +
-    '        <legend>Mangas</legend>\n' +
-    '        <table>\n' +
+    '        <legend>\n' +
+    '            <h3>\n' +
+    '                <small>Mangas</small>\n' +
+    '            </h3>\n' +
+    '        </legend>\n' +
+    '        <table class="table table-striped table-bordered text-center">\n' +
     '            <thead>\n' +
     '            <tr>\n' +
-    '                <th>Name</th>\n' +
-    '                <th>Collection</th>\n' +
-    '                <th>Number</th>\n' +
-    '                <th>Do I have it?</th>\n' +
-    '                <th>Action</th>\n' +
+    '                <th class="text-center">Collection</th>\n' +
+    '                <th class="text-center">Name</th>\n' +
+    '                <th class="text-center">Number</th>\n' +
+    '                <th class="text-center">Do I have it?</th>\n' +
+    '                <th class="text-center">Action</th>\n' +
     '            </tr>\n' +
     '            </thead>\n' +
-    '            <tbody>\n' +
-    '            <tr ng-repeat="item in items">\n' +
-    '                <td>{{item.name}}</td>\n' +
-    '                <td>{{item.collection}}</td>\n' +
-    '                <td>{{item.number}}</td>\n' +
-    '                <td>{{item.doIHaveIt ? \'Yes\' : \'No\'}}</td>\n' +
+    '            <tbody class="text-center">\n' +
+    '            <tr data-ng-repeat="manga in mangas">\n' +
+    '                <td>{{manga.collection}}</td>\n' +
+    '                <td>{{manga.name}}</td>\n' +
+    '                <td>{{manga.number}}</td>\n' +
+    '                <td>{{manga.doIHaveIt ? \'Yes\' : \'No\'}}</td>\n' +
     '                <td>\n' +
-    '                    <button ng-click="openRemoveDialog(item)"\n' +
-    '                            id="btn_delete">Remove\n' +
+    '                    <a data-ng-href="/views/manga/{{manga.id}}/edit" id="update" class="btn btn-primary">\n' +
+    '                        Edit\n' +
+    '                    </a>\n' +
+    '                    <button data-ng-click="openRemoveDialog(manga)" id="delete" class="btn btn-warning">\n' +
+    '                        Remove\n' +
     '                    </button>\n' +
-    '                    <a ng-href="/views/manga/{{item.id}}/edit"\n' +
-    '                       id="btn_update">Edit</a>\n' +
     '                </td>\n' +
     '            </tr>\n' +
     '            </tbody>\n' +
     '            <tfoot>\n' +
     '            <tr>\n' +
-    '                <td>\n' +
-    '                    <uib-pagination total-items="bigTotalItems" ng-model="bigCurrentPage" max-size="maxSize"\n' +
-    '                                    class="pagination-sm" items-per-page="itemsPerPage" boundary-links="true"\n' +
-    '                                    rotate="false" num-pages="numPages" ng-change="pageChanged()">\n' +
-    '                    </uib-pagination>\n' +
+    '                <td colspan="5">\n' +
+    '                    <div class="text-center">\n' +
+    '                        <uib-pagination total-items="bigTotalItems" ng-model="bigCurrentPage" max-size="maxSize"\n' +
+    '                                        class="pagination" items-per-page="itemsPerPage" boundary-links="true"\n' +
+    '                                        rotate="false" num-pages="numPages" ng-change="pageChanged()">\n' +
+    '                        </uib-pagination>\n' +
+    '                    </div>\n' +
     '                </td>\n' +
     '            </tr>\n' +
     '            <tr>\n' +
-    '                <td><span>Total of {{bigTotalItems}} mangas</span></td>\n' +
+    '                <td colspan="5" class="text-center">\n' +
+    '                    <span>Total of {{bigTotalItems}} mangas</span>\n' +
+    '                </td>\n' +
     '            </tr>\n' +
     '            </tfoot>\n' +
     '        </table>\n' +
@@ -353,13 +418,18 @@ module.run(['$templateCache', function($templateCache) {
     '    </uib-alert>\n' +
     '\n' +
     '    <fieldset>\n' +
-    '        <legend><h3><small>Search</small></h3></legend>\n' +
+    '        <legend>\n' +
+    '            <h3>\n' +
+    '                <small>Search</small>\n' +
+    '            </h3>\n' +
+    '        </legend>\n' +
     '        <form id="mangasDeckForm" name="mangasDeckForm" class="form-horizontal">\n' +
-    '            <div class="form-group form-group-lg">\n' +
+    '            <div class="form-group">\n' +
     '                <label for="collection" class="col-sm-2 control-label">Collection</label>\n' +
     '\n' +
     '                <div class="col-sm-3">\n' +
-    '                    <input id="collection" class="form-control input-lg" name="collection" type="text" data-ng-model="collection"\n' +
+    '                    <input id="collection" class="form-control" name="collection" type="text"\n' +
+    '                           data-ng-model="collection"\n' +
     '                           placeholder="Collection\'s name">\n' +
     '                </div>\n' +
     '            </div>\n' +
@@ -367,7 +437,11 @@ module.run(['$templateCache', function($templateCache) {
     '    </fieldset>\n' +
     '\n' +
     '    <fieldset>\n' +
-    '        <legend><h3><small>Latest Publications</small></h3></legend>\n' +
+    '        <legend>\n' +
+    '            <h3>\n' +
+    '                <small>Latest Publications</small>\n' +
+    '            </h3>\n' +
+    '        </legend>\n' +
     '\n' +
     '        <div>\n' +
     '            <div deckgrid class="deckgrid" cardTemplate="/partials/mangas/templates/card_deck.html"\n' +
@@ -377,7 +451,7 @@ module.run(['$templateCache', function($templateCache) {
     '    </fieldset>\n' +
     '    <div class="text-center">\n' +
     '        <uib-pagination total-items="bigTotalItems" ng-model="bigCurrentPage" max-size="maxSize"\n' +
-    '                        class="pagination-sm" items-per-page="itemsPerPage" boundary-links="true"\n' +
+    '                        class="pagination" items-per-page="itemsPerPage" boundary-links="true"\n' +
     '                        rotate="false" num-pages="numPages" ng-change="pageChanged()">\n' +
     '        </uib-pagination>\n' +
     '    </div>\n' +
@@ -393,7 +467,7 @@ try {
 }
 module.run(['$templateCache', function($templateCache) {
   $templateCache.put('/partials/publishers/publisher.html',
-    '<div>\n' +
+    '<div class="col-sm-12">\n' +
     '\n' +
     '    <uib-alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">\n' +
     '        {{alert.msg}}\n' +
@@ -401,27 +475,35 @@ module.run(['$templateCache', function($templateCache) {
     '\n' +
     '    <fieldset>\n' +
     '\n' +
-    '        <legend>{{legend}}</legend>\n' +
+    '        <legend>\n' +
+    '            <h3>\n' +
+    '                <small>{{legend}}</small>\n' +
+    '            </h3>\n' +
+    '        </legend>\n' +
     '\n' +
-    '        <form id="publisherForm" name="publisherForm">\n' +
-    '            <input type="hidden" name="id" ng-model="publisher.id">\n' +
+    '        <form id="publisherForm" name="publisherForm" class="form-horizontal">\n' +
+    '            <input type="hidden" name="id" data-ng-model="publisher.id">\n' +
     '\n' +
-    '            <div>\n' +
-    '                <label for="name">Name</label>\n' +
+    '            <div class="form-group">\n' +
+    '                <label for="name" class="col-sm-2 control-label">Name</label>\n' +
     '\n' +
-    '                <div>\n' +
-    '                    <input id="name" name="name" type="text" ng-model="publisher.name"\n' +
-    '                           placeholder="Publisher\'s name" required\n' +
-    '                           pattern=".{2,}" title="Please type at least 2 characters">\n' +
-    '                    <span data-ng-show="publisherForm.name.$invalid">Please enter a valid name</span>\n' +
+    '                <div class="col-sm-3">\n' +
+    '                    <input id="name" name="name" type="text" data-ng-model="publisher.name"\n' +
+    '                           class="form-control" placeholder="Publisher\'s name"\n' +
+    '                           required pattern=".{2,}" title="Please type at least 2 characters">\n' +
+    '                    <span data-ng-show="publisherForm.name.$invalid"><small>Please enter a valid name</small></span>\n' +
     '                </div>\n' +
     '            </div>\n' +
     '\n' +
-    '            <div>\n' +
-    '                <button id="submit" name="submit" ng-click="save(publisher)">\n' +
-    '                    Save\n' +
-    '                </button>\n' +
-    '                <button id="reset" name="reset" ng-click="reset()">Reset</button>\n' +
+    '            <div class="form-group">\n' +
+    '                <label for="submit" class="col-sm-3 control-label"></label>\n' +
+    '\n' +
+    '                <div class="col-md-6">\n' +
+    '                    <button id="submit" name="submit" data-ng-click="save(publisher)" class="btn btn-primary">\n' +
+    '                        Submit\n' +
+    '                    </button>\n' +
+    '                    <button id="reset" name="reset" data-ng-click="reset()" class="btn btn-default">Reset</button>\n' +
+    '                </div>\n' +
     '            </div>\n' +
     '        </form>\n' +
     '    </fieldset>\n' +
@@ -437,7 +519,7 @@ try {
 }
 module.run(['$templateCache', function($templateCache) {
   $templateCache.put('/partials/publishers/publishers.html',
-    '<div>\n' +
+    '<div class="col-sm-12">\n' +
     '\n' +
     '    <uib-alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">\n' +
     '        {{alert.msg}}\n' +
@@ -445,15 +527,19 @@ module.run(['$templateCache', function($templateCache) {
     '\n' +
     '    <fieldset>\n' +
     '\n' +
-    '        <legend>Search:</legend>\n' +
+    '        <legend>\n' +
+    '            <h3>\n' +
+    '                <small>Search</small>\n' +
+    '            </h3>\n' +
+    '        </legend>\n' +
     '\n' +
-    '        <form>\n' +
-    '            <div>\n' +
-    '                <label for="name">Name</label>\n' +
+    '        <form id="publishersForm" name="publishersForm" class="form-horizontal">\n' +
+    '            <div class="form-group">\n' +
+    '                <label for="name" class="col-sm-2 control-label">Name</label>\n' +
     '\n' +
-    '                <div>\n' +
-    '                    <input id="name" name="name" type="text" ng-model="name"\n' +
-    '                           placeholder="Publisher\'s name">\n' +
+    '                <div class="col-sm-3">\n' +
+    '                    <input id="name" name="name" type="text" data-ng-model="name"\n' +
+    '                           placeholder="Publisher\'s name" class="form-control">\n' +
     '                </div>\n' +
     '            </div>\n' +
     '\n' +
@@ -461,34 +547,41 @@ module.run(['$templateCache', function($templateCache) {
     '    </fieldset>\n' +
     '\n' +
     '    <fieldset>\n' +
-    '        <legend>Publishers</legend>\n' +
+    '        <legend>\n' +
+    '            <h3>\n' +
+    '                <small>Publishers</small>\n' +
+    '            </h3>\n' +
+    '        </legend>\n' +
     '\n' +
-    '        <table>\n' +
+    '        <table class="table table-striped table-bordered text-center">\n' +
     '            <thead>\n' +
     '            <tr>\n' +
-    '                <th>Name</th>\n' +
-    '                <th>Action</th>\n' +
+    '                <th class="text-center">Name</th>\n' +
+    '                <th class="text-center">Action</th>\n' +
     '            </tr>\n' +
     '            </thead>\n' +
-    '            <tbody>\n' +
-    '            <tr ng-repeat="item in items">\n' +
-    '                <td>{{item.name}}</td>\n' +
-    '                <td>\n' +
-    '                    <button ng-click="openRemoveDialog(item)"\n' +
-    '                            id="btn_delete">Remove\n' +
+    '            <tbody class="text-center">\n' +
+    '            <tr data-ng-repeat="publisher in publishers">\n' +
+    '                <td width="70%">{{publisher.name}}</td>\n' +
+    '                <td width="30%">\n' +
+    '                    <a id="update" data-ng-href="/views/publisher/{{publisher.id}}/edit" class="btn btn-primary">\n' +
+    '                        Edit\n' +
+    '                    </a>\n' +
+    '                    <button id="delete" class="btn btn-warning" data-ng-click="openRemoveDialog(publisher)">\n' +
+    '                        Remove\n' +
     '                    </button>\n' +
-    '                    <a ng-href="/views/publisher/{{item.id}}/edit"\n' +
-    '                       id="btn_update">Edit</a>\n' +
     '                </td>\n' +
     '            </tr>\n' +
     '            </tbody>\n' +
     '            <tfoot>\n' +
     '            <tr>\n' +
-    '                <td>\n' +
-    '                    <uib-pagination total-items="bigTotalItems" ng-model="bigCurrentPage" max-size="maxSize"\n' +
-    '                                    class="pagination-sm" items-per-page="itemsPerPage" boundary-links="true"\n' +
-    '                                    rotate="false" num-pages="numPages" ng-change="pageChanged()">\n' +
-    '                    </uib-pagination>\n' +
+    '                <td colspan="2">\n' +
+    '                    <div class="text-center">\n' +
+    '                        <uib-pagination total-items="bigTotalItems" ng-model="bigCurrentPage" max-size="maxSize"\n' +
+    '                                        class="pagination" items-per-page="itemsPerPage" boundary-links="true"\n' +
+    '                                        rotate="false" num-pages="numPages" ng-change="pageChanged()">\n' +
+    '                        </uib-pagination>\n' +
+    '                    </div>\n' +
     '                </td>\n' +
     '            </tr>\n' +
     '            </tfoot>\n' +
