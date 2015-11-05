@@ -49,8 +49,6 @@ class MangaManager @Inject()(mangaService: MangaService) extends Actor with Acto
 
       log debug s"Scraping done. $mangasSize mangas has been found"
 
-      mangas.foreach(println)
-
       killScrapingActor(collection)
 
       coverManager ! CoverManager.Start(mangas)
@@ -62,7 +60,7 @@ class MangaManager @Inject()(mangaService: MangaService) extends Actor with Acto
   }
 
   def createScrapingActor(name: String): ActorRef = {
-    log debug s"Creating ScrapingActor = $name"
+    log debug s"Creating ScrapingActor = ${name.standardize}"
 
     val actorRef = context.actorOf(ScrapingActor.props(self), name.standardize)
 
@@ -73,11 +71,11 @@ class MangaManager @Inject()(mangaService: MangaService) extends Actor with Acto
 
   def killScrapingActor(key: String): Unit = {
 
-    log debug s"Killing ScrapingActor = $key"
+    log debug s"Killing ScrapingActor = ${key.standardize}"
 
     scrapeActors.get(key.standardize) match {
       case Some(actorRef) => actorRef ! PoisonPill
-      case None => log warning s"Trying to kill actor key = $key"
+      case None => log warning s"Trying to kill actor key = ${key.standardize}"
     }
   }
 

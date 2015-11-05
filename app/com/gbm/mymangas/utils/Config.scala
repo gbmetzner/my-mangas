@@ -9,7 +9,7 @@ object Config {
 
   private val config = play.api.Play.configuration
 
-  lazy val defaultMangaImage = getStringFromKey("manga.no.cover")
+  lazy val defaultCover = getStringFromKey("manga.no.cover")
 
   lazy val smartFileKey: String = getStringFromKey("smartfile.key")
 

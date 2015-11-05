@@ -32,62 +32,62 @@ class CoverManager(creator: ActorRef) extends Actor with ActorLogging {
   override def receive: Receive = {
     case CoverManager.Start(mangas) => mangas.foreach {
       case (manga, link) =>
-        val name = s"${manga.collection}_${manga.number}".standardize
+        val name = s"${manga.collection}_${manga.number}"
         createCoverDownloadActor(name) ! CoverDownloader.Download(manga, link)
     }
     case CoverManager.DownloadDone(manga, filePath) =>
       log debug s"Download done. Filepath = $filePath"
 
-      val name = s"${manga.collection}_${manga.number}".standardize
+      val name = s"${manga.collection}_${manga.number}"
       killCoverDownloadActor(name)
       createCoverUploadActor(name) ! CoverUploader.Upload(manga, filePath)
 
     case CoverManager.CoverNotAvailable(manga) =>
       log debug s"Cover not available for ${manga.fullName}"
 
-      val name = s"${manga.collection}_${manga.number}".standardize
+      val name = s"${manga.collection}_${manga.number}"
       killCoverUploadActor(name)
       creator ! MangaManager.Persist(manga)
 
     case CoverManager.UploadDone(manga) =>
       log debug s"Upload done of ${manga.fullName}"
 
-      val name = s"${manga.collection}_${manga.number}".standardize
+      val name = s"${manga.collection}_${manga.number}"
       killCoverUploadActor(name)
       creator ! MangaManager.Persist(manga)
   }
 
   def createCoverDownloadActor(name: String): ActorRef = {
-    log debug s"Creating CoverDownloadActor = $name"
+    log debug s"Creating CoverDownloadActor = ${name.standardize}"
 
-    val actorRef = context.actorOf(CoverDownloader.props(self), s"download-$name")
+    val actorRef = context.actorOf(CoverDownloader.props(self), s"download-${name.standardize}")
     coverDownloaders += (s"download-$name" -> actorRef)
     actorRef
   }
 
   def killCoverDownloadActor(key: String): Unit = {
-    log debug s"Killing CoverDownloadActor = $key"
+    log debug s"Killing CoverDownloadActor = ${key.standardize}"
 
     coverDownloaders.get(s"download-$key") match {
       case Some(actorRef) => actorRef ! PoisonPill
-      case None => log warning s"Trying to kill CoverDownloadActor key = $key"
+      case None => log warning s"Trying to kill CoverDownloadActor key = ${key.standardize}"
     }
   }
 
   def createCoverUploadActor(name: String): ActorRef = {
-    log debug s"Creating CoverUploadActor = $name"
+    log debug s"Creating CoverUploadActor = ${name.standardize}"
 
-    val actorRef = context.actorOf(CoverUploader.props(self), s"upload-$name")
+    val actorRef = context.actorOf(CoverUploader.props(self), s"upload-${name.standardize}")
     coverUploaders += (s"upload-$name" -> actorRef)
     actorRef
   }
 
   def killCoverUploadActor(key: String): Unit = {
-    log debug s"Killing CoverUploadActor = $key"
+    log debug s"Killing CoverUploadActor = ${key.standardize}"
 
     coverUploaders.get(s"upload-$key") match {
       case Some(actorRef) => actorRef ! PoisonPill
-      case None => log warning s"Trying to kill CoverUploadActor key = $key"
+      case None => log warning s"Trying to kill CoverUploadActor key = ${key.standardize}"
     }
   }
 

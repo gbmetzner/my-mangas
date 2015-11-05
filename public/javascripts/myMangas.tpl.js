@@ -367,7 +367,7 @@ module.run(['$templateCache', function($templateCache) {
     '        <legend>Editions</legend>\n' +
     '\n' +
     '        <div>\n' +
-    '            <div deckgrid class="deckgrid" cardTemplate="/partials/mangas/template/card_deck.html"\n' +
+    '            <div deckgrid class="deckgrid" cardTemplate="/partials/mangas/templates/card_deck.html"\n' +
     '                 source="mangas">\n' +
     '            </div>\n' +
     '        </div>\n' +
@@ -529,7 +529,7 @@ try {
   module = angular.module('myMangas.tpl', []);
 }
 module.run(['$templateCache', function($templateCache) {
-  $templateCache.put('/partials/mangas/template/card_deck.html',
+  $templateCache.put('/partials/mangas/templates/card_deck.html',
     '<div class="cover">\n' +
     '    <a id="btnUpdate" ng-href="/views/manga/{{card.id}}/edit">\n' +
     '        <h2>{{card.collection}} # {{card.number}}</h2>\n' +

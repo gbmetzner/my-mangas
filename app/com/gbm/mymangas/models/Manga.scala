@@ -14,7 +14,7 @@ case class Manga(id: UUID = generate(),
                  name: String,
                  number: Int,
                  doIHaveIt: Boolean = false,
-                 publicLink: String = Config.defaultMangaImage,
+                 publicLink: String = Config.defaultCover,
                  createdAt: DateTime = DateTime.now(),
                  updatedAt: DateTime = DateTime.now()) {
 

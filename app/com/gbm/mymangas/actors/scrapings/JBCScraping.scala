@@ -5,11 +5,9 @@ import net.ruippeixotog.scalascraper.dsl.DSL.Extract._
 import net.ruippeixotog.scalascraper.dsl.DSL._
 import org.jsoup.nodes.Document
 
-import scala.util.{Failure, Success, Try}
-
 /**
- * @author Gustavo Metzner on 10/22/15.
- */
+  * @author Gustavo Metzner on 10/22/15.
+  */
 
 class JBCScraping(override val collection: String,
                   override val latestNumber: Int,
@@ -31,17 +29,17 @@ class JBCScraping(override val collection: String,
 
   override def extractLinks: Seq[String] = {
 
-    def buildPageURL(pageNumber: Int): String = s"http://mangasjbc.uol.com.br/titulos/$searchParam/page/$pageNumber"
+    def buildPageURL(pageNumber: Int): String = s"${baseURL}titulos/$searchParam/page/$pageNumber"
 
     @annotation.tailrec
     def extract(page: Int, acc: Seq[String]): Seq[String] = browser get buildPageURL(page) match {
       case None => acc
-      case Some(document) => extract(page + 1, acc ++ extractMangasLinks(document) {
-        document => document >> extractor(".txt a", attrs("href"))
-      })
+      case Some(document) => extract(page + 1, acc ++ extractMangasLinks(document)(extractLinks))
     }
 
     extract(latestNumber + 1, Seq.empty[String])
   }
+
+  protected[scrapings] def extractLinks(document: Document): Seq[String] = document >> extractor(".txt a", attrs("href"))
 
 }

@@ -23,5 +23,5 @@ class SchedulerMangaScraping @Inject()(val app: Application,
 
   logger info "Manga Scraping scheduling..."
 
-  system.scheduler.schedule(15.seconds, 24.hours, collectionManager, CollectionManager.Start)
+  system.scheduler.schedule(5.seconds, 24.hours, collectionManager, CollectionManager.Start)
 }

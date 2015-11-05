@@ -28,7 +28,7 @@ object FileUpload {
       parsePublicLink(makePublicLink(externalPath, file.getName)) concat file.getName
     } match {
       case Success(publicLink) => publicLink
-      case Failure(_) => Config.defaultMangaImage
+      case Failure(_) => Config.defaultCover
     }
   }
 

@@ -36,7 +36,7 @@ class CoverDownloader(creator: ActorRef) extends Actor with ActorLogging {
         case Success(filePath) => creator ! CoverManager.DownloadDone(manga, filePath)
         case Failure(_) =>
           log info s"Cover not found for ${manga.fullName}"
-          creator ! CoverManager.CoverNotAvailable(manga.copy(publicLink = Config.defaultMangaImage))
+          creator ! CoverManager.CoverNotAvailable(manga.copy(publicLink = Config.defaultCover))
       }
   }
 

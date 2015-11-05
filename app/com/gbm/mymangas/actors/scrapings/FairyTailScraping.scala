@@ -5,8 +5,8 @@ import net.ruippeixotog.scalascraper.dsl.DSL._
 import org.jsoup.nodes.Document
 
 /**
- * @author Gustavo Metzner on 10/17/15.
- */
+  * @author Gustavo Metzner on 10/17/15.
+  */
 class FairyTailScraping(override val collection: String,
                         override val latestNumber: Int,
                         override val searchParam: String) extends JBCScraping(collection, latestNumber, searchParam) {
@@ -18,4 +18,7 @@ class FairyTailScraping(override val collection: String,
 
   override def extractImgLink(document: Document): String = document >> extractor(".imgCapa", attr("src"))
 
+  override protected[scrapings] def extractLinks(document: Document): Seq[String] = {
+    document >> extractor(".listEdicoes a", attrs("href"))
+  }
 }
