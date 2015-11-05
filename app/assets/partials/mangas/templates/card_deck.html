@@ -1,0 +1,12 @@
+<div class="cover">
+    <a id="btnUpdate" ng-href="/views/manga/{{card.id}}/edit">
+        <h2>{{card.collection}} # {{card.number}}</h2>
+    </a>
+
+    <div class="thumbnail">
+        <img src="" class="portrait" alt="Image" data-ng-src="{{card.publicLink}}"/>
+    </div>
+    <div class="text-left">
+        <span class="glyphicon glyphicon-{{card.doIHaveIt ? 'ok' : 'remove'}}" aria-hidden="true"></span>
+    </div>
+</div>

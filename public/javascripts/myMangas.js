@@ -2,6 +2,8 @@ angular.module('myMangas',
     ['ngRoute',
         'ui.bootstrap',
         'ngFileUpload',
+        'myMangas.tpl',
+        'akoenig.deckgrid',
         'publisher.controllers',
         'publisher.services',
         'publisher.routes',
@@ -76,9 +78,10 @@ angular.module('collection.controllers', ['collection.services', 'publisher.serv
             });
 
             $scope.openRemoveDialog = function (collection) {
-                $scope.collectionToRemove = collection;
-                ngDialog.openConfirm({
-                    template: 'removeCollectionTemplate',
+                $scope.type = "Collection";
+                $scope.type = collection;
+                ngDialog.open({
+                    template: '/partials/templates/remove_dialog.html',
                     className: 'ngdialog-theme-default',
                     scope: $scope
                 }).then(function (collectionID) {
@@ -163,7 +166,7 @@ angular.module('collection.controllers', ['collection.services', 'publisher.serv
                 $scope.alerts.splice(index, 1);
             };
         }]);
-angular.module('manga.controllers', ['manga.services', 'collection.services', 'ngDialog'])
+angular.module('manga.controllers', ['manga.services', 'collection.services', 'ngDialog', 'myMangas.tpl'])
     .controller('NewMangaController', ['$scope', 'MangaService', 'CollectionService',
         function ($scope, MangaService, CollectionService) {
 
@@ -182,7 +185,6 @@ angular.module('manga.controllers', ['manga.services', 'collection.services', 'n
             };
 
             $scope.save = function (manga) {
-                alert($scope.mangaForm.$valid);
                 if ($scope.mangaForm.$valid) {
                     MangaService.save(manga).then(function (response) {
                         $scope.reset();
@@ -231,9 +233,10 @@ angular.module('manga.controllers', ['manga.services', 'collection.services', 'n
             });
 
             $scope.openRemoveDialog = function (manga) {
-                $scope.mangaToRemove = manga;
-                ngDialog.openConfirm({
-                    template: 'removeMangaTemplate',
+                $scope.item = manga;
+                $scope.type = "Manga";
+                ngDialog.open({
+                    template: '/partials/templates/remove_dialog.html',
                     className: 'ngdialog-theme-default',
                     scope: $scope
                 }).then(function (mangaID) {
@@ -344,7 +347,54 @@ angular.module('manga.controllers', ['manga.services', 'collection.services', 'n
             };
 
 
-        }]);
+        }]).controller('DeckMangaController', ['$scope', '$timeout', 'MangaService',
+                   function ($scope, $timeout, MangaService) {
+
+                   $scope.mangas = [];
+
+                   var collection = "";
+
+                   var timeout;
+
+                   $scope.$watch('collection', function (newVal) {
+                       if (newVal) {
+                           if (timeout) $timeout.cancel(timeout);
+                           timeout = $timeout(function () {
+                                   collection = newVal;
+                               paginate(1, 0);
+                           }, 350);
+                       }
+                   });
+
+                   var paginate = function (currentPage, skip) {
+                       $scope.itemsPerPage = 30;
+                       $scope.maxSize = 5;
+                       $scope.bigCurrentPage = currentPage;
+
+                       MangaService.paginate({
+                           'manga': {collection: collection, name:""},
+                           'limit': $scope.itemsPerPage,
+                           'skip': skip
+                       }).then(function (response) {
+                           $scope.mangas = response.data.items;
+                           $scope.bigTotalItems = response.data.totalRecords;
+                       }, function (response) {
+
+                       });
+                   };
+
+                   $scope.setPage = function (pageNo) {
+                       $scope.bigCurrentPage = pageNo;
+                   };
+
+                   $scope.pageChanged = function () {
+                       paginate($scope.bigCurrentPage, $scope.itemsPerPage * ($scope.bigCurrentPage - 1));
+                   };
+
+                   paginate(1, 0);
+
+
+                   }]);
 angular.module('publisher.controllers', ['publisher.services', 'ngDialog'])
     .controller('NewPublisherController', ['$scope', 'PublisherService',
         function ($scope, PublisherService) {
@@ -393,9 +443,11 @@ angular.module('publisher.controllers', ['publisher.services', 'ngDialog'])
             });
 
             $scope.openRemoveDialog = function (publisher) {
-                $scope.publisherToRemove = publisher;
+                $scope.item = publisher;
+                $scope.type = "Publisher";
+
                 ngDialog.openConfirm({
-                    template: 'removePublisherTemplate',
+                    template: '/partials/templates/remove_dialog.html',
                     className: 'ngdialog-theme-default',
                     scope: $scope
                 }).then(function (publisherID) {
@@ -484,15 +536,15 @@ angular.module('collection.routes', ['collection.controllers'])
     .config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
         $routeProvider
             .when('/views/collection', {
-                templateUrl: '/assets/partials/collections/collection.html',
+                templateUrl: '/partials/collections/collection.html',
                 controller: 'NewCollectionController'
             })
             .when('/views/collections', {
-                templateUrl: '/assets/partials/collections/collections.html',
+                templateUrl: '/partials/collections/collections.html',
                 controller: 'ListCollectionController'
             })
             .when('/views/collection/:id/edit', {
-                templateUrl: '/assets/partials/collections/collection.html',
+                templateUrl: '/partials/collections/collection.html',
                 controller: 'UpdateCollectionController'
             });
         $locationProvider.html5Mode({
@@ -504,16 +556,19 @@ angular.module('manga.routes', ['manga.controllers'])
     .config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
         $routeProvider
             .when('/views/manga', {
-                templateUrl: '/assets/partials/mangas/manga.html',
+                templateUrl: '/partials/mangas/manga.html',
                 controller: 'NewMangaController'
             })
             .when('/views/mangas', {
-                templateUrl: '/assets/partials/mangas/mangas.html',
+                templateUrl: '/partials/mangas/mangas.html',
                 controller: 'ListMangaController'
             })
             .when('/views/manga/:id/edit', {
-                templateUrl: '/assets/partials/mangas/manga.html',
+                templateUrl: '/partials/mangas/manga.html',
                 controller: 'UpdateMangaController'
+            }).when('/', {
+                templateUrl: '/partials/mangas/mangas_deck.html',
+                controller: 'DeckMangaController'
             });
         $locationProvider.html5Mode({
             enabled: true,
@@ -524,15 +579,15 @@ angular.module('publisher.routes', ['publisher.controllers'])
     .config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
         $routeProvider
             .when('/views/publisher', {
-                templateUrl: '/assets/partials/publishers/publisher.html',
+                templateUrl: '/partials/publishers/publisher.html',
                 controller: 'NewPublisherController'
             })
             .when('/views/publishers', {
-                templateUrl: '/assets/partials/publishers/publishers.html',
+                templateUrl: '/partials/publishers/publishers.html',
                 controller: 'ListPublisherController'
             })
             .when('/views/publisher/:id/edit', {
-                templateUrl: '/assets/partials/publishers/publisher.html',
+                templateUrl: '/partials/publishers/publisher.html',
                 controller: 'UpdatePublisherController'
             });
         $locationProvider.html5Mode({

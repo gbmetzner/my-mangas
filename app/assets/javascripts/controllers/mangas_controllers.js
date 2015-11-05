@@ -1,4 +1,4 @@
-angular.module('manga.controllers', ['manga.services', 'collection.services', 'ngDialog'])
+angular.module('manga.controllers', ['manga.services', 'collection.services', 'ngDialog', 'myMangas.tpl'])
     .controller('NewMangaController', ['$scope', 'MangaService', 'CollectionService',
         function ($scope, MangaService, CollectionService) {
 
@@ -17,7 +17,6 @@ angular.module('manga.controllers', ['manga.services', 'collection.services', 'n
             };
 
             $scope.save = function (manga) {
-                alert($scope.mangaForm.$valid);
                 if ($scope.mangaForm.$valid) {
                     MangaService.save(manga).then(function (response) {
                         $scope.reset();
@@ -66,9 +65,10 @@ angular.module('manga.controllers', ['manga.services', 'collection.services', 'n
             });
 
             $scope.openRemoveDialog = function (manga) {
-                $scope.mangaToRemove = manga;
-                ngDialog.openConfirm({
-                    template: 'removeMangaTemplate',
+                $scope.item = manga;
+                $scope.type = "Manga";
+                ngDialog.open({
+                    template: '/partials/templates/remove_dialog.html',
                     className: 'ngdialog-theme-default',
                     scope: $scope
                 }).then(function (mangaID) {
@@ -179,4 +179,51 @@ angular.module('manga.controllers', ['manga.services', 'collection.services', 'n
             };
 
 
-        }]);
+        }]).controller('DeckMangaController', ['$scope', '$timeout', 'MangaService',
+                   function ($scope, $timeout, MangaService) {
+
+                   $scope.mangas = [];
+
+                   var collection = "";
+
+                   var timeout;
+
+                   $scope.$watch('collection', function (newVal) {
+                       if (newVal) {
+                           if (timeout) $timeout.cancel(timeout);
+                           timeout = $timeout(function () {
+                                   collection = newVal;
+                               paginate(1, 0);
+                           }, 350);
+                       }
+                   });
+
+                   var paginate = function (currentPage, skip) {
+                       $scope.itemsPerPage = 30;
+                       $scope.maxSize = 5;
+                       $scope.bigCurrentPage = currentPage;
+
+                       MangaService.paginate({
+                           'manga': {collection: collection, name:""},
+                           'limit': $scope.itemsPerPage,
+                           'skip': skip
+                       }).then(function (response) {
+                           $scope.mangas = response.data.items;
+                           $scope.bigTotalItems = response.data.totalRecords;
+                       }, function (response) {
+
+                       });
+                   };
+
+                   $scope.setPage = function (pageNo) {
+                       $scope.bigCurrentPage = pageNo;
+                   };
+
+                   $scope.pageChanged = function () {
+                       paginate($scope.bigCurrentPage, $scope.itemsPerPage * ($scope.bigCurrentPage - 1));
+                   };
+
+                   paginate(1, 0);
+
+
+                   }]);

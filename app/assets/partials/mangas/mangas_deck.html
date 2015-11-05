@@ -1,0 +1,36 @@
+<div>
+
+    <uib-alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
+        {{alert.msg}}
+    </uib-alert>
+
+    <fieldset>
+        <legend>Search</legend>
+        <form>
+            <div>
+                <label for="collection">Collection</label>
+
+                <div>
+                    <input id="collection" name="collection" type="text" ng-model="collection"
+                           placeholder="Collection's name">
+                </div>
+            </div>
+        </form>
+    </fieldset>
+
+    <fieldset>
+        <legend>Editions</legend>
+
+        <div>
+            <div deckgrid class="deckgrid" cardTemplate="/partials/mangas/templates/card_deck.html"
+                 source="mangas">
+            </div>
+        </div>
+    </fieldset>
+    <div>
+        <uib-pagination total-items="bigTotalItems" ng-model="bigCurrentPage" max-size="maxSize"
+                        class="pagination-sm" items-per-page="itemsPerPage" boundary-links="true"
+                        rotate="false" num-pages="numPages" ng-change="pageChanged()">
+        </uib-pagination>
+    </div>
+</div>

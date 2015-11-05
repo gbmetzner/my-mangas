@@ -63,9 +63,10 @@ angular.module('collection.controllers', ['collection.services', 'publisher.serv
             });
 
             $scope.openRemoveDialog = function (collection) {
-                $scope.collectionToRemove = collection;
-                ngDialog.openConfirm({
-                    template: 'removeCollectionTemplate',
+                $scope.type = "Collection";
+                $scope.type = collection;
+                ngDialog.open({
+                    template: '/partials/templates/remove_dialog.html',
                     className: 'ngdialog-theme-default',
                     scope: $scope
                 }).then(function (collectionID) {

@@ -46,9 +46,11 @@ angular.module('publisher.controllers', ['publisher.services', 'ngDialog'])
             });
 
             $scope.openRemoveDialog = function (publisher) {
-                $scope.publisherToRemove = publisher;
+                $scope.item = publisher;
+                $scope.type = "Publisher";
+
                 ngDialog.openConfirm({
-                    template: 'removePublisherTemplate',
+                    template: '/partials/templates/remove_dialog.html',
                     className: 'ngdialog-theme-default',
                     scope: $scope
                 }).then(function (publisherID) {

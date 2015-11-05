@@ -1,75 +1,72 @@
-<div class="col-sm-12">
-    <div class="col-md-10">
-        <form id="collectionForm" name="collectionForm" class="form-horizontal">
+<div>
+
+    <uib-alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
+        {{alert.msg}}
+    </uib-alert>
+
+    <fieldset>
+
+        <legend>{{legend}}</legend>
+
+        <form id="collectionForm" name="collectionForm">
+
             <input type="hidden" name="id" ng-model="collection.id">
-            <fieldset>
 
-                <legend>{{legend}}</legend>
+            <div>
+                <label for="publisher">Publisher</label>
 
-                <uib-alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
-                    {{alert.msg}}
-                </uib-alert>
+                <div>
+                    <input id="publisher" name="publisher" type="text" ng-model="collection.publisher"
+                           placeholder="Publisher's name"
+                           uib-typeahead="publisher for publisher in getPublishers($viewValue)"
+                           typeahead-loading="loadingLocations" typeahead-no-results="noResults">
+                    <i ng-show="loadingLocations" class="glyphicon glyphicon-refresh"></i>
 
-                <div class="form-group">
-                    <label class="col-md-4 control-label" for="publisher">Publisher</label>
-
-                    <div class="col-md-4">
-                        <input id="publisher" name="publisher" type="text" ng-model="collection.publisher" placeholder="Publisher's name"
-                               uib-typeahead="publisher for publisher in getPublishers($viewValue)"
-                               typeahead-loading="loadingLocations" typeahead-no-results="noResults"
-                               class="form-control">
-                        <i ng-show="loadingLocations" class="glyphicon glyphicon-refresh"></i>
-
-                        <div ng-show="noResults">
-                            <i class="glyphicon glyphicon-remove"></i> No Results Found
-                        </div>
-                        <span data-ng-show="collectionForm.publisher.$invalid">Please enter a valid name</span>
+                    <div ng-show="noResults">
+                        <i class="glyphicon glyphicon-remove"></i> No Results Found
                     </div>
+                    <span data-ng-show="collectionForm.publisher.$invalid">Please enter a valid name</span>
                 </div>
+            </div>
 
-                <div class="form-group">
-                    <label class="col-md-4 control-label" for="name">Name</label>
+            <div>
+                <label for="name">Name</label>
 
-                    <div class="col-md-4">
-                        <input id="name" name="name" type="text" ng-model="collection.name"
-                               placeholder="Collection's name" class="form-control input-md" required
-                               pattern=".{2,}" title="Please type at least 2 characters">
-                        <span data-ng-show="collectionForm.name.$invalid">Please enter a valid name</span>
-                    </div>
+                <div>
+                    <input id="name" name="name" type="text" ng-model="collection.name"
+                           placeholder="Collection's name" required
+                           pattern=".{2,}" title="Please type at least 2 characters">
+                    <span data-ng-show="collectionForm.name.$invalid">Please enter a valid name</span>
                 </div>
+            </div>
 
-                <div class="form-group">
-                    <label class="col-md-4 control-label" for="searchParameter">Search Parameter</label>
+            <div>
+                <label for="searchParameter">Search Parameter</label>
 
-                    <div class="col-md-4">
-                        <input id="searchParameter" name="searchParameter" type="text" ng-model="collection.searchParam"
-                               placeholder="Search's parameter" class="form-control input-md" required
-                               pattern=".{2,}" title="Please type at least 2 characters">
-                        <span data-ng-show="collectionForm.searchParameter.$invalid">Please enter a valid name</span>
-                    </div>
+                <div>
+                    <input id="searchParameter" name="searchParameter" type="text" ng-model="collection.searchParam"
+                           placeholder="Search's parameter" required
+                           pattern=".{2,}" title="Please type at least 2 characters">
+                    <span data-ng-show="collectionForm.searchParameter.$invalid">Please enter a valid name</span>
                 </div>
+            </div>
 
-                <div class="form-group">
-                    <label class="col-md-4 control-label" for="isComplete">Is Complete</label>
+            <div>
+                <label for="isComplete">Is Complete</label>
 
-                    <div class="col-md-4">
-                        <input id="isComplete" name="isComplete" type="checkbox" class="btn btn-success"
-                               ng-model="collection.isComplete" ng-true-value="true" ng-false-value="false">
-                    </div>
+                <div>
+                    <input id="isComplete" name="isComplete" type="checkbox"
+                           ng-model="collection.isComplete" ng-true-value="true" ng-false-value="false">
                 </div>
+            </div>
 
-                <div class="form-group">
-                    <label class="col-md-4 control-label" for="submit"></label>
-
-                    <div class="col-md-8">
-                        <button id="submit" name="submit" ng-click="save(collection)" class="btn btn-success">
-                            Save
-                        </button>
-                        <button id="reset" name="reset" ng-click="reset()" class="btn btn-warning">Reset</button>
-                    </div>
-                </div>
-
-            </fieldset>
+            <div>
+                <button id="submit" name="submit" ng-click="save(collection)">
+                    Save
+                </button>
+                <button id="reset" name="reset" ng-click="reset()">Reset</button>
+            </div>
         </form>
-    </div>
+
+    </fieldset>
 </div>

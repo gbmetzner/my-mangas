@@ -1,38 +1,33 @@
-<div class="col-sm-12">
-    <div class="col-md-10" >
-        <form id="publisherForm" name="publisherForm" class="form-horizontal">
+<div>
+
+    <uib-alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
+        {{alert.msg}}
+    </uib-alert>
+
+    <fieldset>
+
+        <legend>{{legend}}</legend>
+
+        <form id="publisherForm" name="publisherForm">
             <input type="hidden" name="id" ng-model="publisher.id">
-            <fieldset>
 
-                <legend>{{legend}}</legend>
+            <div>
+                <label for="name">Name</label>
 
-                <uib-alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
-                    {{alert.msg}}
-                </uib-alert>
-
-                <div class="form-group">
-                    <label class="col-md-4 control-label" for="name">Name</label>
-
-                    <div class="col-md-4">
-                        <input id="name" name="name" type="text" ng-model="publisher.name"
-                               placeholder="Publisher's name" class="form-control input-md" required
-                               pattern=".{2,}" title="Please type at least 2 characters">
-                        <span data-ng-show="publisherForm.name.$invalid">Please enter a valid name</span>
-                    </div>
+                <div>
+                    <input id="name" name="name" type="text" ng-model="publisher.name"
+                           placeholder="Publisher's name" required
+                           pattern=".{2,}" title="Please type at least 2 characters">
+                    <span data-ng-show="publisherForm.name.$invalid">Please enter a valid name</span>
                 </div>
+            </div>
 
-                <div class="form-group">
-                    <label class="col-md-4 control-label" for="submit"></label>
-
-                    <div class="col-md-8">
-                        <button id="submit" name="submit" ng-click="save(publisher)" class="btn btn-success">
-                            Save
-                        </button>
-                        <button id="reset" name="reset" ng-click="reset()" class="btn btn-warning">Reset</button>
-                    </div>
-                </div>
-
-            </fieldset>
+            <div>
+                <button id="submit" name="submit" ng-click="save(publisher)">
+                    Save
+                </button>
+                <button id="reset" name="reset" ng-click="reset()">Reset</button>
+            </div>
         </form>
-    </div>
+    </fieldset>
 </div>
