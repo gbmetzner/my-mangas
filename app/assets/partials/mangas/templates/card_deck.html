@@ -1,12 +1,11 @@
-<div class="cover">
-    <a id="btnUpdate" ng-href="/views/manga/{{card.id}}/edit">
-        <h2>{{card.collection}} # {{card.number}}</h2>
+<div class="text-center">
+    <a id="btnUpdate" data-ng-href="/views/manga/{{card.id}}/edit">
+        <h3>{{card.collection}} # {{card.number}}</h3>
+        <div class="thumbnail">
+            <img src="" class="portrait img-responsive" alt="Image" data-ng-src="{{card.publicLink}}"/>
+            <div class="text-left">
+                <span class="glyphicon glyphicon-{{card.doIHaveIt ? 'ok green-glyphicon' : 'remove red-glyphicon'}}"></span>
+            </div>
+        </div>
     </a>
-
-    <div class="thumbnail">
-        <img src="" class="portrait" alt="Image" data-ng-src="{{card.publicLink}}"/>
-    </div>
-    <div class="text-left">
-        <span class="glyphicon glyphicon-{{card.doIHaveIt ? 'ok' : 'remove'}}" aria-hidden="true"></span>
-    </div>
 </div>

@@ -1,17 +1,17 @@
-<div>
+<div class="col-sm-12">
 
     <uib-alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
         {{alert.msg}}
     </uib-alert>
 
     <fieldset>
-        <legend>Search</legend>
-        <form>
-            <div>
-                <label for="collection">Collection</label>
+        <legend><h3><small>Search</small></h3></legend>
+        <form id="mangasDeckForm" name="mangasDeckForm" class="form-horizontal">
+            <div class="form-group form-group-lg">
+                <label for="collection" class="col-sm-2 control-label">Collection</label>
 
-                <div>
-                    <input id="collection" name="collection" type="text" ng-model="collection"
+                <div class="col-sm-3">
+                    <input id="collection" class="form-control input-lg" name="collection" type="text" data-ng-model="collection"
                            placeholder="Collection's name">
                 </div>
             </div>
@@ -19,7 +19,7 @@
     </fieldset>
 
     <fieldset>
-        <legend>Editions</legend>
+        <legend><h3><small>Latest Publications</small></h3></legend>
 
         <div>
             <div deckgrid class="deckgrid" cardTemplate="/partials/mangas/templates/card_deck.html"
@@ -27,7 +27,7 @@
             </div>
         </div>
     </fieldset>
-    <div>
+    <div class="text-center">
         <uib-pagination total-items="bigTotalItems" ng-model="bigCurrentPage" max-size="maxSize"
                         class="pagination-sm" items-per-page="itemsPerPage" boundary-links="true"
                         rotate="false" num-pages="numPages" ng-change="pageChanged()">

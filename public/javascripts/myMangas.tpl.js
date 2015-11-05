@@ -346,20 +346,20 @@ try {
 }
 module.run(['$templateCache', function($templateCache) {
   $templateCache.put('/partials/mangas/mangas_deck.html',
-    '<div>\n' +
+    '<div class="col-sm-12">\n' +
     '\n' +
     '    <uib-alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">\n' +
     '        {{alert.msg}}\n' +
     '    </uib-alert>\n' +
     '\n' +
     '    <fieldset>\n' +
-    '        <legend>Search</legend>\n' +
-    '        <form>\n' +
-    '            <div>\n' +
-    '                <label for="collection">Collection</label>\n' +
+    '        <legend><h3><small>Search</small></h3></legend>\n' +
+    '        <form id="mangasDeckForm" name="mangasDeckForm" class="form-horizontal">\n' +
+    '            <div class="form-group form-group-lg">\n' +
+    '                <label for="collection" class="col-sm-2 control-label">Collection</label>\n' +
     '\n' +
-    '                <div>\n' +
-    '                    <input id="collection" name="collection" type="text" ng-model="collection"\n' +
+    '                <div class="col-sm-3">\n' +
+    '                    <input id="collection" class="form-control input-lg" name="collection" type="text" data-ng-model="collection"\n' +
     '                           placeholder="Collection\'s name">\n' +
     '                </div>\n' +
     '            </div>\n' +
@@ -367,7 +367,7 @@ module.run(['$templateCache', function($templateCache) {
     '    </fieldset>\n' +
     '\n' +
     '    <fieldset>\n' +
-    '        <legend>Editions</legend>\n' +
+    '        <legend><h3><small>Latest Publications</small></h3></legend>\n' +
     '\n' +
     '        <div>\n' +
     '            <div deckgrid class="deckgrid" cardTemplate="/partials/mangas/templates/card_deck.html"\n' +
@@ -375,7 +375,7 @@ module.run(['$templateCache', function($templateCache) {
     '            </div>\n' +
     '        </div>\n' +
     '    </fieldset>\n' +
-    '    <div>\n' +
+    '    <div class="text-center">\n' +
     '        <uib-pagination total-items="bigTotalItems" ng-model="bigCurrentPage" max-size="maxSize"\n' +
     '                        class="pagination-sm" items-per-page="itemsPerPage" boundary-links="true"\n' +
     '                        rotate="false" num-pages="numPages" ng-change="pageChanged()">\n' +
@@ -533,17 +533,16 @@ try {
 }
 module.run(['$templateCache', function($templateCache) {
   $templateCache.put('/partials/mangas/templates/card_deck.html',
-    '<div class="cover">\n' +
-    '    <a id="btnUpdate" ng-href="/views/manga/{{card.id}}/edit">\n' +
-    '        <h2>{{card.collection}} # {{card.number}}</h2>\n' +
+    '<div class="text-center">\n' +
+    '    <a id="btnUpdate" data-ng-href="/views/manga/{{card.id}}/edit">\n' +
+    '        <h3>{{card.collection}} # {{card.number}}</h3>\n' +
+    '        <div class="thumbnail">\n' +
+    '            <img src="" class="portrait img-responsive" alt="Image" data-ng-src="{{card.publicLink}}"/>\n' +
+    '            <div class="text-left">\n' +
+    '                <span class="glyphicon glyphicon-{{card.doIHaveIt ? \'ok green-glyphicon\' : \'remove red-glyphicon\'}}"></span>\n' +
+    '            </div>\n' +
+    '        </div>\n' +
     '    </a>\n' +
-    '\n' +
-    '    <div class="thumbnail">\n' +
-    '        <img src="" class="portrait" alt="Image" data-ng-src="{{card.publicLink}}"/>\n' +
-    '    </div>\n' +
-    '    <div class="text-left">\n' +
-    '        <span class="glyphicon glyphicon-{{card.doIHaveIt ? \'ok\' : \'remove\'}}" aria-hidden="true"></span>\n' +
-    '    </div>\n' +
     '</div>');
 }]);
 })();

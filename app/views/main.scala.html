@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="en" ng-app="myMangas">
+<html lang="en" data-ng-app="myMangas">
     <head>
         <title>My Mangas</title>
         <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/main.css")">
@@ -13,8 +13,8 @@
 
     <body >
     <div ui-layout class="layout-mock">
-        <header class="north-back navbar navbar-default navbar-fixed-top navbar-inner">
-            <div class="container">
+        <header class="north-back navbar navbar-default navbar-fixed-top navbar-inner" >
+            <div class="container-fluid">
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-3" ng-click="isCollapsed = !isCollapsed">
                         <span class="sr-only">Toggle navigation</span>
@@ -85,18 +85,16 @@
         </header>
 
             <!-- Page Content -->
-        <ui-layout options="{ flow : 'column' }">
+        <div class="container-fluid container-position" ui-layout="{ flow : 'row' }">
             <div class="center-back">
-                <div class="container">
-                    <div ng-view></div>
-                </div>
+                <div data-ng-view></div>
             </div>
-        </ui-layout>
+        </div>
 
             <!-- Footer -->
         <footer class="south-back footer">
-            <div class="container">
-                <p class="text-muted">Place sticky footer content here.</p>
+            <div class="container-fluid text-center">
+                <p class="text-muted">gbmetzner ®</p>
             </div>
         </footer>
 
