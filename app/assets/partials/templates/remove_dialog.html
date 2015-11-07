@@ -1,13 +1,15 @@
 <div class="ngdialog-message">
-    <h3>Remove {{type}}</h3>
+    <h3>
+        <small>Remove {{type}}</small>
+    </h3>
 
     <p>Are you sure you want to remove the item: {{item.name}}?</p>
 </div>
 <div class="ngdialog-buttons">
-    <button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog()">
+    <button type="button" class="ngdialog-button ngdialog-button-secondary" data-ng-click="closeThisDialog()">
         Cancel
     </button>
     <button type="button" class="ngdialog-button ngdialog-button-primary"
-            ng-click="confirm(item.id)">Save
+            data-ng-click="confirm(item.id)">Save
     </button>
 </div>

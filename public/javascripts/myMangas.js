@@ -1,18 +1,60 @@
-angular.module('myMangas',
+var myMangas = angular.module('myMangas',
     ['ngRoute',
+     'ngCookies',
         'ui.bootstrap',
         'ngFileUpload',
         'myMangas.tpl',
         'akoenig.deckgrid',
         'publisher.controllers',
-        'publisher.services',
         'publisher.routes',
         'collection.controllers',
-        'collection.services',
         'collection.routes',
         'manga.controllers',
-        'manga.services',
-        'manga.routes']);
+        'manga.routes',
+        'login.controllers',
+        'login.directives']).config(["$provide", "$httpProvider", function ($provide, $httpProvider) {
+
+  // Intercept http calls.
+  $provide.factory('HttpInterceptor', ["$q", function ($q) {
+    return {
+      // On request success
+      request: function (config) {
+        // console.log(config); // Contains the data about the request before it is sent.
+
+        // Return the config or wrap it in a promise if blank.
+        return config || $q.when(config);
+      },
+
+      // On request failure
+      requestError: function (rejection) {
+        // console.log(rejection); // Contains the data about the error on the request.
+
+        // Return the promise rejection.
+        return $q.reject(rejection);
+      },
+
+      // On response success
+      response: function (response) {
+        // console.log(response); // Contains the data from the response.
+
+        // Return the response or promise.
+        return response || $q.when(response);
+      },
+
+      // On response failture
+      responseError: function (rejection) {
+        // console.log(rejection); // Contains the data about the error.
+
+        // Return the promise rejection.
+        return $q.reject(rejection);
+      }
+    };
+  }]);
+
+  // Add the interceptor to the $httpProvider.
+  $httpProvider.interceptors.push('HttpInterceptor');
+
+}]);
 angular.module('collection.controllers', ['collection.services', 'publisher.services', 'ngDialog'])
     .controller('NewCollectionController', ['$scope', 'CollectionService', 'PublisherService',
         function ($scope, CollectionService, PublisherService) {
@@ -165,6 +207,69 @@ angular.module('collection.controllers', ['collection.services', 'publisher.serv
             $scope.closeAlert = function (index) {
                 $scope.alerts.splice(index, 1);
             };
+        }]);
+angular.module('login.controllers', ['login.services', 'ngDialog', 'myMangas.tpl', 'ngCookies'])
+    .controller('LoginController', ['$scope', '$cookies', 'LoginService', 'ngDialog',
+        function ($scope, $cookies, LoginService, ngDialog) {
+
+            var logged = false;
+
+            var token = $cookies["XSRF-TOKEN"];
+
+            $scope.form = {};
+
+            if (token) {
+                LoginService.logged()
+                .then(
+                    function(response){
+                        $scope.name = response.data.user.name;
+                        logged = true;
+                },
+                    function(response){
+                        logged = false;
+                });
+            }
+
+              var dialog = function(message){
+
+                $scope.message = message;
+
+                ngDialog.open({
+                         template: '/partials/templates/info_dialog.html',
+                         className: 'ngdialog-theme-default',
+                         scope: $scope
+                     });
+                };
+
+              $scope.isAuthenticated = function(){
+                return logged;
+              };
+
+              $scope.login = function(loginData){
+                if ($scope.form.loginForm.$valid){
+                    LoginService.login(loginData).then(function(response){
+                        token = response.data.token;
+                        $scope.name = response.data.user.name;
+                        logged = true;
+                    },
+                    function(response){
+                        logged = false;
+                        dialog(response.data.msg);
+                    });
+                }
+              };
+
+              $scope.logout = function(){
+                LoginService.logout().then(function(response){
+                    dialog(response.data.msg);
+                    $scope.name = undefined;
+                    logged = false;
+                },
+                function(response){
+                    logged = false;
+                });
+              };
+
         }]);
 angular.module('manga.controllers', ['manga.services', 'collection.services', 'ngDialog', 'myMangas.tpl'])
     .controller('NewMangaController', ['$scope', 'MangaService', 'CollectionService',
@@ -532,6 +637,23 @@ angular.module('publisher.controllers', ['publisher.services', 'ngDialog'])
                 $scope.alerts.splice(index, 1);
             };
         }]);
+angular.module('login.directives', []).directive('appHeader', function() {
+  var bool = {
+    'true': true,
+    'false': false
+  };
+
+  return {
+    restrict: 'E',
+    link: function (scope, element, attrs) {
+      attrs.$observe('isauthenticated', function (newValue, oldValue) {
+        if (bool[newValue]) { scope.headerUrl = '/assets/partials/login/logged.html'; }
+        else { scope.headerUrl = '/assets/partials/login/not_logged.html'; }
+      });
+    },
+    template: '<div ng-include="headerUrl"></div>'
+  };
+});
 angular.module('collection.routes', ['collection.controllers'])
     .config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
         $routeProvider
@@ -662,6 +784,21 @@ angular.module('collection.services', []).factory('CollectionService', ['$http',
     };
 }])
 ;
+
+
+angular.module('login.services', []).factory('LoginService', ['$http', function ($http) {
+    return {
+        login: function (loginData) {
+            return $http.post('/api/login', loginData);
+        },
+        logout: function () {
+            return $http.put('/api/logout');
+        },
+        logged: function(){
+            return $http.get('/api/logged');
+        }
+    };
+}]);
 
 
 angular.module('manga.services', []).factory('MangaService', ['$http', function ($http) {

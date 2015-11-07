@@ -21,8 +21,8 @@ libraryDependencies ++= Seq(
   "com.typesafe" % "config" % "1.3.0" withSources(),
   "com.logentries" % "logentries-appender" % "1.1.32" withSources(),
   "com.sksamuel.scrimage" %% "scrimage-core" % "2.1.0" withSources(),
-  "com.smartfile" % "JavaClient" % "1.0",
-  "net.ruippeixotog" %% "scala-scraper" % "0.1.1" withSources()
+  "net.ruippeixotog" %% "scala-scraper" % "0.1.1" withSources(),
+  "com.smartfile" % "JavaClient" % "1.0"
 )
 
 // Play provides two styles of routers, one expects its actions to be injected, the

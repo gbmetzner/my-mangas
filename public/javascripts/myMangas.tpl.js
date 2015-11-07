@@ -199,6 +199,47 @@ try {
   module = angular.module('myMangas.tpl', []);
 }
 module.run(['$templateCache', function($templateCache) {
+  $templateCache.put('/partials/login/logged.html',
+    '<ul class="nav navbar-nav navbar-right">\n' +
+    '    <li>\n' +
+    '        <p class="navbar-text">Welcome <b>{{name}}</b>!</p>\n' +
+    '    </li>\n' +
+    '    <li>\n' +
+    '        <a href="#" role="button" class="btn btn-default" data-ng-click="logout()">Log out</a>\n' +
+    '    </li>\n' +
+    '</ul>');
+}]);
+})();
+
+(function(module) {
+try {
+  module = angular.module('myMangas.tpl');
+} catch (e) {
+  module = angular.module('myMangas.tpl', []);
+}
+module.run(['$templateCache', function($templateCache) {
+  $templateCache.put('/partials/login/not_logged.html',
+    '<form id="loginForm" name="form.loginForm" class="navbar-form navbar-right" >\n' +
+    '    <div class="form-group">\n' +
+    '        <input id="username" type="text" class="form-control" name="username" placeholder="Username"\n' +
+    '               data-ng-model="loginData.username" required>\n' +
+    '    </div>\n' +
+    '    <div class="form-group">\n' +
+    '        <input id="password" type="password" class="form-control" name="password" placeholder="Password"\n' +
+    '               data-ng-model="loginData.password" required>\n' +
+    '    </div>\n' +
+    '    <button class="btn btn-default" data-ng-click="login(loginData)">Sign In</button>\n' +
+    '</form>');
+}]);
+})();
+
+(function(module) {
+try {
+  module = angular.module('myMangas.tpl');
+} catch (e) {
+  module = angular.module('myMangas.tpl', []);
+}
+module.run(['$templateCache', function($templateCache) {
   $templateCache.put('/partials/mangas/manga.html',
     '<div class="col-sm-12">\n' +
     '\n' +
@@ -600,18 +641,44 @@ try {
   module = angular.module('myMangas.tpl', []);
 }
 module.run(['$templateCache', function($templateCache) {
+  $templateCache.put('/partials/templates/info_dialog.html',
+    '<div class="ngdialog-message">\n' +
+    '    <h3>\n' +
+    '        <small>Info!</small>\n' +
+    '    </h3>\n' +
+    '\n' +
+    '    <p>{{message}}</p>\n' +
+    '</div>\n' +
+    '<div class="ngdialog-buttons">\n' +
+    '    <button type="button" class="ngdialog-button ngdialog-button-secondary" data-ng-click="closeThisDialog()">\n' +
+    '        Ok\n' +
+    '    </button>\n' +
+    '</div>\n' +
+    '');
+}]);
+})();
+
+(function(module) {
+try {
+  module = angular.module('myMangas.tpl');
+} catch (e) {
+  module = angular.module('myMangas.tpl', []);
+}
+module.run(['$templateCache', function($templateCache) {
   $templateCache.put('/partials/templates/remove_dialog.html',
     '<div class="ngdialog-message">\n' +
-    '    <h3>Remove {{type}}</h3>\n' +
+    '    <h3>\n' +
+    '        <small>Remove {{type}}</small>\n' +
+    '    </h3>\n' +
     '\n' +
     '    <p>Are you sure you want to remove the item: {{item.name}}?</p>\n' +
     '</div>\n' +
     '<div class="ngdialog-buttons">\n' +
-    '    <button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog()">\n' +
+    '    <button type="button" class="ngdialog-button ngdialog-button-secondary" data-ng-click="closeThisDialog()">\n' +
     '        Cancel\n' +
     '    </button>\n' +
     '    <button type="button" class="ngdialog-button ngdialog-button-primary"\n' +
-    '            ng-click="confirm(item.id)">Save\n' +
+    '            data-ng-click="confirm(item.id)">Save\n' +
     '    </button>\n' +
     '</div>\n' +
     '');

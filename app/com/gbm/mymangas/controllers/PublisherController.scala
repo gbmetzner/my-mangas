@@ -7,6 +7,7 @@ import com.gbm.mymangas.models.Publisher
 import com.gbm.mymangas.models.filters.PublisherFilter
 import com.gbm.mymangas.services.PublisherService
 import com.gbm.mymangas.utils.json.PublisherParser.publisherFormatter
+import play.api.i18n.MessagesApi
 import play.api.libs.json.Json
 import play.api.mvc.Action
 
@@ -14,12 +15,13 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 /**
- * @author Gustavo Metzner on 10/10/15.
- */
-class PublisherController @Inject()(publisherService: PublisherService) extends BaseController {
+  * @author Gustavo Metzner on 10/10/15.
+  */
+class PublisherController @Inject()(publisherService: PublisherService,
+                                    override val messagesApi: MessagesApi) extends BaseController {
 
-  def create = Action.async(parse.json) {
-    request =>
+  def create = HasTokenAsync(parse.json) {
+    _ => _ => request =>
 
       logger debug s"Create a Publisher = $request"
 
@@ -46,17 +48,20 @@ class PublisherController @Inject()(publisherService: PublisherService) extends 
       }
   }
 
-  def edit(id: UUID) = Action.async {
-    logger debug s"Find by id = $id"
+  def edit(id: UUID) = HasTokenAsync() {
+    _ => _ => request =>
 
-    publisherService.findOneBy(PublisherFilter(id = Some(id))).map {
-      case Some(publisher) => Ok(Json.obj("publisher" -> Json.toJson(publisher)))
-      case None => NotFound(Json.obj("msg" -> "publisher.not.found"))
-    }
+      logger debug s"Find by id = $id"
+
+      publisherService.findOneBy(PublisherFilter(id = Some(id))).map {
+        case Some(publisher) => Ok(Json.obj("publisher" -> Json.toJson(publisher)))
+        case None => NotFound(Json.obj("msg" -> "publisher.not.found"))
+      }
   }
 
-  def update(id: UUID) = Action.async(parse.json) {
-    request =>
+  def update(id: UUID) = HasTokenAsync(parse.json) {
+    _ => _ => request =>
+
       logger debug s"Update a Publisher = $request"
 
       request.body.validate[Publisher].map {
@@ -67,12 +72,14 @@ class PublisherController @Inject()(publisherService: PublisherService) extends 
       }.getOrElse(Future.successful(BadRequest("invalid json")))
   }
 
-  def remove(id: UUID) = Action.async {
-    logger debug s"Removing id = $id"
+  def remove(id: UUID) = HasTokenAsync() {
+    _ => _ => request =>
 
-    publisherService.remove(id).map {
-      case Left(error) => BadRequest(Json.obj("msg" -> error.message))
-      case Right(success) => Ok(Json.obj("msg" -> success.message))
-    }
+      logger debug s"Removing id = $id"
+
+      publisherService.remove(id).map {
+        case Left(error) => BadRequest(Json.obj("msg" -> error.message))
+        case Right(success) => Ok(Json.obj("msg" -> success.message))
+      }
   }
 }

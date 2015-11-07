@@ -5,6 +5,11 @@
 # Home page
 GET           /                                                com.gbm.mymangas.controllers.Application.main(any = "none")
 
+# Login
+POST          /api/login                                       com.gbm.mymangas.controllers.LoginController.login
+PUT           /api/logout                                      com.gbm.mymangas.controllers.LoginController.logout
+GET           /api/logged                                      com.gbm.mymangas.controllers.LoginController.logged
+
 # Publishers
 POST          /api/publishers                                  com.gbm.mymangas.controllers.PublisherController.create
 PUT           /api/publishers/:id                              com.gbm.mymangas.controllers.PublisherController.update(id: java.util.UUID)
