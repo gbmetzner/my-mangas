@@ -11,7 +11,7 @@ object Config {
 
   private val config = play.api.Play.configuration
 
-  lazy val defaultCover = getStringFromKey("manga.no.cover")
+  lazy val defaultCover: String = getStringFromKey("manga.no.cover")
 
   lazy val smartFileKey: String = getStringFromKey("smartfile.key")
 
@@ -20,6 +20,8 @@ object Config {
   lazy val smartFileApiUrl: String = getStringFromKey("smartfile.api.url")
 
   lazy val cacheDuration: Duration = getDuration("cache.expiration")
+
+  lazy val hostname: String = getStringFromKey("hostname")
 
   def getString(key: String) = getStringFromKey(key)
 

@@ -9,8 +9,8 @@ import play.api.mvc.{AnyContent, Request}
 import com.gbm.mymangas.utils.UUID._
 
 /**
- * @author Gustavo Metzner on 10/13/15.
- */
+  * @author Gustavo Metzner on 10/13/15.
+  */
 object MangaParser {
 
   private val reads: Reads[Manga] = new Reads[Manga] {
@@ -39,7 +39,7 @@ object MangaParser {
   }
 
   implicit val mangaFormatterController = Format(reads, writes)
-  
+
   implicit val mangaFormatterService = Json.format[Manga]
 
   def queryString2Predicate(request: Request[AnyContent]): Predicate = {
@@ -49,7 +49,7 @@ object MangaParser {
     val number = request.getQueryString("number").map(_.toInt)
     val limit = request.getQueryString("limit").map(_.toInt)
     val skip = request.getQueryString("skip").map(_.toInt)
-    MangaFilter(id = id, collection = collection, name = name, number = number, limit, skip)
+    MangaFilter(id = id, collection = collection, name = name, number = number, limit = limit, skip = skip)
   }
 
 }

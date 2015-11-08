@@ -11,8 +11,8 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.{Failure, Success}
 
 /**
- * @author Gustavo Metzner on 10/17/15.
- */
+  * @author Gustavo Metzner on 10/17/15.
+  */
 object CollectionManager {
 
   case object Start
@@ -40,10 +40,9 @@ class CollectionManager @Inject()(collectionService: CollectionService,
               log info s" Collection ${collection.name} is being started."
               mangaManager ! MangaManager.StartProcess(collection.publisher, collection.name, collection.searchParam)
           }
-        case Failure(error) => {
+        case Failure(error) =>
           log error error.getMessage
           startProcess(attempt + 1)
-        }
       }
     } else {
       log warning s"Something went wrong. $attempt attempts was made. See logs, please."
