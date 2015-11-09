@@ -1,5 +1,5 @@
 angular.module('manga.routes', ['manga.controllers'])
-    .config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
+    .config(['$routeProvider', function ($routeProvider) {
         $routeProvider
             .when('/views/manga', {
                 templateUrl: '/partials/mangas/manga.html',
@@ -16,8 +16,4 @@ angular.module('manga.routes', ['manga.controllers'])
                 templateUrl: '/partials/mangas/mangas_deck.html',
                 controller: 'DeckMangaController'
             });
-        $locationProvider.html5Mode({
-            enabled: true,
-            requireBase: false
-        });
     }]);

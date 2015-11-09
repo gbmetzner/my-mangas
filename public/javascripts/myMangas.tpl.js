@@ -199,6 +199,32 @@ try {
   module = angular.module('myMangas.tpl', []);
 }
 module.run(['$templateCache', function($templateCache) {
+  $templateCache.put('/partials/errors/404.html',
+    '<div class="container-fluid">\n' +
+    '    <div class="hero-unit text-center">\n' +
+    '        <h1>Ops!\n' +
+    '            <small><font face="Tahoma" color="red">Page Not Found :(</font></small>\n' +
+    '        </h1>\n' +
+    '        <br/>\n' +
+    '\n' +
+    '        <p>The page you requested could not be found, either contact your webmaster or try again. Use your\n' +
+    '            browsers <b>Back</b> button to navigate to the page you have prevously come from</p>\n' +
+    '\n' +
+    '        <p><b>Or you could just press this neat little button:</b></p>\n' +
+    '        <a href="#" data-ng-href="/" class="btn btn-large btn-info"><i class="icon-home icon-white"></i> Take Me to My Mangas</a>\n' +
+    '    </div>\n' +
+    '</div>\n' +
+    '');
+}]);
+})();
+
+(function(module) {
+try {
+  module = angular.module('myMangas.tpl');
+} catch (e) {
+  module = angular.module('myMangas.tpl', []);
+}
+module.run(['$templateCache', function($templateCache) {
   $templateCache.put('/partials/login/logged.html',
     '<ul class="nav navbar-nav navbar-right">\n' +
     '    <li>\n' +

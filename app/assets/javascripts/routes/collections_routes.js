@@ -1,5 +1,5 @@
 angular.module('collection.routes', ['collection.controllers'])
-    .config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
+    .config(['$routeProvider', function ($routeProvider) {
         $routeProvider
             .when('/views/collection', {
                 templateUrl: '/partials/collections/collection.html',
@@ -13,8 +13,4 @@ angular.module('collection.routes', ['collection.controllers'])
                 templateUrl: '/partials/collections/collection.html',
                 controller: 'UpdateCollectionController'
             });
-        $locationProvider.html5Mode({
-            enabled: true,
-            requireBase: false
-        });
     }]);

@@ -1,5 +1,5 @@
 angular.module('publisher.routes', ['publisher.controllers'])
-    .config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
+    .config(['$routeProvider', function ($routeProvider) {
         $routeProvider
             .when('/views/publisher', {
                 templateUrl: '/partials/publishers/publisher.html',
@@ -13,8 +13,4 @@ angular.module('publisher.routes', ['publisher.controllers'])
                 templateUrl: '/partials/publishers/publisher.html',
                 controller: 'UpdatePublisherController'
             });
-        $locationProvider.html5Mode({
-            enabled: true,
-            requireBase: false
-        });
     }]);

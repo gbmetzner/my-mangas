@@ -12,7 +12,13 @@ var myMangas = angular.module('myMangas',
         'manga.controllers',
         'manga.routes',
         'login.controllers',
-        'login.directives']).config(["$provide", "$httpProvider", function ($provide, $httpProvider) {
+        'login.directives',
+        'errors.routes',]).config(["$provide", "$httpProvider", "$locationProvider", function ($provide, $httpProvider, $locationProvider) {
+
+    $locationProvider.html5Mode({
+        enabled: true,
+        requireBase: false
+     });
 
   // Intercept http calls.
   $provide.factory('HttpInterceptor', ["$q", function ($q) {
@@ -27,9 +33,14 @@ var myMangas = angular.module('myMangas',
 
       // On request failure
       requestError: function (rejection) {
-        // console.log(rejection); // Contains the data about the error on the request.
+            alert(rejection.status);
+          switch (rejection.status) {
+              case 404:
+                $location.path('/404');
+                break;
+              default: $location.path('/error');
+          }
 
-        // Return the promise rejection.
         return $q.reject(rejection);
       },
 
@@ -41,7 +52,7 @@ var myMangas = angular.module('myMangas',
         return response || $q.when(response);
       },
 
-      // On response failture
+      // On response failure
       responseError: function (rejection) {
         // console.log(rejection); // Contains the data about the error.
 
@@ -207,6 +218,10 @@ angular.module('collection.controllers', ['collection.services', 'publisher.serv
             $scope.closeAlert = function (index) {
                 $scope.alerts.splice(index, 1);
             };
+        }]);
+angular.module('errors.controllers', []).controller('ErrorController', ['$scope',
+        function ($scope) {
+
         }]);
 angular.module('login.controllers', ['login.services', 'ngDialog', 'myMangas.tpl', 'ngCookies'])
     .controller('LoginController', ['$scope', '$cookies', 'LoginService', 'ngDialog',
@@ -655,7 +670,7 @@ angular.module('login.directives', []).directive('appHeader', function() {
   };
 });
 angular.module('collection.routes', ['collection.controllers'])
-    .config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
+    .config(['$routeProvider', function ($routeProvider) {
         $routeProvider
             .when('/views/collection', {
                 templateUrl: '/partials/collections/collection.html',
@@ -669,13 +684,17 @@ angular.module('collection.routes', ['collection.controllers'])
                 templateUrl: '/partials/collections/collection.html',
                 controller: 'UpdateCollectionController'
             });
-        $locationProvider.html5Mode({
-            enabled: true,
-            requireBase: false
-        });
+    }]);
+angular.module('errors.routes', [])
+    .config(['$routeProvider', function ($routeProvider) {
+        $routeProvider
+            .when('/404', {
+                templateUrl: '/partials/errors/404.html'
+            })
+            .otherwise('/404');
     }]);
 angular.module('manga.routes', ['manga.controllers'])
-    .config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
+    .config(['$routeProvider', function ($routeProvider) {
         $routeProvider
             .when('/views/manga', {
                 templateUrl: '/partials/mangas/manga.html',
@@ -692,13 +711,9 @@ angular.module('manga.routes', ['manga.controllers'])
                 templateUrl: '/partials/mangas/mangas_deck.html',
                 controller: 'DeckMangaController'
             });
-        $locationProvider.html5Mode({
-            enabled: true,
-            requireBase: false
-        });
     }]);
 angular.module('publisher.routes', ['publisher.controllers'])
-    .config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
+    .config(['$routeProvider', function ($routeProvider) {
         $routeProvider
             .when('/views/publisher', {
                 templateUrl: '/partials/publishers/publisher.html',
@@ -712,10 +727,6 @@ angular.module('publisher.routes', ['publisher.controllers'])
                 templateUrl: '/partials/publishers/publisher.html',
                 controller: 'UpdatePublisherController'
             });
-        $locationProvider.html5Mode({
-            enabled: true,
-            requireBase: false
-        });
     }]);
 angular.module('collection.services', []).factory('CollectionService', ['$http', function ($http) {
 

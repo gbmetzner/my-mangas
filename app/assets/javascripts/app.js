@@ -12,7 +12,13 @@ var myMangas = angular.module('myMangas',
         'manga.controllers',
         'manga.routes',
         'login.controllers',
-        'login.directives']).config(function ($provide, $httpProvider) {
+        'login.directives',
+        'errors.routes',]).config(function ($provide, $httpProvider, $locationProvider) {
+
+    $locationProvider.html5Mode({
+        enabled: true,
+        requireBase: false
+     });
 
   // Intercept http calls.
   $provide.factory('HttpInterceptor', function ($q) {
@@ -27,9 +33,14 @@ var myMangas = angular.module('myMangas',
 
       // On request failure
       requestError: function (rejection) {
-        // console.log(rejection); // Contains the data about the error on the request.
+            alert(rejection.status);
+          switch (rejection.status) {
+              case 404:
+                $location.path('/404');
+                break;
+              default: $location.path('/error');
+          }
 
-        // Return the promise rejection.
         return $q.reject(rejection);
       },
 
@@ -41,7 +52,7 @@ var myMangas = angular.module('myMangas',
         return response || $q.when(response);
       },
 
-      // On response failture
+      // On response failure
       responseError: function (rejection) {
         // console.log(rejection); // Contains the data about the error.
 
