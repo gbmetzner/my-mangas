@@ -77,3 +77,7 @@ html, body {
 .red-glyphicon {
     color:red;
 }
+
+.messages {
+    width: 60%;
+}

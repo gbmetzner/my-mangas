@@ -13,6 +13,7 @@ var myMangas = angular.module('myMangas',
         'manga.routes',
         'login.controllers',
         'login.directives',
+        'messages.directives',
         'errors.routes',]).config(function ($provide, $httpProvider, $locationProvider) {
 
     $locationProvider.html5Mode({

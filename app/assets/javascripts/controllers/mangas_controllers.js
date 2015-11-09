@@ -2,8 +2,6 @@ angular.module('manga.controllers', ['manga.services', 'collection.services', 'n
     .controller('NewMangaController', ['$scope', 'MangaService', 'CollectionService',
         function ($scope, MangaService, CollectionService) {
 
-            $scope.alerts = [];
-
             $scope.legend = "Add New Manga";
 
             $scope.showUploadCover = false;
@@ -36,10 +34,6 @@ angular.module('manga.controllers', ['manga.services', 'collection.services', 'n
                 };
             };
 
-            $scope.closeAlert = function (index) {
-                $scope.alerts.splice(index, 1);
-            };
-
         }]).controller('ListMangaController', ['$scope', '$timeout', 'MangaService', 'ngDialog',
         function ($scope, $timeout, MangaService, ngDialog) {
 
@@ -47,8 +41,6 @@ angular.module('manga.controllers', ['manga.services', 'collection.services', 'n
                 collection: "",
                 name: ""
             };
-
-            $scope.alerts = [];
 
             var timeout;
             $scope.$watchGroup(['manga.collection', 'manga.name'], function (newVal) {
@@ -110,14 +102,8 @@ angular.module('manga.controllers', ['manga.services', 'collection.services', 'n
 
             paginate(1, 0);
 
-            $scope.closeAlert = function (index) {
-                $scope.alerts.splice(index, 1);
-            };
-
         }]).controller('UpdateMangaController', ['$scope', '$routeParams', 'MangaService',
         'CollectionService', 'Upload', function ($scope, $routeParams, MangaService, CollectionService, Upload) {
-
-            $scope.alerts = [];
 
             $scope.showUploadCover = true;
 
@@ -158,11 +144,6 @@ angular.module('manga.controllers', ['manga.services', 'collection.services', 'n
             $scope.reset = function () {
                 updateModel();
             };
-
-            $scope.closeAlert = function (index) {
-                $scope.alerts.splice(index, 1);
-            };
-
 
             $scope.uploadCover = function (file, manga) {
                 Upload.upload({

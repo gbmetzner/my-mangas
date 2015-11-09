@@ -1,9 +1,5 @@
 <div class="col-sm-12">
 
-    <uib-alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
-        {{alert.msg}}
-    </uib-alert>
-
     <fieldset>
 
         <legend>
@@ -66,14 +62,14 @@
             </tbody>
             <tfoot>
             <tr>
-                <div class="text-center">
-                    <td colspan="4">
+                <td colspan="4">
+                    <div class="text-center">
                         <uib-pagination total-items="bigTotalItems" ng-model="bigCurrentPage" max-size="maxSize"
                                         class="pagination" items-per-page="itemsPerPage" boundary-links="true"
                                         rotate="false" num-pages="numPages" ng-change="pageChanged()">
                         </uib-pagination>
-                    </td>
-                </div>
+                    </div>
+                </td>
             </tr>
             </tfoot>
         </table>

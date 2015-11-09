@@ -13,6 +13,7 @@ var myMangas = angular.module('myMangas',
         'manga.routes',
         'login.controllers',
         'login.directives',
+        'messages.directives',
         'errors.routes',]).config(["$provide", "$httpProvider", "$locationProvider", function ($provide, $httpProvider, $locationProvider) {
 
     $locationProvider.html5Mode({
@@ -70,8 +71,6 @@ angular.module('collection.controllers', ['collection.services', 'publisher.serv
     .controller('NewCollectionController', ['$scope', 'CollectionService', 'PublisherService',
         function ($scope, CollectionService, PublisherService) {
 
-            $scope.alerts = [];
-
             $scope.getPublishers = function (name) {
                 return PublisherService.findByName(name).then(function (response) {
                     return response.data.items.map(function (item) {
@@ -102,10 +101,6 @@ angular.module('collection.controllers', ['collection.services', 'publisher.serv
                 };
             };
 
-            $scope.closeAlert = function (index) {
-                $scope.alerts.splice(index, 1);
-            };
-
         }]).controller('ListCollectionController', ['$scope', '$timeout', 'CollectionService', 'ngDialog',
         function ($scope, $timeout, CollectionService, ngDialog) {
 
@@ -113,8 +108,6 @@ angular.module('collection.controllers', ['collection.services', 'publisher.serv
                 publisher: "",
                 name: ""
             };
-
-            $scope.alerts = [];
 
             var timeout;
             $scope.$watchGroup(['collection.publisher', 'collection.name'], function (newVal) {
@@ -131,9 +124,10 @@ angular.module('collection.controllers', ['collection.services', 'publisher.serv
             });
 
             $scope.openRemoveDialog = function (collection) {
+                $scope.item = collection;
                 $scope.type = "Collection";
-                $scope.type = collection;
-                ngDialog.open({
+
+                ngDialog.openConfirm({
                     template: '/partials/templates/remove_dialog.html',
                     className: 'ngdialog-theme-default',
                     scope: $scope
@@ -176,14 +170,8 @@ angular.module('collection.controllers', ['collection.services', 'publisher.serv
 
             paginate(1, 0);
 
-            $scope.closeAlert = function (index) {
-                $scope.alerts.splice(index, 1);
-            };
-
         }]).controller('UpdateCollectionController', ['$scope', '$routeParams', 'CollectionService',
         function ($scope, $routeParams, CollectionService) {
-
-            $scope.alerts = [];
 
             $scope.legend = "Update Collection";
 
@@ -215,9 +203,6 @@ angular.module('collection.controllers', ['collection.services', 'publisher.serv
                 updateModel();
             };
 
-            $scope.closeAlert = function (index) {
-                $scope.alerts.splice(index, 1);
-            };
         }]);
 angular.module('errors.controllers', []).controller('ErrorController', ['$scope',
         function ($scope) {
@@ -290,8 +275,6 @@ angular.module('manga.controllers', ['manga.services', 'collection.services', 'n
     .controller('NewMangaController', ['$scope', 'MangaService', 'CollectionService',
         function ($scope, MangaService, CollectionService) {
 
-            $scope.alerts = [];
-
             $scope.legend = "Add New Manga";
 
             $scope.showUploadCover = false;
@@ -324,10 +307,6 @@ angular.module('manga.controllers', ['manga.services', 'collection.services', 'n
                 };
             };
 
-            $scope.closeAlert = function (index) {
-                $scope.alerts.splice(index, 1);
-            };
-
         }]).controller('ListMangaController', ['$scope', '$timeout', 'MangaService', 'ngDialog',
         function ($scope, $timeout, MangaService, ngDialog) {
 
@@ -335,8 +314,6 @@ angular.module('manga.controllers', ['manga.services', 'collection.services', 'n
                 collection: "",
                 name: ""
             };
-
-            $scope.alerts = [];
 
             var timeout;
             $scope.$watchGroup(['manga.collection', 'manga.name'], function (newVal) {
@@ -398,14 +375,8 @@ angular.module('manga.controllers', ['manga.services', 'collection.services', 'n
 
             paginate(1, 0);
 
-            $scope.closeAlert = function (index) {
-                $scope.alerts.splice(index, 1);
-            };
-
         }]).controller('UpdateMangaController', ['$scope', '$routeParams', 'MangaService',
         'CollectionService', 'Upload', function ($scope, $routeParams, MangaService, CollectionService, Upload) {
-
-            $scope.alerts = [];
 
             $scope.showUploadCover = true;
 
@@ -446,11 +417,6 @@ angular.module('manga.controllers', ['manga.services', 'collection.services', 'n
             $scope.reset = function () {
                 updateModel();
             };
-
-            $scope.closeAlert = function (index) {
-                $scope.alerts.splice(index, 1);
-            };
-
 
             $scope.uploadCover = function (file, manga) {
                 Upload.upload({
@@ -519,8 +485,6 @@ angular.module('publisher.controllers', ['publisher.services', 'ngDialog'])
     .controller('NewPublisherController', ['$scope', 'PublisherService',
         function ($scope, PublisherService) {
 
-            $scope.alerts = [];
-
             $scope.legend = "Add New Publisher";
 
             $scope.save = function (publisher) {
@@ -540,16 +504,10 @@ angular.module('publisher.controllers', ['publisher.services', 'ngDialog'])
                 };
             };
 
-            $scope.closeAlert = function (index) {
-                $scope.alerts.splice(index, 1);
-            };
-
         }]).controller('ListPublisherController', ['$scope', '$route', '$timeout', 'PublisherService', 'ngDialog',
         function ($scope, $route, $timeout, PublisherService, ngDialog) {
 
             var name = '';
-
-            $scope.alerts = [];
 
             var timeout;
             $scope.$watch('name', function (newVal) {
@@ -609,14 +567,8 @@ angular.module('publisher.controllers', ['publisher.services', 'ngDialog'])
 
             paginate(1, 0);
 
-            $scope.closeAlert = function (index) {
-                $scope.alerts.splice(index, 1);
-            };
-
         }]).controller('UpdatePublisherController', ['$scope', '$routeParams', 'PublisherService',
         function ($scope, $routeParams, PublisherService) {
-
-            $scope.alerts = [];
 
             $scope.legend = "Update Publisher";
 
@@ -647,10 +599,6 @@ angular.module('publisher.controllers', ['publisher.services', 'ngDialog'])
             $scope.reset = function () {
                 updateModel();
             };
-
-            $scope.closeAlert = function (index) {
-                $scope.alerts.splice(index, 1);
-            };
         }]);
 angular.module('login.directives', []).directive('appHeader', function() {
   var bool = {
@@ -669,6 +617,21 @@ angular.module('login.directives', []).directive('appHeader', function() {
     template: '<div ng-include="headerUrl"></div>'
   };
 });
+angular.module('messages.directives', []).directive('messages',['$timeout', function($timeout) {
+  return {
+    restrict: 'E',
+    link: function (scope, element, attrs) {
+        scope.alerts = [];
+
+        var indexes = 0;
+
+        scope.closeAlert = function (index) {
+            scope.alerts.splice(index, 1);
+        };
+    },
+    templateUrl: '/partials/templates/messages.html'
+  };
+}]);
 angular.module('collection.routes', ['collection.controllers'])
     .config(['$routeProvider', function ($routeProvider) {
         $routeProvider

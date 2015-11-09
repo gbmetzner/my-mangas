@@ -2,8 +2,6 @@ angular.module('publisher.controllers', ['publisher.services', 'ngDialog'])
     .controller('NewPublisherController', ['$scope', 'PublisherService',
         function ($scope, PublisherService) {
 
-            $scope.alerts = [];
-
             $scope.legend = "Add New Publisher";
 
             $scope.save = function (publisher) {
@@ -23,16 +21,10 @@ angular.module('publisher.controllers', ['publisher.services', 'ngDialog'])
                 };
             };
 
-            $scope.closeAlert = function (index) {
-                $scope.alerts.splice(index, 1);
-            };
-
         }]).controller('ListPublisherController', ['$scope', '$route', '$timeout', 'PublisherService', 'ngDialog',
         function ($scope, $route, $timeout, PublisherService, ngDialog) {
 
             var name = '';
-
-            $scope.alerts = [];
 
             var timeout;
             $scope.$watch('name', function (newVal) {
@@ -92,14 +84,8 @@ angular.module('publisher.controllers', ['publisher.services', 'ngDialog'])
 
             paginate(1, 0);
 
-            $scope.closeAlert = function (index) {
-                $scope.alerts.splice(index, 1);
-            };
-
         }]).controller('UpdatePublisherController', ['$scope', '$routeParams', 'PublisherService',
         function ($scope, $routeParams, PublisherService) {
-
-            $scope.alerts = [];
 
             $scope.legend = "Update Publisher";
 
@@ -129,9 +115,5 @@ angular.module('publisher.controllers', ['publisher.services', 'ngDialog'])
 
             $scope.reset = function () {
                 updateModel();
-            };
-
-            $scope.closeAlert = function (index) {
-                $scope.alerts.splice(index, 1);
             };
         }]);

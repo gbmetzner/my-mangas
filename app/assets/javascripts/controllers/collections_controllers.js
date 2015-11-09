@@ -2,8 +2,6 @@ angular.module('collection.controllers', ['collection.services', 'publisher.serv
     .controller('NewCollectionController', ['$scope', 'CollectionService', 'PublisherService',
         function ($scope, CollectionService, PublisherService) {
 
-            $scope.alerts = [];
-
             $scope.getPublishers = function (name) {
                 return PublisherService.findByName(name).then(function (response) {
                     return response.data.items.map(function (item) {
@@ -34,10 +32,6 @@ angular.module('collection.controllers', ['collection.services', 'publisher.serv
                 };
             };
 
-            $scope.closeAlert = function (index) {
-                $scope.alerts.splice(index, 1);
-            };
-
         }]).controller('ListCollectionController', ['$scope', '$timeout', 'CollectionService', 'ngDialog',
         function ($scope, $timeout, CollectionService, ngDialog) {
 
@@ -45,8 +39,6 @@ angular.module('collection.controllers', ['collection.services', 'publisher.serv
                 publisher: "",
                 name: ""
             };
-
-            $scope.alerts = [];
 
             var timeout;
             $scope.$watchGroup(['collection.publisher', 'collection.name'], function (newVal) {
@@ -63,9 +55,10 @@ angular.module('collection.controllers', ['collection.services', 'publisher.serv
             });
 
             $scope.openRemoveDialog = function (collection) {
+                $scope.item = collection;
                 $scope.type = "Collection";
-                $scope.type = collection;
-                ngDialog.open({
+
+                ngDialog.openConfirm({
                     template: '/partials/templates/remove_dialog.html',
                     className: 'ngdialog-theme-default',
                     scope: $scope
@@ -108,14 +101,8 @@ angular.module('collection.controllers', ['collection.services', 'publisher.serv
 
             paginate(1, 0);
 
-            $scope.closeAlert = function (index) {
-                $scope.alerts.splice(index, 1);
-            };
-
         }]).controller('UpdateCollectionController', ['$scope', '$routeParams', 'CollectionService',
         function ($scope, $routeParams, CollectionService) {
-
-            $scope.alerts = [];
 
             $scope.legend = "Update Collection";
 
@@ -147,7 +134,4 @@ angular.module('collection.controllers', ['collection.services', 'publisher.serv
                 updateModel();
             };
 
-            $scope.closeAlert = function (index) {
-                $scope.alerts.splice(index, 1);
-            };
         }]);

@@ -8,10 +8,6 @@ module.run(['$templateCache', function($templateCache) {
   $templateCache.put('/partials/collections/collection.html',
     '<div class="col-sm-12">\n' +
     '\n' +
-    '    <uib-alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">\n' +
-    '        {{alert.msg}}\n' +
-    '    </uib-alert>\n' +
-    '\n' +
     '    <fieldset>\n' +
     '\n' +
     '        <legend>\n' +
@@ -110,10 +106,6 @@ module.run(['$templateCache', function($templateCache) {
   $templateCache.put('/partials/collections/collections.html',
     '<div class="col-sm-12">\n' +
     '\n' +
-    '    <uib-alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">\n' +
-    '        {{alert.msg}}\n' +
-    '    </uib-alert>\n' +
-    '\n' +
     '    <fieldset>\n' +
     '\n' +
     '        <legend>\n' +
@@ -176,14 +168,14 @@ module.run(['$templateCache', function($templateCache) {
     '            </tbody>\n' +
     '            <tfoot>\n' +
     '            <tr>\n' +
-    '                <div class="text-center">\n' +
-    '                    <td colspan="4">\n' +
+    '                <td colspan="4">\n' +
+    '                    <div class="text-center">\n' +
     '                        <uib-pagination total-items="bigTotalItems" ng-model="bigCurrentPage" max-size="maxSize"\n' +
     '                                        class="pagination" items-per-page="itemsPerPage" boundary-links="true"\n' +
     '                                        rotate="false" num-pages="numPages" ng-change="pageChanged()">\n' +
     '                        </uib-pagination>\n' +
-    '                    </td>\n' +
-    '                </div>\n' +
+    '                    </div>\n' +
+    '                </td>\n' +
     '            </tr>\n' +
     '            </tfoot>\n' +
     '        </table>\n' +
@@ -268,10 +260,6 @@ try {
 module.run(['$templateCache', function($templateCache) {
   $templateCache.put('/partials/mangas/manga.html',
     '<div class="col-sm-12">\n' +
-    '\n' +
-    '    <uib-alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">\n' +
-    '        {{alert.msg}}\n' +
-    '    </uib-alert>\n' +
     '\n' +
     '    <fieldset>\n' +
     '\n' +
@@ -382,10 +370,6 @@ module.run(['$templateCache', function($templateCache) {
   $templateCache.put('/partials/mangas/mangas.html',
     '<div class="col-sm-12">\n' +
     '\n' +
-    '    <uib-alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">\n' +
-    '        {{alert.msg}}\n' +
-    '    </uib-alert>\n' +
-    '\n' +
     '    <fieldset>\n' +
     '\n' +
     '        <legend>\n' +
@@ -480,10 +464,6 @@ module.run(['$templateCache', function($templateCache) {
   $templateCache.put('/partials/mangas/mangas_deck.html',
     '<div class="col-sm-12">\n' +
     '\n' +
-    '    <uib-alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">\n' +
-    '        {{alert.msg}}\n' +
-    '    </uib-alert>\n' +
-    '\n' +
     '    <fieldset>\n' +
     '        <legend>\n' +
     '            <h3>\n' +
@@ -536,10 +516,6 @@ module.run(['$templateCache', function($templateCache) {
   $templateCache.put('/partials/publishers/publisher.html',
     '<div class="col-sm-12">\n' +
     '\n' +
-    '    <uib-alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">\n' +
-    '        {{alert.msg}}\n' +
-    '    </uib-alert>\n' +
-    '\n' +
     '    <fieldset>\n' +
     '\n' +
     '        <legend>\n' +
@@ -587,10 +563,6 @@ try {
 module.run(['$templateCache', function($templateCache) {
   $templateCache.put('/partials/publishers/publishers.html',
     '<div class="col-sm-12">\n' +
-    '\n' +
-    '    <uib-alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">\n' +
-    '        {{alert.msg}}\n' +
-    '    </uib-alert>\n' +
     '\n' +
     '    <fieldset>\n' +
     '\n' +
@@ -681,6 +653,23 @@ module.run(['$templateCache', function($templateCache) {
     '    </button>\n' +
     '</div>\n' +
     '');
+}]);
+})();
+
+(function(module) {
+try {
+  module = angular.module('myMangas.tpl');
+} catch (e) {
+  module = angular.module('myMangas.tpl', []);
+}
+module.run(['$templateCache', function($templateCache) {
+  $templateCache.put('/partials/templates/messages.html',
+    '<div id="messages" class="messages center-block text-center">\n' +
+    '    <uib-alert data-ng-repeat="alert in alerts" dismiss-on-timeout=\'3000\' type="{{alert.type}}"\n' +
+    '               close="closeAlert($index)">\n' +
+    '        {{alert.msg}}\n' +
+    '    </uib-alert>\n' +
+    '</div>');
 }]);
 })();
 

@@ -40,13 +40,16 @@ class LoginController @Inject()(userService: UserService,
   def logout = Action.async {
     request => Future {
       request.headers.get(AuthTokenHeader) map {
-        token => Ok(Json.obj("msg"->"user.logged.out")).discardingToken(token)
+        token =>
+          logger debug s"Logging out for token = $token"
+          Ok(Json.obj("msg" -> "user.logged.out")).discardingToken(token)
       } getOrElse BadRequest(Json.obj("msg" -> "No Token"))
     }
   }
 
   def logged = HasTokenAsync() {
     token => user => request =>
+      logger debug s"Retrieving user data for $user"
       Future.successful(Ok(Json.obj("user" -> Json.toJson(user))))
   }
 
