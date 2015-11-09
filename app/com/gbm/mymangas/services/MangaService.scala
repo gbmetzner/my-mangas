@@ -6,9 +6,9 @@ import javax.inject.Inject
 
 import com.gbm.mymangas.models.filters.{MangaFilter, Predicate}
 import com.gbm.mymangas.models.{Manga, Page}
-import com.gbm.mymangas.utils.{Config, FileUpload}
 import com.gbm.mymangas.utils.json.MangaParser.mangaFormatterService
 import com.gbm.mymangas.utils.messages.{Error, Failed, Succeed, Warning}
+import com.gbm.mymangas.utils.{Config, FileUpload}
 import org.joda.time.DateTime
 import play.api.libs.json.Json
 import play.modules.reactivemongo.ReactiveMongoApi
@@ -73,6 +73,14 @@ class MangaService @Inject()(val reactiveMongoApi: ReactiveMongoApi) extends Ser
           lastError => if (lastError.hasErrors) Left(Error(lastError.message)) else Right(Succeed("manga.updated"))
         }
       case None => Future.successful(Left(Warning("manga.not.found")))
+    }
+  }
+
+  def updateComplete(collectionsName: String, doIHaveIt: Boolean)(implicit ec: ExecutionContext): Unit = {
+    logger debug s"Updating mangas for collection = $collectionsName with $doIHaveIt"
+
+    findBy(MangaFilter(collection = Some(collectionsName))).foreach {
+      _.foreach(manga => update(manga.copy(doIHaveIt = doIHaveIt)))
     }
   }
 

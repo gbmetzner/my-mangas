@@ -15,9 +15,10 @@ import play.modules.reactivemongo.json._
 import scala.concurrent.{ExecutionContext, Future, Promise}
 
 /**
- * @author Gustavo Metzner on 10/13/15.
- */
-class CollectionService @Inject()(val reactiveMongoApi: ReactiveMongoApi) extends Service {
+  * @author Gustavo Metzner on 10/13/15.
+  */
+class CollectionService @Inject()(mangaService: MangaService,
+                                  val reactiveMongoApi: ReactiveMongoApi) extends Service {
 
   override protected[services] val collectionName: String = "collections"
 
@@ -52,13 +53,15 @@ class CollectionService @Inject()(val reactiveMongoApi: ReactiveMongoApi) extend
     }
 
     def update() = findOneBy(CollectionFilter(id = Option(id))).foreach {
-      case Some(oldCollection) => {
+      case Some(oldCollection) =>
         collection.update(Json.obj("id" -> id), oldCollection.copy(publisher = coll.publisher, name = coll.name, updatedAt = DateTime.now())).map {
           lastError =>
             if (lastError.hasErrors) promise.success(Left(Error(lastError.message)))
-            else promise.success(Right(Succeed("publisher.updated")))
+            else {
+              mangaService.updateComplete(coll.name, coll.isComplete)
+              promise.success(Right(Succeed("publisher.updated")))
+            }
         }
-      }
       case None => promise.success(Left(Error("publisher.not.found")))
     }
 
