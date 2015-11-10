@@ -31,5 +31,5 @@ case class MangaFilter(id: Option[UUID] = None,
 
   }
 
-  override def sort: JsObject = Json.obj("collection" -> -1, "number" -> -1, "createdAt" -> -1)
+  override def sort: JsObject = Json.obj("doIHaveIt" -> 1, "collection" -> 1, "number" -> -1, "createdAt" -> -1)
 }
