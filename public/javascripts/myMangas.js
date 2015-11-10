@@ -67,6 +67,38 @@ var myMangas = angular.module('myMangas',
   $httpProvider.interceptors.push('HttpInterceptor');
 
 }]);
+angular.module('login.directives', []).directive('appHeader', function() {
+  var bool = {
+    'true': true,
+    'false': false
+  };
+
+  return {
+    restrict: 'E',
+    link: function (scope, element, attrs) {
+      attrs.$observe('isauthenticated', function (newValue, oldValue) {
+        if (bool[newValue]) { scope.headerUrl = '/assets/partials/login/logged.html'; }
+        else { scope.headerUrl = '/assets/partials/login/not_logged.html'; }
+      });
+    },
+    template: '<div ng-include="headerUrl"></div>'
+  };
+});
+angular.module('messages.directives', []).directive('messages',['$timeout', function($timeout) {
+  return {
+    restrict: 'E',
+    link: function (scope, element, attrs) {
+        scope.alerts = [];
+
+        var indexes = 0;
+
+        scope.closeAlert = function (index) {
+            scope.alerts.splice(index, 1);
+        };
+    },
+    templateUrl: '/partials/templates/messages.html'
+  };
+}]);
 angular.module('collection.controllers', ['collection.services', 'publisher.services', 'ngDialog'])
     .controller('NewCollectionController', ['$scope', 'CollectionService', 'PublisherService',
         function ($scope, CollectionService, PublisherService) {
@@ -600,38 +632,6 @@ angular.module('publisher.controllers', ['publisher.services', 'ngDialog'])
                 updateModel();
             };
         }]);
-angular.module('login.directives', []).directive('appHeader', function() {
-  var bool = {
-    'true': true,
-    'false': false
-  };
-
-  return {
-    restrict: 'E',
-    link: function (scope, element, attrs) {
-      attrs.$observe('isauthenticated', function (newValue, oldValue) {
-        if (bool[newValue]) { scope.headerUrl = '/assets/partials/login/logged.html'; }
-        else { scope.headerUrl = '/assets/partials/login/not_logged.html'; }
-      });
-    },
-    template: '<div ng-include="headerUrl"></div>'
-  };
-});
-angular.module('messages.directives', []).directive('messages',['$timeout', function($timeout) {
-  return {
-    restrict: 'E',
-    link: function (scope, element, attrs) {
-        scope.alerts = [];
-
-        var indexes = 0;
-
-        scope.closeAlert = function (index) {
-            scope.alerts.splice(index, 1);
-        };
-    },
-    templateUrl: '/partials/templates/messages.html'
-  };
-}]);
 angular.module('collection.routes', ['collection.controllers'])
     .config(['$routeProvider', function ($routeProvider) {
         $routeProvider

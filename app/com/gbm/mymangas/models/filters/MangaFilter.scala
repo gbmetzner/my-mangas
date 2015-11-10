@@ -19,8 +19,8 @@ case class MangaFilter(id: Option[UUID] = None,
 
   override def filter: JsObject = {
 
-    val filter = (collection.map(c => Json.obj("collection" -> Json.obj("$regex" -> s".*$c*.", "$options" -> "i")))
-      :: name.map(n => Json.obj("name" -> Json.obj("$regex" -> s".*$n*.", "$options" -> "i")))
+    val filter = (collection.map(c => Json.obj("collection" -> Json.obj("$regex" -> c, "$options" -> "i")))
+      :: name.map(n => Json.obj("name" -> Json.obj("$regex" -> n, "$options" -> "i")))
       :: number.map(n => Json.obj("number" -> n))
       :: id.map(i => Json.obj("id" -> i))
       :: from.map(f => Json.obj("createdAt" -> Json.obj("$gte" -> f.getMillis)))
@@ -31,5 +31,5 @@ case class MangaFilter(id: Option[UUID] = None,
 
   }
 
-  override def sort: JsObject = Json.obj("createdAt" -> -1)
+  override def sort: JsObject = Json.obj("collection" -> -1, "number" -> -1, "createdAt" -> -1)
 }

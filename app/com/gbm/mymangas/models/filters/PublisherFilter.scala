@@ -14,7 +14,7 @@ case class PublisherFilter(id: Option[UUID] = None,
 
   override def filter: JsObject = {
     val filter = (name.map(n => Json.obj("name" -> Json.obj(
-      "$regex" -> s".*$n*.", "$options" -> "i"
+      "$regex" -> n, "$options" -> "i"
     ))) :: id.map(i => Json.obj("id" -> i
     )) :: Nil).map(_.getOrElse(JsObject(Nil)))
 

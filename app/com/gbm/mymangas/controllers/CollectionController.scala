@@ -84,4 +84,16 @@ class CollectionController @Inject()(collectionService: CollectionService,
       }
   }
 
+  def complete(collection: String) = HasTokenAsync() {
+    _ => _ => request =>
+
+      logger debug s"Collection $collection is complete."
+//
+//      collectionService.remove(id).map {
+//        case Left(error) => BadRequest(Json.obj("msg" -> error.message))
+//        case Right(success) => Ok(Json.obj("msg" -> success.message))
+//      }
+      ???
+  }
+
 }
