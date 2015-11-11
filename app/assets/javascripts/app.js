@@ -21,49 +21,36 @@ var myMangas = angular.module('myMangas',
         requireBase: false
      });
 
-  // Intercept http calls.
-  $provide.factory('HttpInterceptor', function ($q) {
+  $provide.factory('HttpInterceptor', function ($q, $location) {
     return {
-      // On request success
-      request: function (config) {
-        // console.log(config); // Contains the data about the request before it is sent.
 
-        // Return the config or wrap it in a promise if blank.
+      request: function (config) {
         return config || $q.when(config);
       },
 
-      // On request failure
       requestError: function (rejection) {
-            alert(rejection.status);
+        return $q.reject(rejection);
+      },
+
+      response: function (response) {
+        return response || $q.when(response);
+      },
+
+      responseError: function (rejection) {
           switch (rejection.status) {
+              case 401:
+                $location.path('/');
+                break;
               case 404:
                 $location.path('/404');
                 break;
               default: $location.path('/error');
           }
-
-        return $q.reject(rejection);
-      },
-
-      // On response success
-      response: function (response) {
-        // console.log(response); // Contains the data from the response.
-
-        // Return the response or promise.
-        return response || $q.when(response);
-      },
-
-      // On response failure
-      responseError: function (rejection) {
-        // console.log(rejection); // Contains the data about the error.
-
-        // Return the promise rejection.
         return $q.reject(rejection);
       }
     };
   });
 
-  // Add the interceptor to the $httpProvider.
   $httpProvider.interceptors.push('HttpInterceptor');
 
 });

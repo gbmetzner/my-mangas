@@ -59,7 +59,7 @@ angular.module('manga.controllers', ['manga.services', 'collection.services', 'n
             $scope.openRemoveDialog = function (manga) {
                 $scope.item = manga;
                 $scope.type = "Manga";
-                ngDialog.open({
+                ngDialog.openConfirm({
                     template: '/partials/templates/remove_dialog.html',
                     className: 'ngdialog-theme-default',
                     scope: $scope
@@ -154,8 +154,6 @@ angular.module('manga.controllers', ['manga.services', 'collection.services', 'n
                 }, function (response) {
                     $scope.alerts.push({type: 'warning', msg: response.data.msg});
                 }, function (evt) {
-                    //var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
-                    //console.log('progress: ' + progressPercentage + '% ' + evt.config.data.file.name);
                 });
             };
 

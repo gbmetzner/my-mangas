@@ -30,13 +30,16 @@ trait Security {
         val maybeToken = request.headers.get(AuthTokenHeader).orElse(request.getQueryString(AuthTokenUrlKey))
         maybeToken flatMap {
           token => Cache.getAs[Id](token) map {
-            id => f(token)(id)(request)
+            id => Cache.set(token, id, cacheDuration)
+              f(token)(id)(request)
           }
         } getOrElse Future.successful(Unauthorized(Json.obj("msg" -> messagesApi("user.not.logged"))))
     }
 
-  def fromCache(token: String): Option[Id] = {
-    Cache.getAs[Id](token)
+  def fromCache(token: String): Option[Id] = Cache.getAs[Id](token) match {
+    case Some(id) => Cache.set(token, id, cacheDuration)
+      Some(id)
+    case None => None
   }
 
   implicit class ResultWithToken(result: Result) {
