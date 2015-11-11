@@ -18,7 +18,15 @@ class FairyTailScraping(override val collection: String,
 
   override def extractImgLink(document: Document): String = document >> extractor(".imgCapa", attr("src"))
 
-  override protected[scrapings] def extractLinks(document: Document): Seq[String] = {
-    document >> extractor(".listEdicoes a", attrs("href"))
+  override def buildPageURL(pageNumber: Int): String = s"$baseURL$searchParam-$pageNumber"
+
+  override def extractLinks: Seq[String] = {
+    @annotation.tailrec
+    def extract(page: Int, acc: Seq[String]): Seq[String] = browser get buildPageURL(page) match {
+      case None => acc
+      case Some(document) =>
+        extract(page + 1, acc ++ Seq(buildPageURL(page)))
+    }
+    extract(latestNumber + 1, Seq.empty[String])
   }
 }

@@ -1,16 +1,17 @@
 package com.gbm.mymangas.actors.scrapings
 
 import com.gbm.mymangas.models.Manga
+import com.typesafe.scalalogging.LazyLogging
 import net.ruippeixotog.scalascraper.browser.Browser
 import org.jsoup.nodes.Document
 
 import scala.util.{Failure, Success, Try}
 
 /**
- * @author Gustavo Metzner on 10/17/15.
- */
+  * @author Gustavo Metzner on 10/17/15.
+  */
 
-trait Scrapable {
+trait Scrapable extends LazyLogging {
   val collection: String
   val latestNumber: Int
   val baseURL: String
@@ -46,6 +47,9 @@ trait Scrapable {
 
   def scrape: Seq[(Manga, String)] = {
     val links = extractLinks
+
+    logger debug s"Scrapping total of ${links.size} mangas"
+    links.foreach(println)
 
     @annotation.tailrec
     def process(links: Seq[String], acc: Seq[(Manga, String)]): Seq[(Manga, String)] = links match {

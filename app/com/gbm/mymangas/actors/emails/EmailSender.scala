@@ -37,6 +37,7 @@ class EmailSender @Inject()(mangaService: MangaService,
       mangasF.map(_.size).foreach {
         case size: Int if size > 0 =>
           mailerClient.send(Email(to = getString("my.email"), from = getString("from.email"), qtyMangas = size))
+        case 0 => log debug "No email to send."
       }
   }
 }

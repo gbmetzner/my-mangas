@@ -27,9 +27,9 @@ class JBCScraping(override val collection: String,
     document >> extractor("#int_content img", attr("src"))
   }
 
-  override def extractLinks: Seq[String] = {
+  def buildPageURL(pageNumber: Int): String = s"${baseURL}titulos/$searchParam/page/$pageNumber"
 
-    def buildPageURL(pageNumber: Int): String = s"${baseURL}titulos/$searchParam/page/$pageNumber"
+  override def extractLinks: Seq[String] = {
 
     @annotation.tailrec
     def extract(page: Int, acc: Seq[String]): Seq[String] = browser get buildPageURL(page) match {

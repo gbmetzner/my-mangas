@@ -23,6 +23,6 @@ class SchedulerEmail @Inject()(val app: Application,
 
   logger info "Email scheduling..."
 
-  system.scheduler.schedule(5.seconds, 24.hours, emailSender, EmailSender.Send)
+  system.scheduler.schedule(1.hour, 24.hours, emailSender, EmailSender.Send)
 }
 
