@@ -29,6 +29,7 @@ GET           /api/collections/:id/edit                        com.gbm.mymangas.
 POST          /api/mangas                                      com.gbm.mymangas.controllers.MangaController.create
 POST          /api/mangas/cover/upload                         com.gbm.mymangas.controllers.MangaController.uploadCover
 PUT           /api/mangas/:id                                  com.gbm.mymangas.controllers.MangaController.update(id: java.util.UUID)
+PUT           /api/mangas/ownership/:id                        com.gbm.mymangas.controllers.MangaController.updateOwnership(id: java.util.UUID)
 DELETE        /api/mangas/:id                                  com.gbm.mymangas.controllers.MangaController.remove(id: java.util.UUID)
 GET           /api/mangas/search                               com.gbm.mymangas.controllers.MangaController.search
 GET           /api/mangas/:id/edit                             com.gbm.mymangas.controllers.MangaController.edit(id: java.util.UUID)

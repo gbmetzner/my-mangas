@@ -2,10 +2,10 @@
     <a id="btnUpdate" data-ng-href="/views/manga/{{card.id}}/edit">
         <h3>{{card.collection}} # {{card.number}}</h3>
         <div class="thumbnail">
-            <img src="" class="portrait img-responsive" alt="Image" data-ng-src="{{card.publicLink}}"/>
-            <div class="text-left">
+            <div class="text-left" >
                 <span class="glyphicon glyphicon-{{card.doIHaveIt ? 'ok green-glyphicon' : 'remove red-glyphicon'}}"></span>
             </div>
+            <img src="" class="portrait img-responsive" alt="Image" data-ng-src="{{card.publicLink}}"/>
         </div>
     </a>
 </div>

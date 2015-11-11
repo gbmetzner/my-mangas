@@ -2,8 +2,11 @@ package com.gbm.mymangas.models.filters
 
 import java.util.UUID
 
+import com.sksamuel.scrimage.Position
 import org.joda.time.DateTime
 import play.api.libs.json.{JsArray, JsObject, Json}
+
+import scala.util.Random
 
 /**
   * @author Gustavo Metzner on 10/13/15.
@@ -31,5 +34,7 @@ case class MangaFilter(id: Option[UUID] = None,
 
   }
 
-  override def sort: JsObject = Json.obj("doIHaveIt" -> 1, "collection" -> 1, "number" -> -1, "createdAt" -> -1)
+  override def sort: JsObject = {
+    Json.obj("doIHaveIt" -> 1)
+  }
 }

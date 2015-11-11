@@ -50,7 +50,11 @@
                 <td>{{manga.collection}}</td>
                 <td>{{manga.name}}</td>
                 <td>{{manga.number}}</td>
-                <td>{{manga.doIHaveIt ? 'Yes' : 'No'}}</td>
+                <td>
+                    <a role="button" href="#" data-ng-click="updateOwnership(manga)">
+                        <span class="glyphicon glyphicon-{{manga.doIHaveIt ? 'ok green-glyphicon' : 'remove red-glyphicon'}}"></span>
+                    </a>
+                </td>
                 <td>
                     <a data-ng-href="/views/manga/{{manga.id}}/edit" id="update" class="btn btn-primary">
                         Edit

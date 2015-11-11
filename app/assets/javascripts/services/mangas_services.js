@@ -13,6 +13,9 @@ angular.module('manga.services', []).factory('MangaService', ['$http', function 
         remove: function (mangaID) {
             return $http.delete(baseURL + '/' + mangaID);
         },
+        updateOwnership: function(mangaID, doIHaveIt){
+            return $http.put(baseURL + '/ownership/' + mangaID, doIHaveIt);
+        },
         paginate: function (mangaFilter) {
             var url = '/search?';
             if (mangaFilter.limit) {

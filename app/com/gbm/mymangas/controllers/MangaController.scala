@@ -112,4 +112,18 @@ class MangaController @Inject()(mangaService: MangaService,
         case Right(success) => Ok(Json.obj("msg" -> success.message))
       }
   }
+
+  def updateOwnership(id: UUID) = HasTokenAsync(parse.json) {
+    _ => _ => request =>
+
+      logger info s"Update manga ownership = $request"
+
+      request.body.validate[Boolean].map {
+        doIHaveIt => mangaService.updateOwnership(id, doIHaveIt).map {
+          case Left(error) => BadRequest(Json.obj("msg" -> error.message))
+          case Right(success) => Created(Json.obj("msg" -> success.message))
+        }
+      }.getOrElse(Future.successful(BadRequest("invalid json")))
+  }
+
 }

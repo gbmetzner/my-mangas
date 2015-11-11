@@ -420,7 +420,11 @@ module.run(['$templateCache', function($templateCache) {
     '                <td>{{manga.collection}}</td>\n' +
     '                <td>{{manga.name}}</td>\n' +
     '                <td>{{manga.number}}</td>\n' +
-    '                <td>{{manga.doIHaveIt ? \'Yes\' : \'No\'}}</td>\n' +
+    '                <td>\n' +
+    '                    <a role="button" href="#" data-ng-click="updateOwnership(manga)">\n' +
+    '                        <span class="glyphicon glyphicon-{{manga.doIHaveIt ? \'ok green-glyphicon\' : \'remove red-glyphicon\'}}"></span>\n' +
+    '                    </a>\n' +
+    '                </td>\n' +
     '                <td>\n' +
     '                    <a data-ng-href="/views/manga/{{manga.id}}/edit" id="update" class="btn btn-primary">\n' +
     '                        Edit\n' +
@@ -712,10 +716,10 @@ module.run(['$templateCache', function($templateCache) {
     '    <a id="btnUpdate" data-ng-href="/views/manga/{{card.id}}/edit">\n' +
     '        <h3>{{card.collection}} # {{card.number}}</h3>\n' +
     '        <div class="thumbnail">\n' +
-    '            <img src="" class="portrait img-responsive" alt="Image" data-ng-src="{{card.publicLink}}"/>\n' +
-    '            <div class="text-left">\n' +
+    '            <div class="text-left" >\n' +
     '                <span class="glyphicon glyphicon-{{card.doIHaveIt ? \'ok green-glyphicon\' : \'remove red-glyphicon\'}}"></span>\n' +
     '            </div>\n' +
+    '            <img src="" class="portrait img-responsive" alt="Image" data-ng-src="{{card.publicLink}}"/>\n' +
     '        </div>\n' +
     '    </a>\n' +
     '</div>');

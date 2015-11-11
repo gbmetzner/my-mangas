@@ -75,6 +75,14 @@ angular.module('manga.controllers', ['manga.services', 'collection.services', 'n
                 });
             };
 
+            $scope.updateOwnership = function(manga){
+                MangaService.updateOwnership(manga.id, !manga.doIHaveIt).then(function (response) {
+                    paginate($scope.bigCurrentPage, $scope.itemsPerPage * ($scope.bigCurrentPage - 1));
+                }, function (response) {
+
+                });
+            };
+
             var paginate = function (currentPage, skip) {
                 $scope.itemsPerPage = 10;
                 $scope.maxSize = 5;

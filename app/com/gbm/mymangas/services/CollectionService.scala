@@ -58,7 +58,7 @@ class CollectionService @Inject()(mangaService: MangaService,
           lastError =>
             if (lastError.hasErrors) promise.success(Left(Error(lastError.message)))
             else {
-              mangaService.updateComplete(coll.name, coll.isComplete)
+              mangaService.completeUpdate(coll.name, coll.isComplete)
               promise.success(Right(Succeed("publisher.updated")))
             }
         }

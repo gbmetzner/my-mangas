@@ -76,7 +76,17 @@ class MangaService @Inject()(val reactiveMongoApi: ReactiveMongoApi) extends Ser
     }
   }
 
-  def updateComplete(collectionsName: String, doIHaveIt: Boolean)(implicit ec: ExecutionContext): Unit = {
+  def updateOwnership(id: UUID, doIHaveIt: Boolean)(implicit ec: ExecutionContext): Future[Either[Failed, Succeed]] = {
+    findOneBy(MangaFilter(id = Option(id))).flatMap {
+      case Some(m) =>
+        collection.update(Json.obj("id" -> id), m.copy(doIHaveIt = doIHaveIt, updatedAt = DateTime.now())).map {
+          lastError => if (lastError.hasErrors) Left(Error(lastError.message)) else Right(Succeed("manga.updated"))
+        }
+      case None => Future.successful(Left(Warning("manga.not.found")))
+    }
+  }
+
+  def completeUpdate(collectionsName: String, doIHaveIt: Boolean)(implicit ec: ExecutionContext): Unit = {
     logger debug s"Updating mangas for collection = $collectionsName with $doIHaveIt"
 
     findBy(MangaFilter(collection = Some(collectionsName))).foreach {
