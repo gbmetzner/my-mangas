@@ -38,7 +38,7 @@ class CollectionManager @Inject()(collectionService: CollectionService,
           collections.foreach {
             collection =>
               log info s" Collection ${collection.name} is being started."
-              mangaManager ! MangaManager.StartProcess(collection.publisher, collection.name, collection.searchParam)
+              mangaManager ! MangaManager.StartProcess(collection)
           }
         case Failure(error) =>
           log error error.getMessage

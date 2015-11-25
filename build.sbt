@@ -14,6 +14,7 @@ resolvers += "Local Maven Repository" at Path.userHome.asFile.toURI.toURL + ".m2
 
 libraryDependencies ++= Seq(
   cache,
+  ws,
   "org.reactivemongo" %% "play2-reactivemongo" % "0.11.7.play24" withSources(),
   "com.typesafe.scala-logging" %% "scala-logging" % "3.1.0" withSources(),
   "com.typesafe.play" %% "play-mailer" % "3.0.1" withSources(),

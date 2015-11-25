@@ -10,7 +10,7 @@ import scala.util.{Failure, Success, Try}
 /**
   * Created by gbmetzner on 11/17/15.
   */
-trait UrlGenerator {
+trait PagesFinder {
   val baseURL: String
   val browser: Browser
 
