@@ -5,8 +5,8 @@ import com.gbm.mymangas.actors.mangas.MangaManager.ScrapingDone
 import com.gbm.mymangas.actors.scrapings.ScrapingActor.{Scrape, ScraperFactory}
 
 /**
- * @author Gustavo Metzner on 10/19/15.
- */
+  * @author Gustavo Metzner on 10/19/15.
+  */
 object ScrapingActor {
   def props(creator: ActorRef): Props = Props(new ScrapingActor(creator))
 
@@ -14,10 +14,7 @@ object ScrapingActor {
 
   object ScraperFactory {
     def build(publisher: String, collection: String, number: Int, searchParam: String): Scrapable = {
-      if ("JBC" == publisher) {
-        if ("Fairy Tail" == collection) new FairyTailScraping(collection, number, searchParam)
-        else new JBCScraping(collection, number, searchParam)
-      }
+      if ("JBC" == publisher) new JBCScraping(collection, number, searchParam)
       else if ("Panini" == publisher) new PaniniScraping(collection, number, searchParam)
       else throw new IllegalArgumentException()
     }

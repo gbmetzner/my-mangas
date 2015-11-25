@@ -9,4 +9,5 @@ target
 /conf/db-dev.conf
 /conf/db-prod.conf
 /conf/smartfile.conf
+/conf/email.conf
 .DS_Store
