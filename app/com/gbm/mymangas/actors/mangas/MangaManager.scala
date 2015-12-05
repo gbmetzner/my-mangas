@@ -47,12 +47,10 @@ class MangaManager @Inject()(mangaService: MangaService) extends Actor with Acto
 
       for {
         number <- latestNumberFuture
-      } (createPagesActor(collection.name)
-        ! PagesActor.messages.FindPages(collection.publisher, collection.searchParam, number))
+      } createPagesActor(collection.name) ! PagesActor.FindPages(collection.publisher, collection.searchParam, number)
 
-    case PagesActor.messages.Pages(searchParam, pages) =>
+    case PagesActor.Pages(searchParam, pages) =>
       killPagesActor(searchParam)
-      println(pages.size)
   }
 
   def createPagesActor(name: String): ActorRef = {

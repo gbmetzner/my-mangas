@@ -23,7 +23,9 @@ libraryDependencies ++= Seq(
   "com.sksamuel.scrimage" %% "scrimage-core" % "2.1.0" withSources(),
   "net.ruippeixotog" %% "scala-scraper" % "0.1.1" withSources(),
   "com.smartfile" % "JavaClient" % "1.0",
-  "org.scalatest" %% "scalatest" % "2.2.4" % Test withSources()
+  "com.typesafe.akka" %% "akka-actor" % "2.3.13" withSources(),
+  "org.scalatest" %% "scalatest" % "2.2.4" % Test withSources(),
+  "com.typesafe.akka" %% "akka-testkit" % "2.3.13" % Test withSources()
 )
 
 // Play provides two styles of routers, one expects its actions to be injected, the

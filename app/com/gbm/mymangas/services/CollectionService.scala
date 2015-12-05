@@ -5,6 +5,7 @@ import javax.inject.Inject
 
 import com.gbm.mymangas.models.filters.{CollectionFilter, Predicate}
 import com.gbm.mymangas.models.{Collection, Page}
+import com.gbm.mymangas.services.MangaService
 import com.gbm.mymangas.utils.json.CollectionParser.collectionFormatterService
 import com.gbm.mymangas.utils.messages.{Error, Failed, Succeed}
 import org.joda.time.DateTime

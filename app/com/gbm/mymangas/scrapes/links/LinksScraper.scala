@@ -1,6 +1,7 @@
 package com.gbm.mymangas.scrapes.links
 
 import com.gbm.mymangas.scrapes.Scraper
+import com.gbm.mymangas.utils.browser.Browser
 import net.ruippeixotog.scalascraper.dsl.DSL._
 import net.ruippeixotog.scalascraper.scraper.ContentExtractors._
 import org.jsoup.nodes.Document
@@ -10,24 +11,27 @@ import org.jsoup.nodes.Document
   */
 trait LinksScraper extends Scraper {
 
-  override type R = Seq[String]
+  val browser: Browser
 
-  protected[links] def extract(document: Document)(f: Document => R): R = {
-    f(document).map(link => s"$baseURL$link")
+  override type R = Seq[Document]
+  type L = Seq[String]
+
+  protected[links] def extract(document: Document)(f: Document => L): R = {
+    f(document).map(link => browser.get(s"$baseURL$link")).filter(_.isDefined).map(_.get)
   }
 
   protected[this] sealed trait Scraper {
-    def extractLinks(document: Document): R
+    def extractLinks(document: Document): L
   }
 
   object panini extends Scraper {
-    override def extractLinks(document: Document): R = {
+    override def extractLinks(document: Document): L = {
       Seq(document >> extractor("h3 a", attr("href")))
     }
   }
 
   object jbc extends Scraper {
-    override def extractLinks(document: Document): R = {
+    override def extractLinks(document: Document): L = {
       document >> extractor(".txt a", attrs("href"))
     }
   }
