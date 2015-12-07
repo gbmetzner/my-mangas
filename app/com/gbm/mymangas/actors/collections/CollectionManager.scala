@@ -5,6 +5,7 @@ import javax.inject.{Inject, Named, Singleton}
 import akka.actor.{Actor, ActorLogging, ActorRef}
 import com.gbm.mymangas.actors.mangas.MangaManager
 import com.gbm.mymangas.models.filters.CollectionFilter
+import com.gbm.mymangas.repositories.CollectionRepository
 import com.gbm.mymangas.services.CollectionService
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -21,6 +22,7 @@ object CollectionManager {
 
 @Singleton
 class CollectionManager @Inject()(collectionService: CollectionService,
+                                  collectionRepository: CollectionRepository,
                                   @Named("manga-manager") mangaManager: ActorRef) extends Actor with ActorLogging {
 
   override def receive: Receive = {
@@ -33,7 +35,7 @@ class CollectionManager @Inject()(collectionService: CollectionService,
 
   private def startProcess(attempt: Int): Unit = {
     if (attempt < 4) {
-      collectionService.findBy(CollectionFilter(isComplete = Some(false))).onComplete {
+      collectionService.findBy(CollectionFilter(isComplete = Some(false)))(collectionRepository.findBy).onComplete {
         case Success(collections) =>
           collections.foreach {
             collection =>

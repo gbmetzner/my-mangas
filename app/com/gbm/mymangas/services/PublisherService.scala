@@ -1,30 +1,25 @@
 package com.gbm.mymangas.services
 
 import java.util.UUID
-import javax.inject.Inject
 
 import com.gbm.mymangas.models.filters.{Predicate, PublisherFilter}
 import com.gbm.mymangas.models.{Page, Publisher}
-import com.gbm.mymangas.utils.json.PublisherParser.publisherFormatterJson
 import com.gbm.mymangas.utils.messages.{Error, Failed, Succeed}
 import org.joda.time.DateTime
-import play.api.libs.json.Json
-import play.modules.reactivemongo.ReactiveMongoApi
-import play.modules.reactivemongo.json._
+import reactivemongo.api.commands.WriteResult
 
-import scala.concurrent.{ExecutionContext, Future, Promise}
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.{Future, Promise}
 
 /**
- * @author Gustavo Metzner on 10/10/15.
- */
-class PublisherService @Inject()(val reactiveMongoApi: ReactiveMongoApi) extends Service {
+  * @author Gustavo Metzner on 10/10/15.
+  */
+class PublisherService {
 
-  override protected[services] val collectionName: String = "publishers"
-
-  def insert(publisher: Publisher)(implicit ec: ExecutionContext): Future[Either[Failed, Succeed]] = {
-    findBy(PublisherFilter(name = Some(publisher.name))).flatMap {
+  def insert(publisher: Publisher)(f: Publisher => Future[WriteResult])(g: Predicate => Future[List[Publisher]]): Future[Either[Failed, Succeed]] = {
+    findBy(PublisherFilter(name = Some(publisher.name)))(g).flatMap {
       publishers => if (publishers.isEmpty) {
-        (collection insert publisher).map {
+        f(publisher).map {
           lastError => if (lastError.hasErrors) Left(Error(lastError.message)) else Right(Succeed("publisher.added"))
         }
       }
@@ -32,11 +27,11 @@ class PublisherService @Inject()(val reactiveMongoApi: ReactiveMongoApi) extends
     }
   }
 
-  def update(id: UUID, publisher: Publisher)(implicit ec: ExecutionContext): Future[Either[Failed, Succeed]] = {
+  def update(id: UUID, publisher: Publisher)(f: (UUID, Publisher) => Future[WriteResult])(g: Predicate => Future[List[Publisher]]): Future[Either[Failed, Succeed]] = {
 
     val promise = Promise[Either[Failed, Succeed]]()
 
-    val isAvailable: Future[Boolean] = findBy(PublisherFilter(name = Option(publisher.name))).map {
+    val isAvailable: Future[Boolean] = findBy(PublisherFilter(name = Option(publisher.name)))(g).map {
       publishers => publishers.filter(_.id != id).forall(p => p.name.toLowerCase != publisher.name.toLowerCase)
     }
 
@@ -45,33 +40,30 @@ class PublisherService @Inject()(val reactiveMongoApi: ReactiveMongoApi) extends
       else promise.success(Left(Error("publisher.already.exists")))
     }
 
-    def update() = findOneBy(PublisherFilter(id = Option(id))).foreach {
-      case Some(oldPublisher) => {
-        collection.update(Json.obj("id" -> id), oldPublisher.copy(name = publisher.name, updatedAt = DateTime.now())).map {
+    def update() = findBy(PublisherFilter(id = Option(id)))(g).map(_.headOption).foreach {
+      case Some(oldPublisher) =>
+        f(id, oldPublisher.copy(name = publisher.name, updatedAt = DateTime.now())).map {
           lastError =>
             if (lastError.hasErrors) promise.success(Left(Error(lastError.message)))
             else promise.success(Right(Succeed("publisher.updated")))
         }
-      }
       case None => promise.success(Left(Error("publisher.not.found")))
     }
 
     promise.future
   }
 
-  def findBy(predicate: Predicate)(implicit ec: ExecutionContext): Future[List[Publisher]] = {
-    collection.find(predicate.filter).
-      sort(predicate.sort).
-      cursor[Publisher]().collect[List]()
+  def findBy(predicate: Predicate)(f: Predicate => Future[List[Publisher]]): Future[List[Publisher]] = {
+    f(predicate)
   }
 
-  def findOneBy(predicate: Predicate)(implicit ec: ExecutionContext): Future[Option[Publisher]] = {
-    collection.find(predicate.filter).sort(predicate.sort).one[Publisher]
+  def findOneBy(predicate: Predicate)(f: Predicate => Future[Option[Publisher]]): Future[Option[Publisher]] = {
+    f(predicate)
   }
 
-  def remove(id: UUID)(implicit ec: ExecutionContext): Future[Either[Failed, Succeed]] = {
-    findOneBy(PublisherFilter(id = Option(id))).flatMap {
-      case Some(_) => collection.remove(Json.obj("id" -> id)).map {
+  def remove(id: UUID)(f: UUID => Future[WriteResult])(g: Predicate => Future[Option[Publisher]]): Future[Either[Failed, Succeed]] = {
+    findOneBy(PublisherFilter(id = Option(id)))(g).flatMap {
+      case Some(_) => f(id).map {
         lastError =>
           if (lastError.hasErrors) Left(Error(lastError.message))
           else Right(Succeed("publisher.removed"))
@@ -80,17 +72,7 @@ class PublisherService @Inject()(val reactiveMongoApi: ReactiveMongoApi) extends
     }
   }
 
-  def search(predicate: Predicate)(implicit ec: ExecutionContext): Future[Option[Page[Publisher]]] = {
-    val totalRecordsFuture = collection.find(predicate.filter).cursor[Publisher]().collect[List]().map {
-      records => records.size
-    }
-    val itemsFuture = collection.find(predicate.filter)
-      .options(predicate.queryOpts)
-      .sort(predicate.sort).cursor[Publisher]().collect[List](predicate.queryOpts.batchSizeN)
-
-    for {
-      totalRecords <- totalRecordsFuture
-      items <- itemsFuture
-    } yield Option(Page(totalRecords = totalRecords, items = items))
+  def search(predicate: Predicate)(f: Predicate => Future[Option[Page[Publisher]]]): Future[Option[Page[Publisher]]] = {
+    f(predicate)
   }
 }

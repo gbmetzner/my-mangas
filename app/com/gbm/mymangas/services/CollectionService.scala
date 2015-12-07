@@ -1,64 +1,60 @@
 package com.gbm.mymangas.services
 
 import java.util.UUID
-import javax.inject.Inject
 
 import com.gbm.mymangas.models.filters.{CollectionFilter, Predicate}
 import com.gbm.mymangas.models.{Collection, Page}
-import com.gbm.mymangas.utils.json.CollectionParser.collectionFormatterService
 import com.gbm.mymangas.utils.messages.{Error, Failed, Succeed}
 import org.joda.time.DateTime
-import play.api.libs.json.Json
-import play.modules.reactivemongo.ReactiveMongoApi
-import play.modules.reactivemongo.json._
+import reactivemongo.api.commands.WriteResult
 
-import scala.concurrent.{ExecutionContext, Future, Promise}
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.{Future, Promise}
 
 /**
   * @author Gustavo Metzner on 10/13/15.
   */
-class CollectionService @Inject()(mangaService: MangaService,
-                                  val reactiveMongoApi: ReactiveMongoApi) extends Service {
+class CollectionService {
+  //extends Service {
 
-  override protected[services] val collectionName: String = "collections"
-
-  def insert(coll: Collection)(implicit ec: ExecutionContext): Future[Either[Failed, Succeed]] = {
-    findBy(CollectionFilter(name = Some(coll.name))).flatMap {
-      colls => if (colls.isEmpty) {
-        (collection insert coll).map {
-          lastError => if (lastError.hasErrors) Left(Error(lastError.message)) else Right(Succeed("collection.added"))
+  def insert(coll: Collection)(f: Collection => Future[WriteResult])(g: Predicate => Future[List[Collection]]): Future[Either[Failed, Succeed]] = {
+    findBy(CollectionFilter(name = Some(coll.name)))(g).flatMap {
+      colls =>
+        if (colls.isEmpty) {
+          f(coll).map {
+            lastError => if (lastError.hasErrors) Left(Error(lastError.message)) else Right(Succeed("collection.added"))
+          }
         }
-      }
-      else Future.successful(Left(Error("collection.already.exists")))
+        else Future.successful(Left(Error("collection.already.exists")))
     }
   }
 
-  def findBy(predicate: Predicate)(implicit ec: ExecutionContext): Future[List[Collection]] = {
-    collection.find(predicate.filter).
-      sort(predicate.sort).
-      cursor[Collection]().collect[List]()
+  def findBy(predicate: Predicate)(f: Predicate => Future[List[Collection]]): Future[List[Collection]] = {
+    f(predicate)
   }
 
-  def update(id: UUID, coll: Collection)(implicit ec: ExecutionContext): Future[Either[Failed, Succeed]] = {
+  def update(id: UUID, coll: Collection)(f: (UUID, Collection) => Future[WriteResult])
+            (g: Predicate => Future[List[Collection]])(h: (String, Boolean) => Unit): Future[Either[Failed, Succeed]] = {
 
     val promise = Promise[Either[Failed, Succeed]]()
 
-    val isAvailable: Future[Boolean] = findBy(CollectionFilter(name = Option(coll.name))).map {
+    val isAvailable: Future[Boolean] = findBy(CollectionFilter(name = Option(coll.name)))(g).map {
       collections => collections.filter(_.id != id).forall(p => p.name.toLowerCase != coll.name.toLowerCase)
     }
 
-    isAvailable.foreach { available =>
-      if (available) update()
-      else promise.success(Left(Error("co.already.exists")))
+    isAvailable.foreach {
+      available =>
+        if (available) update()
+        else promise.success(Left(Error("collection.already.exists")))
     }
 
-    def update() = findOneBy(CollectionFilter(id = Option(id))).foreach {
+    def update() = g(CollectionFilter(id = Option(id))).map(_.headOption).foreach {
       case Some(oldCollection) =>
-        collection.update(Json.obj("id" -> id), oldCollection.copy(publisher = coll.publisher, name = coll.name, updatedAt = DateTime.now())).map {
+        f(id, oldCollection.copy(publisher = coll.publisher, name = coll.name, updatedAt = DateTime.now())).map {
           lastError =>
             if (lastError.hasErrors) promise.success(Left(Error(lastError.message)))
             else {
-              mangaService.completeUpdate(coll.name, coll.isComplete)
+              h(coll.name, coll.isComplete)
               promise.success(Right(Succeed("publisher.updated")))
             }
         }
@@ -68,13 +64,13 @@ class CollectionService @Inject()(mangaService: MangaService,
     promise.future
   }
 
-  def findOneBy(predicate: Predicate)(implicit ec: ExecutionContext): Future[Option[Collection]] = {
-    collection.find(predicate.filter).sort(predicate.sort).one[Collection]
+  def findOneBy(predicate: Predicate)(f: Predicate => Future[Option[Collection]]): Future[Option[Collection]] = {
+    f(predicate)
   }
 
-  def remove(id: UUID)(implicit ec: ExecutionContext): Future[Either[Failed, Succeed]] = {
-    findOneBy(CollectionFilter(id = Option(id))).flatMap {
-      case Some(_) => collection.remove(Json.obj("id" -> id)).map {
+  def remove(id: UUID)(f: UUID => Future[WriteResult])(g: Predicate => Future[Option[Collection]]): Future[Either[Failed, Succeed]] = {
+    findOneBy(CollectionFilter(id = Option(id)))(g).flatMap {
+      case Some(_) => f(id).map {
         lastError =>
           if (lastError.hasErrors) Left(Error(lastError.message))
           else Right(Succeed("collection.removed"))
@@ -83,18 +79,7 @@ class CollectionService @Inject()(mangaService: MangaService,
     }
   }
 
-  def search(predicate: Predicate)(implicit ec: ExecutionContext): Future[Option[Page[Collection]]] = {
-    val totalRecordsFuture = collection.find(predicate.filter).cursor[Collection]().collect[List]().map {
-      records => records.size
-    }
-
-    val itemsFuture = collection.find(predicate.filter)
-      .options(predicate.queryOpts)
-      .sort(predicate.sort).cursor[Collection]().collect[List](predicate.queryOpts.batchSizeN)
-
-    for {
-      totalRecords <- totalRecordsFuture
-      items <- itemsFuture
-    } yield Option(Page(totalRecords = totalRecords, items = items))
+  def search(predicate: Predicate)(f: Predicate => Future[Option[Page[Collection]]]): Future[Option[Page[Collection]]] = {
+    f(predicate)
   }
 }

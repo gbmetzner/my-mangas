@@ -2,31 +2,27 @@ package com.gbm.mymangas.services
 
 import java.io.File
 import java.util.UUID
-import javax.inject.Inject
 
 import com.gbm.mymangas.models.filters.{MangaFilter, Predicate}
 import com.gbm.mymangas.models.{Manga, Page}
-import com.gbm.mymangas.utils.json.MangaParser.mangaFormatterService
 import com.gbm.mymangas.utils.messages.{Error, Failed, Succeed, Warning}
 import com.gbm.mymangas.utils.{Config, FileUpload}
 import org.joda.time.DateTime
-import play.api.libs.json.Json
-import play.modules.reactivemongo.ReactiveMongoApi
-import play.modules.reactivemongo.json._
+import play.api.libs.json.{JsObject, Json}
+import reactivemongo.api.commands.WriteResult
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 /**
   * @author Gustavo Metzner on 10/13/15.
   */
-class MangaService @Inject()(val reactiveMongoApi: ReactiveMongoApi) extends Service {
+class MangaService {
 
-  override protected[services] val collectionName: String = "mangas"
-
-  def insert(manga: Manga)(implicit ec: ExecutionContext): Future[Either[Failed, Succeed]] = {
-    findBy(MangaFilter(name = Option(manga.name), number = Option(manga.number))).flatMap {
+  def insert(manga: Manga)(f: Manga => Future[WriteResult])(g: Predicate => Future[List[Manga]]): Future[Either[Failed, Succeed]] = {
+    findBy(MangaFilter(name = Option(manga.name), number = Option(manga.number)))(g).flatMap {
       mangas => if (mangas.isEmpty) {
-        (collection insert manga).map {
+        f(manga).map {
           lastError => if (lastError.hasErrors) Left(Error(lastError.message)) else Right(Succeed("manga.added"))
         }
       }
@@ -34,34 +30,20 @@ class MangaService @Inject()(val reactiveMongoApi: ReactiveMongoApi) extends Ser
     }
   }
 
-  def findBy(predicate: Predicate)(implicit ec: ExecutionContext): Future[List[Manga]] = {
-    collection.find(predicate.filter).
-      options(predicate.queryOpts).
-      sort(predicate.sort).
-      cursor[Manga]().collect[List]()
+  def findBy(predicate: Predicate)(f: Predicate => Future[List[Manga]]): Future[List[Manga]] = {
+    f(predicate)
   }
 
-  def findOneBy(predicate: Predicate)(implicit ec: ExecutionContext): Future[Option[Manga]] = {
-    collection.find(predicate.filter).sort(predicate.sort).one[Manga]
+  def findOneBy(predicate: Predicate)(f: Predicate => Future[Option[Manga]]): Future[Option[Manga]] = {
+    f(predicate)
   }
 
-  def search(predicate: Predicate)(implicit ec: ExecutionContext): Future[Option[Page[Manga]]] = {
-    val totalRecordsFuture = collection.find(predicate.filter).cursor[Manga]().collect[List]().map {
-      records => records.size
-    }
-
-    val itemsFuture = collection.find(predicate.filter)
-      .options(predicate.queryOpts)
-      .sort(predicate.sort).cursor[Manga]().collect[List](predicate.queryOpts.batchSizeN)
-
-    for {
-      totalRecords <- totalRecordsFuture
-      items <- itemsFuture
-    } yield Option(Page(totalRecords = totalRecords, items = items))
+  def search(predicate: Predicate)(f: Predicate => Future[Option[Page[Manga]]]): Future[Option[Page[Manga]]] = {
+    f(predicate)
   }
 
-  def update(manga: Manga)(implicit ec: ExecutionContext): Future[Either[Failed, Succeed]] = {
-    findOneBy(MangaFilter(id = Option(manga.id))).flatMap {
+  def update(id: UUID, manga: Manga)(f: (UUID, Manga) => Future[WriteResult])(g: Predicate => Future[Option[Manga]]): Future[Either[Failed, Succeed]] = {
+    findOneBy(MangaFilter(id = Option(manga.id)))(g).flatMap {
       case Some(m) =>
 
         val link = manga.publicLink match {
@@ -69,34 +51,34 @@ class MangaService @Inject()(val reactiveMongoApi: ReactiveMongoApi) extends Ser
           case _ => manga.publicLink
         }
 
-        collection.update(Json.obj("id" -> manga.id), manga.copy(publicLink = link, createdAt = m.createdAt, updatedAt = DateTime.now())).map {
+        f(id, manga.copy(publicLink = link, createdAt = m.createdAt, updatedAt = DateTime.now())).map {
           lastError => if (lastError.hasErrors) Left(Error(lastError.message)) else Right(Succeed("manga.updated"))
         }
       case None => Future.successful(Left(Warning("manga.not.found")))
     }
   }
 
-  def updateOwnership(id: UUID, doIHaveIt: Boolean)(implicit ec: ExecutionContext): Future[Either[Failed, Succeed]] = {
-    findOneBy(MangaFilter(id = Option(id))).flatMap {
+  def updateOwnership(id: UUID, doIHaveIt: Boolean)(f: (UUID, Manga) => Future[WriteResult])(g: Predicate => Future[Option[Manga]]): Future[Either[Failed, Succeed]] = {
+    findOneBy(MangaFilter(id = Option(id)))(g).flatMap {
       case Some(m) =>
-        collection.update(Json.obj("id" -> id), m.copy(doIHaveIt = doIHaveIt, updatedAt = DateTime.now())).map {
+        f(id, m.copy(doIHaveIt = doIHaveIt, updatedAt = DateTime.now())).map {
           lastError => if (lastError.hasErrors) Left(Error(lastError.message)) else Right(Succeed("manga.updated"))
         }
       case None => Future.successful(Left(Warning("manga.not.found")))
     }
   }
 
-  def completeUpdate(collectionsName: String, doIHaveIt: Boolean)(implicit ec: ExecutionContext): Unit = {
-    logger debug s"Updating mangas for collection = $collectionsName with $doIHaveIt"
+  def completeUpdate(collectionsName: String, doIHaveIt: Boolean)(f: (UUID, Manga) => Future[WriteResult])(g: Predicate => Future[List[Manga]]): Unit = {
+    //logger debug s"Updating mangas for collection = $collectionsName with $doIHaveIt"
 
-    findBy(MangaFilter(collection = Some(collectionsName))).foreach {
-      _.foreach(manga => update(manga.copy(doIHaveIt = doIHaveIt)))
+    findBy(MangaFilter(collection = Some(collectionsName)))(g).foreach {
+      _.foreach(manga => f(manga.id, manga.copy(doIHaveIt = doIHaveIt)))
     }
   }
 
-  def remove(id: UUID)(implicit ec: ExecutionContext): Future[Either[Failed, Succeed]] = {
-    findOneBy(MangaFilter(id = Option(id))).flatMap {
-      case Some(_) => collection.remove(Json.obj("id" -> id)).map {
+  def remove(id: UUID)(f: UUID => Future[WriteResult])(g: Predicate => Future[Option[Manga]]): Future[Either[Failed, Succeed]] = {
+    findOneBy(MangaFilter(id = Option(id)))(g).flatMap {
+      case Some(_) => f(id).map {
         lastError =>
           if (lastError.hasErrors) Left(Error(lastError.message))
           else Right(Succeed("manga.removed"))
@@ -105,26 +87,27 @@ class MangaService @Inject()(val reactiveMongoApi: ReactiveMongoApi) extends Ser
     }
   }
 
-  def uploadCover(mangaID: UUID, directory: String, file: File)(implicit ec: ExecutionContext): Future[Either[Failed, Succeed]] = {
+  def uploadCover(mangaID: UUID, directory: String, file: File)(f: (UUID, Manga) => Future[WriteResult])(g: Predicate => Future[Option[Manga]]): Future[Either[Failed, Succeed]] = {
 
     val publicLink = FileUpload.upload(s"/my-mangas/mangas/$directory", file)
 
-    findBy(MangaFilter(id = Some(mangaID))).flatMap {
-      mangas => if (mangas.nonEmpty) {
-        val updatedManga = mangas.head.copy(publicLink = publicLink, updatedAt = DateTime.now())
-
-        collection.update(Json.obj("id" -> updatedManga.id), updatedManga).map {
+    findOneBy(MangaFilter(id = Some(mangaID)))(g).flatMap {
+      case Some(manga) =>
+        val updatedManga = manga.copy(publicLink = publicLink, updatedAt = DateTime.now())
+        f(mangaID, updatedManga).map {
           lastError => if (lastError.hasErrors) Left(Error(lastError.message)) else Right(Succeed("manga.updated"))
         }
-      } else Future.successful(Left(Warning("manga.not.found")))
+      case None => Future.successful(Left(Warning("manga.not.found")))
     }
   }
 
-  def latestNumber(collectionName: String)(implicit ec: ExecutionContext): Future[Option[Manga]] = {
-    val predicate = MangaFilter(collection = Some(collectionName))
-    collection.find(predicate.filter).
-      options(predicate.queryOpts).
-      sort(Json.obj("number" -> -1)).
-      one[Manga]
+  def latestNumber(collectionName: String)(f: Predicate => Future[Option[Manga]]): Future[Option[Manga]] = {
+
+    val predicate = new MangaFilter(collection = Some(collectionName)) {
+      override def sort: JsObject = {
+        Json.obj("number" -> -1)
+      }
+    }
+    f(predicate)
   }
 }

@@ -6,14 +6,15 @@ import akka.actor._
 import com.gbm.mymangas.actors.covers.CoverManager
 import com.gbm.mymangas.actors.scrapings.ScrapingActor
 import com.gbm.mymangas.models.Manga
+import com.gbm.mymangas.repositories.MangaRepository
 import com.gbm.mymangas.services.MangaService
 import com.gbm.mymangas.utils.StandardizeNames.StandardizeName
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
 /**
- * @author Gustavo Metzner on 10/17/15.
- */
+  * @author Gustavo Metzner on 10/17/15.
+  */
 object MangaManager {
 
   case class StartProcess(publisher: String, collection: String, searchParam: String)
@@ -29,7 +30,7 @@ object MangaManager {
 }
 
 @Singleton
-class MangaManager @Inject()(mangaService: MangaService) extends Actor with ActorLogging {
+class MangaManager @Inject()(mangaService: MangaService, mangaRepository: MangaRepository) extends Actor with ActorLogging {
 
   val coverManager = context.actorOf(CoverManager.props(self), "cover-manager")
 
@@ -37,7 +38,7 @@ class MangaManager @Inject()(mangaService: MangaService) extends Actor with Acto
 
   override def receive: Receive = {
 
-    case MangaManager.StartProcess(publisher, collection, searchParam) => mangaService.latestNumber(collection).map {
+    case MangaManager.StartProcess(publisher, collection, searchParam) => mangaService.latestNumber(collection)(mangaRepository.findOneBy).map {
       case Some(manga) => manga.number
       case None => 0
     }.foreach {
@@ -56,7 +57,7 @@ class MangaManager @Inject()(mangaService: MangaService) extends Actor with Acto
     case MangaManager.Persist(manga) =>
       log debug s"Persisting ${manga.fullName}..."
 
-      mangaService insert manga
+      mangaService.insert(manga)(mangaRepository.insert)(mangaRepository.findBy)
   }
 
   def createScrapingActor(name: String): ActorRef = {

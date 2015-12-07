@@ -35,5 +35,5 @@ object CollectionParser {
   }
 
   implicit val collectionFormatter = Format(reads, writes)
-  implicit val collectionFormatterService = Json.format[Collection]
+  implicit val collectionFormatterRepo = Json.format[Collection]
 }

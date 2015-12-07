@@ -6,6 +6,7 @@ import javax.inject.Inject
 
 import com.gbm.mymangas.models.Manga
 import com.gbm.mymangas.models.filters.MangaFilter
+import com.gbm.mymangas.repositories.MangaRepository
 import com.gbm.mymangas.services.MangaService
 import com.gbm.mymangas.utils.StandardizeNames._
 import com.gbm.mymangas.utils.json.MangaParser.{mangaFormatterController, queryString2Predicate}
@@ -20,59 +21,62 @@ import scala.concurrent.Future
   * @author Gustavo Metzner on 10/13/15.
   */
 class MangaController @Inject()(mangaService: MangaService,
+                                mangaRepository: MangaRepository,
                                 val messagesApi: MessagesApi) extends BaseController {
 
-  def create = HasTokenAsync(parse.json) {
+  import mangaRepository._
+
+  def createManga = HasTokenAsync(parse.json) {
     _ => _ => request =>
 
       logger info s"Create a Manga = $request"
 
       request.body.validate[Manga].map {
-        manga => mangaService.insert(manga).map {
+        manga => mangaService.insert(manga)(insert)(findBy).map {
           case Left(error) => BadRequest(Json.obj("msg" -> error.message))
           case Right(success) => Created(Json.obj("msg" -> success.message))
         }
       }.getOrElse(Future.successful(BadRequest("invalid json")))
   }
 
-  def update(id: UUID) = HasTokenAsync(parse.json) {
+  def updateManga(id: UUID) = HasTokenAsync(parse.json) {
     _ => _ => request =>
 
       logger info s"Update manga = $request"
 
       request.body.validate[Manga].map {
-        manga => mangaService.update(manga.copy(id = id)).map {
+        manga => mangaService.update(id, manga.copy(id = id))(update)(findOneBy).map {
           case Left(error) => BadRequest(Json.obj("msg" -> error.message))
           case Right(success) => Created(Json.obj("msg" -> success.message))
         }
       }.getOrElse(Future.successful(BadRequest("invalid json")))
   }
 
-  def search = Action.async {
+  def searchMangas = Action.async {
     request =>
 
       val predicate = queryString2Predicate(request)
 
       logger debug s"Search by predicate = $predicate"
 
-      mangaService.search(predicate).map {
+      mangaService.search(predicate)(search).map {
         case Some(page) => Ok(Json.obj("totalRecords" -> page.totalRecords, "items" -> Json.toJson(page.items)))
         case None => BadRequest("")
       }
   }
 
-  def edit(id: UUID) = HasTokenAsync() {
+  def editManga(id: UUID) = HasTokenAsync() {
     _ => _ => request =>
 
       logger debug s"Find by id = $id"
 
-      mangaService.findOneBy(MangaFilter(id = Some(id))).map {
+      mangaService.findOneBy(MangaFilter(id = Some(id)))(findOneBy).map {
         case Some(manga) => Ok(Json.obj("manga" -> Json.toJson(manga)))
         case None => NotFound(Json.obj("msg" -> "manga.not.found"))
       }
   }
 
-  def uploadCover = HasTokenAsync(parse.multipartFormData) {
+  def uploadMangaCover = HasTokenAsync(parse.multipartFormData) {
     _ => _ => request =>
 
       val directory = request.getQueryString("directory").get
@@ -85,7 +89,7 @@ class MangaController @Inject()(mangaService: MangaService,
         picture =>
 
           val file = picture.ref.moveTo(new File(s"/tmp/$filename.jpg".standardize))
-          mangaService.uploadCover(mangaID, directory.standardize, file)
+          mangaService.uploadCover(mangaID, directory.standardize, file)(update)(findOneBy)
           file.delete()
 
           Future.successful(Ok(Json.obj("msg" -> "cover.uploaded")))
@@ -94,32 +98,32 @@ class MangaController @Inject()(mangaService: MangaService,
       }
   }
 
-  def latestNumber(collectionName: String) = HasTokenAsync() {
+  def latestMangaNumber(collectionName: String) = HasTokenAsync() {
     _ => _ => request =>
-      mangaService.latestNumber(collectionName).map {
+      mangaService.latestNumber(collectionName)(findOneBy).map {
         case Some(manga) => Ok(Json.obj("data" -> Json.toJson(manga)))
         case None => NotFound(Json.obj("msg" -> "manga.not.found"))
       }
   }
 
-  def remove(id: UUID) = HasTokenAsync() {
+  def removeManga(id: UUID) = HasTokenAsync() {
     _ => _ => request =>
 
       logger debug s"Removing id = $id"
 
-      mangaService.remove(id).map {
+      mangaService.remove(id)(remove)(findOneBy).map {
         case Left(error) => BadRequest(Json.obj("msg" -> error.message))
         case Right(success) => Ok(Json.obj("msg" -> success.message))
       }
   }
 
-  def updateOwnership(id: UUID) = HasTokenAsync(parse.json) {
+  def updateMangaOwnership(id: UUID) = HasTokenAsync(parse.json) {
     _ => _ => request =>
 
       logger info s"Update manga ownership = $request"
 
       request.body.validate[Boolean].map {
-        doIHaveIt => mangaService.updateOwnership(id, doIHaveIt).map {
+        doIHaveIt => mangaService.updateOwnership(id, doIHaveIt)(update)(findOneBy).map {
           case Left(error) => BadRequest(Json.obj("msg" -> error.message))
           case Right(success) => Created(Json.obj("msg" -> success.message))
         }

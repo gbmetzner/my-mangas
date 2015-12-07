@@ -1,12 +1,12 @@
 package com.gbm.mymangas.utils.json
 
 import com.gbm.mymangas.models.Manga
-import com.gbm.mymangas.models.filters.{Predicate, MangaFilter}
+import com.gbm.mymangas.models.filters.{MangaFilter, Predicate}
+import com.gbm.mymangas.utils.UUID._
 import play.api.libs.functional.syntax._
 import play.api.libs.json.Reads._
 import play.api.libs.json._
 import play.api.mvc.{AnyContent, Request}
-import com.gbm.mymangas.utils.UUID._
 
 /**
   * @author Gustavo Metzner on 10/13/15.
@@ -40,7 +40,7 @@ object MangaParser {
 
   implicit val mangaFormatterController = Format(reads, writes)
 
-  implicit val mangaFormatterService = Json.format[Manga]
+  implicit val mangaFormatterRepo = Json.format[Manga]
 
   def queryString2Predicate(request: Request[AnyContent]): Predicate = {
     val id = request.getQueryString("id").map(fromString)
