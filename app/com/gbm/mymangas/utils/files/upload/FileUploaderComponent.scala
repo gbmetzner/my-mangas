@@ -2,8 +2,8 @@ package com.gbm.mymangas.utils.files.upload
 
 import java.io.{File, InputStream}
 
-import com.gbm.mymangas.utils.{Image, Config}
 import com.gbm.mymangas.utils.Config._
+import com.gbm.mymangas.utils.{Config, Image}
 import com.smartfile.api.BasicClient
 import org.apache.commons.io.IOUtils
 import play.api.libs.json.Json
@@ -13,8 +13,13 @@ import scala.util.{Failure, Success, Try}
 /**
   * Created by gbmetzner on 12/4/15.
   */
-trait FileUploader {
-  def upload(externalPath: String, file: File): String
+trait FileUploaderComponent {
+
+  def fileUploader: FileUploader
+
+  trait FileUploader {
+    def upload(externalPath: String, file: File): String
+  }
 
   object smartfile {
 

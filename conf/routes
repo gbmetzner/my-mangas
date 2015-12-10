@@ -11,29 +11,29 @@ PUT           /api/logout                                      com.gbm.mymangas.
 GET           /api/logged                                      com.gbm.mymangas.controllers.LoginController.logged
 
 # Publishers
-POST          /api/publishers                                  com.gbm.mymangas.controllers.PublisherController.create
-PUT           /api/publishers/:id                              com.gbm.mymangas.controllers.PublisherController.update(id: java.util.UUID)
-DELETE        /api/publishers/:id                              com.gbm.mymangas.controllers.PublisherController.remove(id: java.util.UUID)
-GET           /api/publishers/search                           com.gbm.mymangas.controllers.PublisherController.search
-GET           /api/publishers/:id/edit                         com.gbm.mymangas.controllers.PublisherController.edit(id: java.util.UUID)
+POST          /api/publishers                                  com.gbm.mymangas.controllers.PublisherController.createPublisher
+PUT           /api/publishers/:id                              com.gbm.mymangas.controllers.PublisherController.updatePublisher(id: java.util.UUID)
+DELETE        /api/publishers/:id                              com.gbm.mymangas.controllers.PublisherController.removePublisher(id: java.util.UUID)
+GET           /api/publishers/search                           com.gbm.mymangas.controllers.PublisherController.searchPublishers
+GET           /api/publishers/:id/edit                         com.gbm.mymangas.controllers.PublisherController.editPublisher(id: java.util.UUID)
 
 # Collections
-POST          /api/collections                                 com.gbm.mymangas.controllers.CollectionController.create
-PUT           /api/collections/:id                             com.gbm.mymangas.controllers.CollectionController.update(id: java.util.UUID)
-DELETE        /api/collections/:id                             com.gbm.mymangas.controllers.CollectionController.remove(id: java.util.UUID)
-GET           /api/collections/search                          com.gbm.mymangas.controllers.CollectionController.search
-GET           /api/collections/:id/edit                        com.gbm.mymangas.controllers.CollectionController.edit(id: java.util.UUID)
+POST          /api/collections                                 com.gbm.mymangas.controllers.CollectionController.createCollection
+PUT           /api/collections/:id                             com.gbm.mymangas.controllers.CollectionController.updateCollection(id: java.util.UUID)
+DELETE        /api/collections/:id                             com.gbm.mymangas.controllers.CollectionController.removeCollection(id: java.util.UUID)
+GET           /api/collections/search                          com.gbm.mymangas.controllers.CollectionController.searchCollections
+GET           /api/collections/:id/edit                        com.gbm.mymangas.controllers.CollectionController.editCollection(id: java.util.UUID)
 
 
 # Mangas
-POST          /api/mangas                                      com.gbm.mymangas.controllers.MangaController.create
-POST          /api/mangas/cover/upload                         com.gbm.mymangas.controllers.MangaController.uploadCover
-PUT           /api/mangas/:id                                  com.gbm.mymangas.controllers.MangaController.update(id: java.util.UUID)
-PUT           /api/mangas/ownership/:id                        com.gbm.mymangas.controllers.MangaController.updateOwnership(id: java.util.UUID)
-DELETE        /api/mangas/:id                                  com.gbm.mymangas.controllers.MangaController.remove(id: java.util.UUID)
-GET           /api/mangas/search                               com.gbm.mymangas.controllers.MangaController.search
-GET           /api/mangas/:id/edit                             com.gbm.mymangas.controllers.MangaController.edit(id: java.util.UUID)
-GET           /api/mangas/:collectionName/latest-number        com.gbm.mymangas.controllers.MangaController.latestNumber(collectionName: String)
+POST          /api/mangas                                      com.gbm.mymangas.controllers.MangaController.createManga
+POST          /api/mangas/cover/upload                         com.gbm.mymangas.controllers.MangaController.uploadMangaCover
+PUT           /api/mangas/:id                                  com.gbm.mymangas.controllers.MangaController.updateManga(id: java.util.UUID)
+PUT           /api/mangas/ownership/:id                        com.gbm.mymangas.controllers.MangaController.updateMangaOwnership(id: java.util.UUID)
+DELETE        /api/mangas/:id                                  com.gbm.mymangas.controllers.MangaController.removeManga(id: java.util.UUID)
+GET           /api/mangas/search                               com.gbm.mymangas.controllers.MangaController.searchMangas
+GET           /api/mangas/:id/edit                             com.gbm.mymangas.controllers.MangaController.editManga(id: java.util.UUID)
+GET           /api/mangas/:collectionName/latest-number        com.gbm.mymangas.controllers.MangaController.latestMangaNumber(collectionName: String)
 
 # Map static resources from the /public folder to the /assets URL path
 GET           /assets/*file                                    controllers.Assets.versioned(path="/public", file: Asset)

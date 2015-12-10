@@ -26,5 +26,5 @@ object PublisherParser {
   }
 
   implicit val publisherFormatter = Format(reads, writes)
-  implicit val publisherFormatterJson = Json.format[Publisher]
+  implicit val publisherFormatterRepo = Json.format[Publisher]
 }

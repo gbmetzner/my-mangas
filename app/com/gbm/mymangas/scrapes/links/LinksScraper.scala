@@ -16,8 +16,12 @@ trait LinksScraper extends Scraper {
   override type R = Seq[Document]
   type L = Seq[String]
 
-  protected[links] def extract(document: Document)(f: Document => L): R = {
-    f(document).map(link => browser.get(s"$baseURL$link")).filter(_.isDefined).map(_.get)
+  protected[links] def extract(document: Document)(f: Document => L): Seq[Document] = {
+    f(document).map {
+      link =>
+        val fixedLink = s"/$link".replaceAll("//", "/")
+        browser.get(s"$baseURL$fixedLink")
+    }.filter(_.isDefined).map(_.get)
   }
 
   protected[this] sealed trait Scraper {

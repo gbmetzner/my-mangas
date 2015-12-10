@@ -5,7 +5,9 @@ import javax.inject.Inject
 
 import com.gbm.mymangas.models.Collection
 import com.gbm.mymangas.models.filters.CollectionFilter
-import com.gbm.mymangas.services.CollectionService
+import com.gbm.mymangas.registries.{CollectionComponentRegistry, MangaComponentRegistry}
+import com.gbm.mymangas.repositories.{CollectionRepositoryComponent, MangaRepositoryComponent}
+import com.gbm.mymangas.services.{CollectionServiceComponent, MangaServiceComponent}
 import com.gbm.mymangas.utils.json.CollectionParser.collectionFormatter
 import play.api.i18n.MessagesApi
 import play.api.libs.json.Json
@@ -17,23 +19,25 @@ import scala.concurrent.Future
 /**
   * @author Gustavo Metzner on 10/13/15.
   */
-class CollectionController @Inject()(collectionService: CollectionService,
-                                     val messagesApi: MessagesApi) extends BaseController {
+class CollectionController @Inject()(val messagesApi: MessagesApi)
+  extends BaseController with CollectionComponentRegistry with MangaComponentRegistry {
+  requires: CollectionServiceComponent with CollectionRepositoryComponent
+    with MangaServiceComponent with MangaRepositoryComponent =>
 
-  def create = HasTokenAsync(parse.json) {
+  def createCollection = HasTokenAsync(parse.json) {
     _ => _ => request =>
 
       logger info s"Create a Collection = $request"
 
       request.body.validate[Collection].map {
-        coll => collectionService.insert(coll).map {
+        coll => collectionService.insert(coll)(collectionRepository.insert)(collectionRepository.findBy).map {
           case Left(error) => BadRequest(Json.obj("msg" -> error.message))
           case Right(success) => Created(Json.obj("msg" -> success.message))
         }
       }.getOrElse(Future.successful(BadRequest("invalid json")))
   }
 
-  def search = Action.async {
+  def searchCollections = Action.async {
     request =>
 
       val publisher = request.getQueryString("publisher")
@@ -43,56 +47,59 @@ class CollectionController @Inject()(collectionService: CollectionService,
 
       logger debug s"Search by publisher = $publisher, name = $name, limit = $limit and skip = $skip for request = $request"
 
-      collectionService.search(CollectionFilter(name = name, limit = limit, skip = skip)).map {
+      collectionService.search(CollectionFilter(name = name, limit = limit, skip = skip))(collectionRepository.search).map {
         case Some(page) => Ok(Json.obj("totalRecords" -> page.totalRecords, "items" -> Json.toJson(page.items)))
         case None => BadRequest("")
       }
   }
 
-  def edit(id: UUID) = HasTokenAsync() {
+  def editCollection(id: UUID) = HasTokenAsync() {
     _ => _ => request =>
 
       logger debug s"Find by id = $id"
 
-      collectionService.findOneBy(CollectionFilter(id = Some(id))).map {
+      collectionService.findOneBy(CollectionFilter(id = Some(id)))(collectionRepository.findOneBy).map {
         case Some(collection) => Ok(Json.obj("collection" -> Json.toJson(collection)))
         case None => NotFound(Json.obj("msg" -> "collection.not.found"))
       }
   }
 
-  def update(id: UUID) = HasTokenAsync(parse.json) {
+  def updateCollection(id: UUID) = HasTokenAsync(parse.json) {
     _ => _ => request =>
 
       logger debug s"Update a Collection = $request"
 
       request.body.validate[Collection].map {
-        collection => collectionService.update(id, collection).map {
+        collection => collectionService.update(id, collection)(collectionRepository.update)(collectionRepository.findBy) {
+          (collection, doIHaveIt) =>
+            mangaService.completeUpdate(collection, doIHaveIt)(mangaRepository.update)(mangaRepository.findBy)
+        }.map {
           case Left(error) => BadRequest(Json.obj("msg" -> error.message))
           case Right(success) => Ok(Json.obj("msg" -> success.message))
         }
       }.getOrElse(Future.successful(BadRequest("invalid json")))
   }
 
-  def remove(id: UUID) = HasTokenAsync() {
+  def removeCollection(id: UUID) = HasTokenAsync() {
     _ => _ => request =>
 
       logger debug s"Removing id = $id"
 
-      collectionService.remove(id).map {
+      collectionService.remove(id)(collectionRepository.remove)(collectionRepository.findOneBy).map {
         case Left(error) => BadRequest(Json.obj("msg" -> error.message))
         case Right(success) => Ok(Json.obj("msg" -> success.message))
       }
   }
 
-  def complete(collection: String) = HasTokenAsync() {
+  def completeCollection(collection: String) = HasTokenAsync() {
     _ => _ => request =>
 
       logger debug s"Collection $collection is complete."
-//
-//      collectionService.remove(id).map {
-//        case Left(error) => BadRequest(Json.obj("msg" -> error.message))
-//        case Right(success) => Ok(Json.obj("msg" -> success.message))
-//      }
+      //
+      //      collectionService.remove(id).map {
+      //        case Left(error) => BadRequest(Json.obj("msg" -> error.message))
+      //        case Right(success) => Ok(Json.obj("msg" -> success.message))
+      //      }
       ???
   }
 

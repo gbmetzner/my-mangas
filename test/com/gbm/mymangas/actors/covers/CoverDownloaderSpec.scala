@@ -1,12 +1,11 @@
 package com.gbm.mymangas.actors.covers
 
-import java.io.FileNotFoundException
-
+import akka.actor.Props
 import akka.testkit.TestProbe
 import com.gbm.mymangas.base.ActorUnitSpec
 import com.gbm.mymangas.data.MangaDataProvider._
-import com.gbm.mymangas.download.FakeFileDownloader
-import com.gbm.mymangas.utils.files.download.FileDownloader
+import com.gbm.mymangas.actors.covers.download.{FakeFileDownloadComponentImpl, FakeFileDownloadComponentImplError}
+import com.gbm.mymangas.utils.UUID
 
 /**
   * Created by gbmetzner on 12/5/15.
@@ -15,31 +14,29 @@ class CoverDownloaderSpec extends ActorUnitSpec("CoverDownloaderActorSystem") {
 
   "A CoverDownloader" should "react properly to Download/DownloadDone" in {
     val coverManager = TestProbe()
-    val coverDownloader = system.actorOf(CoverDownloader.props(coverManager.ref, FakeFileDownloader), "CoverManagerActor")
+    val coverDownloader = system.actorOf(Props(new CoverDownloader(coverManager.ref) with FakeFileDownloadComponentImpl), "CoverManagerActor")
 
     val manga = gimme("berserk1")
 
-    coverManager.send(coverDownloader, CoverDownloader.Download(manga, "url"))
+    val id = UUID.actorId(manga.collection)
 
-    coverManager.expectMsg(CoverDownloader.DownloadDone(manga, "/tmp/berserk_1.jpg"))
+    coverManager.send(coverDownloader, CoverDownloader.Download(manga, "url", id))
+
+    coverManager.expectMsg(CoverDownloader.DownloadDone(manga, "/tmp/berserk_1.jpg", id))
   }
 
   it should "react properly to Download/CoverNotAvailable" in {
 
-    val fakeFileDownloader = new FileDownloader {
-      override def downloadImage(url: String, file: String): String = throw new FileNotFoundException("Download Error")
-
-      override def extractExtension(url: String): String = ".jpg"
-    }
-
     val coverManager = TestProbe()
-    val coverDownloader = system.actorOf(CoverDownloader.props(coverManager.ref, fakeFileDownloader), "CoverManagerActorError")
+    val coverDownloader = system.actorOf(Props(new CoverDownloader(coverManager.ref) with FakeFileDownloadComponentImplError), "CoverManagerActorError")
 
     val manga = gimme("berserk1")
 
-    coverManager.send(coverDownloader, CoverDownloader.Download(manga, "url"))
+    val id = UUID.actorId(manga.collection)
 
-    coverManager.expectMsg(CoverDownloader.CoverNotAvailable(manga.copy(publicLink = "manga.no.cover")))
+    coverManager.send(coverDownloader, CoverDownloader.Download(manga, "url", id))
+
+    coverManager.expectMsg(CoverDownloader.CoverNotAvailable(manga, id))
   }
 
 }

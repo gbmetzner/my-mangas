@@ -31,7 +31,7 @@ object UserParser {
 
   implicit val userFormatterController = Format(reads, writes)
 
-  implicit val userFormatterService = Json.format[User]
+  implicit val userFormatterRepo = Json.format[User]
 
   implicit val loginFormatterController = Json.format[Login]
 

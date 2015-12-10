@@ -5,7 +5,8 @@ import javax.inject.{Inject, Singleton}
 import akka.actor.{Actor, ActorLogging}
 import com.gbm.mymangas.models.Email
 import com.gbm.mymangas.models.filters.MangaFilter
-import com.gbm.mymangas.services.MangaService
+import com.gbm.mymangas.repositories.MangaRepositoryComponent
+import com.gbm.mymangas.services.MangaServiceComponent
 import com.gbm.mymangas.utils.Config._
 import org.joda.time.DateTime
 import play.api.libs.mailer.MailerClient
@@ -22,8 +23,8 @@ object EmailSender {
 }
 
 @Singleton
-class EmailSender @Inject()(mangaService: MangaService,
-                            mailerClient: MailerClient) extends Actor with ActorLogging {
+class EmailSender @Inject()(mailerClient: MailerClient) extends Actor with ActorLogging {
+  requires: MangaServiceComponent with MangaRepositoryComponent =>
 
   override def receive: Receive = {
     case EmailSender.Send =>
@@ -32,7 +33,7 @@ class EmailSender @Inject()(mangaService: MangaService,
 
       log debug s"Finding between $yesterday and $today"
 
-      val mangasF = mangaService.findBy(MangaFilter(from = Some(yesterday), to = Some(today)))
+      val mangasF = mangaService.findBy(MangaFilter(from = Some(yesterday), to = Some(today)))(mangaRepository.findBy)
 
       mangasF.map(_.size).foreach {
         case size: Int if size > 0 =>

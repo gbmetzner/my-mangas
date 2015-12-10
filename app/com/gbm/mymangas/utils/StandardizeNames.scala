@@ -12,6 +12,7 @@ object StandardizeNames {
       Normalizer.normalize(name, Normalizer.Form.NFD)
         .replaceAll("[^\\p{ASCII}]", "")
         .replaceAll(" ", "_")
+        .replaceAll("#", "_")
         .toLowerCase
     }
   }
