@@ -9,7 +9,7 @@
     </appender>
     <!--appender name="LE" class="com.logentries.logback.LogentriesAppender">
         <Debug>False</Debug>
-        <Token>bab3fd76-1801-40c6-a65d-8501021f4320</Token>
+        <Token>Token</Token>
         <Ssl>False</Ssl>
         <layout>
             <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
