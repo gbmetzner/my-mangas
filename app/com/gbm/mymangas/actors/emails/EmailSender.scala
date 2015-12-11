@@ -2,7 +2,7 @@ package com.gbm.mymangas.actors.emails
 
 import javax.inject.{Inject, Singleton}
 
-import akka.actor.{Actor, ActorLogging}
+import akka.actor.{Props, Actor, ActorLogging}
 import com.gbm.mymangas.models.Email
 import com.gbm.mymangas.models.filters.MangaFilter
 import com.gbm.mymangas.repositories.MangaRepositoryComponent
@@ -19,6 +19,8 @@ import scala.concurrent.ExecutionContext.Implicits.global
 object EmailSender {
 
   case object Send
+
+  //def props:Props = Props(new EmailSender())
 
 }
 

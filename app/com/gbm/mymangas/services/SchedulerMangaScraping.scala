@@ -24,5 +24,5 @@ class SchedulerMangaScraping @Inject()(val app: Application,
 
   val mangasScraper = system.actorOf(MangasScraper.props, "manga-scraper")
 
-  system.scheduler.schedule(15.seconds, 1.hour, mangasScraper, MangasScraper.Start)
+  system.scheduler.schedule(15.seconds, 24.hours, mangasScraper, MangasScraper.Start)
 }
