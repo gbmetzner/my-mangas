@@ -1,10 +1,9 @@
 package com.gbm.mymangas.actors.emails
 
-import javax.inject.{Inject, Singleton}
-
-import akka.actor.{Props, Actor, ActorLogging}
+import akka.actor.{Actor, ActorLogging, Props}
 import com.gbm.mymangas.models.Email
 import com.gbm.mymangas.models.filters.MangaFilter
+import com.gbm.mymangas.registries.MangaComponentRegistry
 import com.gbm.mymangas.repositories.MangaRepositoryComponent
 import com.gbm.mymangas.services.MangaServiceComponent
 import com.gbm.mymangas.utils.Config._
@@ -20,12 +19,11 @@ object EmailSender {
 
   case object Send
 
-  //def props:Props = Props(new EmailSender())
+  def props(mailerClient: MailerClient): Props = Props(new EmailSender(mailerClient) with MangaComponentRegistry)
 
 }
 
-@Singleton
-class EmailSender @Inject()(mailerClient: MailerClient) extends Actor with ActorLogging {
+class EmailSender(mailerClient: MailerClient) extends Actor with ActorLogging {
   requires: MangaServiceComponent with MangaRepositoryComponent =>
 
   override def receive: Receive = {
@@ -38,8 +36,7 @@ class EmailSender @Inject()(mailerClient: MailerClient) extends Actor with Actor
       val mangasF = mangaService.findBy(MangaFilter(from = Some(yesterday), to = Some(today)))(mangaRepository.findBy)
 
       mangasF.map(_.size).foreach {
-        case size: Int if size > 0 =>
-          mailerClient.send(Email(to = getString("my.email"), from = getString("from.email"), qtyMangas = size))
+        case size: Int if size > 0 => mailerClient.send(Email(to = getString("my.email"), from = getString("from.email"), qtyMangas = size))
         case 0 => log debug "No email to send."
       }
   }

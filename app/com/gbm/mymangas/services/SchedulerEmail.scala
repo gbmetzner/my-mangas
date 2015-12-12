@@ -1,11 +1,12 @@
 package com.gbm.mymangas.services
 
-import javax.inject.{Inject, Named, Singleton}
+import javax.inject.{Inject, Singleton}
 
-import akka.actor.{ActorRef, ActorSystem}
+import akka.actor.ActorSystem
 import com.gbm.mymangas.actors.emails.EmailSender
 import com.typesafe.scalalogging.LazyLogging
 import play.api.Application
+import play.api.libs.mailer.MailerClient
 
 import scala.concurrent.ExecutionContext
 import scala.concurrent.duration._
@@ -16,13 +17,15 @@ import scala.concurrent.duration._
 @Singleton
 class SchedulerEmail @Inject()(val app: Application,
                                val system: ActorSystem,
-                               @Named("email-sender") val emailSender: ActorRef)(implicit ec: ExecutionContext)
+                               mailerClient: MailerClient)(implicit ec: ExecutionContext)
   extends LazyLogging {
 
   implicit val application = app
 
   logger info "Email scheduling..."
 
-  system.scheduler.schedule(1.hour, 24.hours, emailSender, EmailSender.Send)
+  val emailSender = system.actorOf(EmailSender.props(mailerClient))
+
+  system.scheduler.schedule(1.minute, 24.hours, emailSender, EmailSender.Send)
 }
 
