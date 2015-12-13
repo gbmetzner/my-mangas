@@ -25,7 +25,12 @@
                 <small>Latest Publications</small>
             </h3>
         </legend>
-
+        <div class="text-center">
+            <uib-pagination total-items="bigTotalItems" ng-model="bigCurrentPage" max-size="maxSize"
+                            class="pagination" items-per-page="itemsPerPage" boundary-links="true"
+                            rotate="false" num-pages="numPages" ng-change="pageChanged()">
+            </uib-pagination>
+        </div>
         <div>
             <div deckgrid class="deckgrid" cardTemplate="/partials/mangas/templates/card_deck.html"
                  source="mangas">

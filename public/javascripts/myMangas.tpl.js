@@ -493,7 +493,12 @@ module.run(['$templateCache', function($templateCache) {
     '                <small>Latest Publications</small>\n' +
     '            </h3>\n' +
     '        </legend>\n' +
-    '\n' +
+    '        <div class="text-center">\n' +
+    '            <uib-pagination total-items="bigTotalItems" ng-model="bigCurrentPage" max-size="maxSize"\n' +
+    '                            class="pagination" items-per-page="itemsPerPage" boundary-links="true"\n' +
+    '                            rotate="false" num-pages="numPages" ng-change="pageChanged()">\n' +
+    '            </uib-pagination>\n' +
+    '        </div>\n' +
     '        <div>\n' +
     '            <div deckgrid class="deckgrid" cardTemplate="/partials/mangas/templates/card_deck.html"\n' +
     '                 source="mangas">\n' +
