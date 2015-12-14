@@ -11,7 +11,6 @@ import org.joda.time.DateTime
   */
 case class Manga(id: UUID = generate(),
                  collection: String,
-                 name: String,
                  number: Int,
                  doIHaveIt: Boolean = false,
                  publicLink: String = Config2.defaultCover,

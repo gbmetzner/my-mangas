@@ -7,7 +7,7 @@ import com.gbm.mymangas.models.Manga
   */
 object MangaDataProvider extends TestData[Manga] {
 
-  val berserk1 = "berserk1" -> Manga(collection = "Berserk", name = "Berserk", number = 1)
+  val berserk1 = "berserk1" -> Manga(collection = "Berserk", number = 1)
 
   add(berserk1)
 

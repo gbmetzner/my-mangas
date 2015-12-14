@@ -2,6 +2,7 @@ package com.gbm.mymangas.scrapes.mangas
 
 import com.gbm.mymangas.models.Manga
 import com.gbm.mymangas.scrapes.Scraper
+import com.gbm.mymangas.utils.StandardizeNames._
 import net.ruippeixotog.scalascraper.dsl.DSL._
 import net.ruippeixotog.scalascraper.scraper.ContentExtractors._
 import org.jsoup.nodes.Document
@@ -20,15 +21,12 @@ trait MangaScraper extends Scraper {
   protected[this] sealed trait Scraper {
 
     def extractManga(document: Document): Manga = {
-      val collection = extractCollection(document)
-      val name = extractName(document)
+      val collection = extractCollection(document).capitalizeAll
       val number = extractNumber(document)
-      Manga(collection = collection, name = name, number = number)
+      Manga(collection = collection, number = number)
     }
 
     protected def extractCoverLink(document: Document): String
-
-    protected[this] def extractName(document: Document): String
 
     protected[this] def extractNumber(document: Document): Int
 
@@ -39,10 +37,6 @@ trait MangaScraper extends Scraper {
 
     override def extractCoverLink(document: Document): String = {
       s"$baseURL${document >> extractor(".cover img", attr("src"))}"
-    }
-
-    protected[this] override def extractName(document: Document): String = {
-      extractCollection(document)
     }
 
     protected[this] override def extractNumber(document: Document): Int = {
@@ -58,10 +52,6 @@ trait MangaScraper extends Scraper {
 
     override def extractCoverLink(document: Document): String = {
       document >> extractor("#int_content img", attr("src"))
-    }
-
-    protected[this] override def extractName(document: Document): String = {
-      document >> extractor("#int_content h3", text)
     }
 
     protected[this] override def extractNumber(document: Document): Int = {

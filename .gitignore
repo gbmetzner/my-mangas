@@ -11,3 +11,5 @@ target
 /conf/smartfile.conf
 /conf/email.conf
 .DS_Store
+.sbtserver
+.sbtserver.lock

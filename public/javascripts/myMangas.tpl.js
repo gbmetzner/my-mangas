@@ -293,19 +293,6 @@ module.run(['$templateCache', function($templateCache) {
     '            </div>\n' +
     '\n' +
     '            <div class="form-group">\n' +
-    '                <label for="name" class="col-sm-2 control-label">Name</label>\n' +
-    '\n' +
-    '                <div class="col-sm-3">\n' +
-    '                    <input id="name" name="name" type="text" data-ng-model="manga.name"\n' +
-    '                           placeholder="Manga\'s name" required class="form-control"\n' +
-    '                           pattern=".{2,}" title="Please type at least 2 characters">\n' +
-    '                    <span data-ng-show="mangaForm.name.$invalid">\n' +
-    '                        <small>Please enter a valid name</small>\n' +
-    '                    </span>\n' +
-    '                </div>\n' +
-    '            </div>\n' +
-    '\n' +
-    '            <div class="form-group">\n' +
     '                <label for="number" class="col-sm-2 control-label">Number</label>\n' +
     '\n' +
     '                <div class="col-sm-3">\n' +
@@ -387,15 +374,6 @@ module.run(['$templateCache', function($templateCache) {
     '                           placeholder="Collection\'s name" class="form-control">\n' +
     '                </div>\n' +
     '            </div>\n' +
-    '\n' +
-    '            <div class="form-group">\n' +
-    '                <label for="name" class="col-sm-2 control-label">Name</label>\n' +
-    '\n' +
-    '                <div class="col-sm-3">\n' +
-    '                    <input id="name" name="name" type="text" data-ng-model="manga.name"\n' +
-    '                           placeholder="Manga\'s name" class="form-control">\n' +
-    '                </div>\n' +
-    '            </div>\n' +
     '        </form>\n' +
     '    </fieldset>\n' +
     '\n' +
@@ -409,7 +387,6 @@ module.run(['$templateCache', function($templateCache) {
     '            <thead>\n' +
     '            <tr>\n' +
     '                <th class="text-center">Collection</th>\n' +
-    '                <th class="text-center">Name</th>\n' +
     '                <th class="text-center">Number</th>\n' +
     '                <th class="text-center">Do I have it?</th>\n' +
     '                <th class="text-center">Action</th>\n' +
@@ -418,7 +395,6 @@ module.run(['$templateCache', function($templateCache) {
     '            <tbody class="text-center">\n' +
     '            <tr data-ng-repeat="manga in mangas">\n' +
     '                <td>{{manga.collection}}</td>\n' +
-    '                <td>{{manga.name}}</td>\n' +
     '                <td>{{manga.number}}</td>\n' +
     '                <td>\n' +
     '                    <a role="button" href="#" data-ng-click="updateOwnership(manga)">\n' +

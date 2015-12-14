@@ -17,4 +17,8 @@ object StandardizeNames {
     }
   }
 
+  implicit class CapitalizeAll(value: String) {
+    def capitalizeAll: String = value.toLowerCase.split(' ').map(_.capitalize).mkString(" ")
+  }
+
 }

@@ -17,15 +17,6 @@
                            placeholder="Collection's name" class="form-control">
                 </div>
             </div>
-
-            <div class="form-group">
-                <label for="name" class="col-sm-2 control-label">Name</label>
-
-                <div class="col-sm-3">
-                    <input id="name" name="name" type="text" data-ng-model="manga.name"
-                           placeholder="Manga's name" class="form-control">
-                </div>
-            </div>
         </form>
     </fieldset>
 
@@ -39,7 +30,6 @@
             <thead>
             <tr>
                 <th class="text-center">Collection</th>
-                <th class="text-center">Name</th>
                 <th class="text-center">Number</th>
                 <th class="text-center">Do I have it?</th>
                 <th class="text-center">Action</th>
@@ -48,7 +38,6 @@
             <tbody class="text-center">
             <tr data-ng-repeat="manga in mangas">
                 <td>{{manga.collection}}</td>
-                <td>{{manga.name}}</td>
                 <td>{{manga.number}}</td>
                 <td>
                     <a role="button" href="#" data-ng-click="updateOwnership(manga)">

@@ -16,10 +16,9 @@ object MangaParser {
   private val reads: Reads[Manga] = new Reads[Manga] {
     override def reads(json: JsValue): JsResult[Manga] = {
       val collection = (json \ "collection").as[String](minLength[String](3) keepAnd maxLength[String](30))
-      val name = (json \ "name").as[String](minLength[String](3) keepAnd maxLength[String](30))
       val number = (json \ "number").as[Int]
       val doIHaveIt = (json \ "doIHaveIt").as[Boolean]
-      JsSuccess(Manga(name = name, collection = collection, number = number, doIHaveIt = doIHaveIt))
+      JsSuccess(Manga(collection = collection, number = number, doIHaveIt = doIHaveIt))
     }
   }
 
@@ -28,7 +27,6 @@ object MangaParser {
       Json.obj(
         "id" -> m.id,
         "collection" -> m.collection,
-        "name" -> m.name,
         "number" -> m.number,
         "publicLink" -> m.publicLink,
         "doIHaveIt" -> m.doIHaveIt,
@@ -45,11 +43,10 @@ object MangaParser {
   def queryString2Predicate(request: Request[AnyContent]): Predicate = {
     val id = request.getQueryString("id").map(fromString)
     val collection = request.getQueryString("collection")
-    val name = request.getQueryString("name")
     val number = request.getQueryString("number").map(_.toInt)
     val limit = request.getQueryString("limit").map(_.toInt)
     val skip = request.getQueryString("skip").map(_.toInt)
-    MangaFilter(id = id, collection = collection, name = name, number = number, limit = limit, skip = skip)
+    MangaFilter(id = id, collection = collection, number = number, limit = limit, skip = skip)
   }
 
 }

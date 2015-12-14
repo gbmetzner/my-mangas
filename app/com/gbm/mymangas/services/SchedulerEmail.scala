@@ -24,8 +24,8 @@ class SchedulerEmail @Inject()(val app: Application,
 
   logger info "Email scheduling..."
 
-  val emailSender = system.actorOf(EmailSender.props(mailerClient))
+  val emailSender = system.actorOf(EmailSender.props(mailerClient), "email-sender")
 
-  system.scheduler.schedule(1.minute, 24.hours, emailSender, EmailSender.Send)
+  system.scheduler.schedule(5.hours, 24.hours, emailSender, EmailSender.Send)
 }
 

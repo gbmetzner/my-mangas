@@ -27,7 +27,7 @@ trait MangaServiceComponentImpl extends MangaServiceComponent {
   class MangaServiceImpl extends MangaService {
 
     def insert(manga: Manga)(f: Manga => Future[WriteResult])(g: Predicate => Future[List[Manga]]): Future[Either[Failed, Succeed]] = {
-      findBy(MangaFilter(name = Option(manga.name), number = Option(manga.number)))(g).flatMap {
+      findBy(MangaFilter(collection = Option(manga.collection), number = Option(manga.number)))(g).flatMap {
         mangas => if (mangas.isEmpty) {
           f(manga).map {
             lastError => if (lastError.hasErrors) Left(Error(lastError.message)) else Right(Succeed("manga.added"))

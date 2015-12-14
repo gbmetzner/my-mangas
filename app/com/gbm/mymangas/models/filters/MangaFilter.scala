@@ -13,7 +13,6 @@ import scala.util.Random
   */
 case class MangaFilter(id: Option[UUID] = None,
                        collection: Option[String] = None,
-                       name: Option[String] = None,
                        number: Option[Int] = None,
                        from: Option[DateTime] = None,
                        to: Option[DateTime] = None,
@@ -23,7 +22,6 @@ case class MangaFilter(id: Option[UUID] = None,
   override def filter: JsObject = {
 
     val filter = (collection.map(c => Json.obj("collection" -> Json.obj("$regex" -> c, "$options" -> "i")))
-      :: name.map(n => Json.obj("name" -> Json.obj("$regex" -> n, "$options" -> "i")))
       :: number.map(n => Json.obj("number" -> n))
       :: id.map(i => Json.obj("id" -> i))
       :: from.map(f => Json.obj("createdAt" -> Json.obj("$gte" -> f.getMillis)))
