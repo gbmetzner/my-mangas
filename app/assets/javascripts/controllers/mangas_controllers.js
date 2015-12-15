@@ -92,7 +92,7 @@ angular.module('manga.controllers', ['manga.services', 'collection.services', 'n
                     'manga': manga,
                     'limit': $scope.itemsPerPage,
                     'skip': skip
-                }).then(function (response) {
+                },false).then(function (response) {
                     $scope.mangas = response.data.items;
                     $scope.bigTotalItems = response.data.totalRecords;
                 }, function (response) {
@@ -194,7 +194,7 @@ angular.module('manga.controllers', ['manga.services', 'collection.services', 'n
                            'manga': {collection: collection, name:""},
                            'limit': $scope.itemsPerPage,
                            'skip': skip
-                       }).then(function (response) {
+                       },true).then(function (response) {
                            $scope.mangas = response.data.items;
                            $scope.bigTotalItems = response.data.totalRecords;
                        }, function (response) {

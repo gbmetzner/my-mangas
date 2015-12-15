@@ -9,7 +9,7 @@
     </appender>
     <appender name="LE" class="com.logentries.logback.LogentriesAppender">
         <Debug>False</Debug>
-        <Token>bab3fd76-1801-40c6-a65d-8501021f4320</Token>
+        <Token>Token</Token>
         <Ssl>False</Ssl>
         <layout>
             <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
@@ -25,19 +25,19 @@
 
     <root level="ERROR">
         <!--appender-ref ref="STDOUT"/-->
-        <appender-ref ref="LE"/>
+        <appender-ref ref="STDOUT"/>
     </root>
     <root level="DEBUG">
         <!--appender-ref ref="STDOUT"/-->
-        <appender-ref ref="LE"/>
+        <appender-ref ref="STDOUT"/>
     </root>
     <root level="WARNING">
         <!--appender-ref ref="STDOUT"/-->
-        <appender-ref ref="LE"/>
+        <appender-ref ref="STDOUT"/>
     </root>
     <root level="INFO">
         <!--appender-ref ref="STDOUT"/-->
-        <appender-ref ref="LE"/>
+        <appender-ref ref="STDOUT"/>
     </root>
 
 </configuration>

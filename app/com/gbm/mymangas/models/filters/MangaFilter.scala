@@ -16,6 +16,7 @@ case class MangaFilter(id: Option[UUID] = None,
                        number: Option[Int] = None,
                        from: Option[DateTime] = None,
                        to: Option[DateTime] = None,
+                       randomSort: Boolean = false,
                        override val limit: Option[Int] = None,
                        override val skip: Option[Int] = None) extends Predicate {
 
@@ -33,6 +34,8 @@ case class MangaFilter(id: Option[UUID] = None,
   }
 
   override def sort: JsObject = {
-    Json.obj("doIHaveIt" -> 1)
+    def random(): Int = if (Random.nextBoolean()) 1 else -1
+    if (randomSort) Json.obj("doIHaveIt" -> 1, "collection" -> random(), "number" -> random())
+    else Json.obj("doIHaveIt" -> 1, "collection" -> 1)
   }
 }

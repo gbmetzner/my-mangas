@@ -352,7 +352,7 @@ angular.module('manga.controllers', ['manga.services', 'collection.services', 'n
                     'manga': manga,
                     'limit': $scope.itemsPerPage,
                     'skip': skip
-                }).then(function (response) {
+                },false).then(function (response) {
                     $scope.mangas = response.data.items;
                     $scope.bigTotalItems = response.data.totalRecords;
                 }, function (response) {
@@ -454,7 +454,7 @@ angular.module('manga.controllers', ['manga.services', 'collection.services', 'n
                            'manga': {collection: collection, name:""},
                            'limit': $scope.itemsPerPage,
                            'skip': skip
-                       }).then(function (response) {
+                       },true).then(function (response) {
                            $scope.mangas = response.data.items;
                            $scope.bigTotalItems = response.data.totalRecords;
                        }, function (response) {
@@ -786,7 +786,7 @@ angular.module('manga.services', []).factory('MangaService', ['$http', function 
         updateOwnership: function(mangaID, doIHaveIt){
             return $http.put(baseURL + '/ownership/' + mangaID, doIHaveIt);
         },
-        paginate: function (mangaFilter) {
+        paginate: function (mangaFilter,random) {
             var url = '/search?';
             if (mangaFilter.limit) {
                 url = url + 'limit=' + mangaFilter.limit;
@@ -799,6 +799,9 @@ angular.module('manga.services', []).factory('MangaService', ['$http', function 
             }
             if (mangaFilter.manga.name) {
                 url = url + '&name=' + mangaFilter.manga.name;
+            }
+            if(random){
+             url = url + '&random=' + random;
             }
             return $http.get(baseURL + url);
         }

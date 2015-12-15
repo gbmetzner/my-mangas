@@ -16,7 +16,7 @@ angular.module('manga.services', []).factory('MangaService', ['$http', function 
         updateOwnership: function(mangaID, doIHaveIt){
             return $http.put(baseURL + '/ownership/' + mangaID, doIHaveIt);
         },
-        paginate: function (mangaFilter) {
+        paginate: function (mangaFilter,random) {
             var url = '/search?';
             if (mangaFilter.limit) {
                 url = url + 'limit=' + mangaFilter.limit;
@@ -29,6 +29,9 @@ angular.module('manga.services', []).factory('MangaService', ['$http', function 
             }
             if (mangaFilter.manga.name) {
                 url = url + '&name=' + mangaFilter.manga.name;
+            }
+            if(random){
+             url = url + '&random=' + random;
             }
             return $http.get(baseURL + url);
         }

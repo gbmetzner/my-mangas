@@ -46,7 +46,8 @@ object MangaParser {
     val number = request.getQueryString("number").map(_.toInt)
     val limit = request.getQueryString("limit").map(_.toInt)
     val skip = request.getQueryString("skip").map(_.toInt)
-    MangaFilter(id = id, collection = collection, number = number, limit = limit, skip = skip)
+    val random = request.getQueryString("random").exists(_.toBoolean)
+    MangaFilter(id = id, collection = collection, number = number, limit = limit, skip = skip, randomSort = random)
   }
 
 }
