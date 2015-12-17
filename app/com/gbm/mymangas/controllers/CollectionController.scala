@@ -31,10 +31,10 @@ class CollectionController @Inject()(val messagesApi: MessagesApi)
 
       request.body.validate[Collection].map {
         coll => collectionService.insert(coll)(collectionRepository.insert)(collectionRepository.findBy).map {
-          case Left(error) => BadRequest(Json.obj("msg" -> error.message))
-          case Right(success) => Created(Json.obj("msg" -> success.message))
+          case Left(error) => BadRequest(Json.obj("msg" -> withMessage(error.message)))
+          case Right(success) => Created(Json.obj("msg" -> withMessage(success.message)))
         }
-      }.getOrElse(Future.successful(BadRequest("invalid json")))
+      }.getOrElse(Future.successful(BadRequest(withMessage("error.invalid.json"))))
   }
 
   def searchCollections = Action.async {
@@ -60,7 +60,7 @@ class CollectionController @Inject()(val messagesApi: MessagesApi)
 
       collectionService.findOneBy(CollectionFilter(id = Some(id)))(collectionRepository.findOneBy).map {
         case Some(collection) => Ok(Json.obj("collection" -> Json.toJson(collection)))
-        case None => NotFound(Json.obj("msg" -> "collection.not.found"))
+        case None => NotFound(Json.obj("msg" -> withMessage("collection.not.found")))
       }
   }
 
@@ -74,10 +74,10 @@ class CollectionController @Inject()(val messagesApi: MessagesApi)
           (collection, doIHaveIt) =>
             mangaService.completeUpdate(collection, doIHaveIt)(mangaRepository.update)(mangaRepository.findBy)
         }.map {
-          case Left(error) => BadRequest(Json.obj("msg" -> error.message))
-          case Right(success) => Ok(Json.obj("msg" -> success.message))
+          case Left(error) => BadRequest(Json.obj("msg" -> withMessage(error.message)))
+          case Right(success) => Ok(Json.obj("msg" -> withMessage(success.message)))
         }
-      }.getOrElse(Future.successful(BadRequest("invalid json")))
+      }.getOrElse(Future.successful(BadRequest(withMessage("error.invalid.json"))))
   }
 
   def removeCollection(id: UUID) = HasTokenAsync() {
@@ -86,8 +86,8 @@ class CollectionController @Inject()(val messagesApi: MessagesApi)
       logger debug s"Removing id = $id"
 
       collectionService.remove(id)(collectionRepository.remove)(collectionRepository.findOneBy).map {
-        case Left(error) => BadRequest(Json.obj("msg" -> error.message))
-        case Right(success) => Ok(Json.obj("msg" -> success.message))
+        case Left(error) => BadRequest(Json.obj("msg" -> withMessage(error.message)))
+        case Right(success) => Ok(Json.obj("msg" -> withMessage(success.message)))
       }
   }
 

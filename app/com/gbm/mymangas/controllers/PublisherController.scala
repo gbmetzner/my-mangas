@@ -9,6 +9,7 @@ import com.gbm.mymangas.registries.PublisherComponentRegistry
 import com.gbm.mymangas.repositories.PublisherRepositoryComponent
 import com.gbm.mymangas.services.PublisherServiceComponent
 import com.gbm.mymangas.utils.json.PublisherParser.publisherFormatter
+import com.gbm.mymangas.utils.json.PublisherParser.queryString2Predicate
 import play.api.i18n.MessagesApi
 import play.api.libs.json.Json
 import play.api.mvc.Action
@@ -31,22 +32,21 @@ class PublisherController @Inject()(val messagesApi: MessagesApi)
 
       request.body.validate[Publisher].map {
         publisher => publisherService.insert(publisher)(publisherRepository.insert)(publisherRepository.findBy).map {
-          case Left(error) => BadRequest(Json.obj("msg" -> error.message))
-          case Right(success) => Created(Json.obj("msg" -> success.message))
+          case Left(error) =>
+            BadRequest(Json.obj("msg" -> withMessage(error.message)))
+          case Right(success) => Created(Json.obj("msg" -> withMessage(success.message)))
         }
-      }.getOrElse(Future.successful(BadRequest("invalid json")))
+      }.getOrElse(Future.successful(BadRequest(Json.obj("msg" -> withMessage("error.invalid.json")))))
   }
 
   def searchPublishers = Action.async {
     request =>
 
-      val name = request.getQueryString("name")
-      val limit = request.getQueryString("limit").map(_.toInt)
-      val skip = request.getQueryString("skip").map(_.toInt)
+      val predicate = queryString2Predicate(request)
 
-      logger debug s"Search by name = $name, limit = $limit and skip = $skip"
+      logger debug s"Search by predicate = $predicate"
 
-      publisherService.search(PublisherFilter(name = name, limit = limit, skip = skip))(publisherRepository.search).map {
+      publisherService.search(predicate)(publisherRepository.search).map {
         case Some(page) => Ok(Json.obj("totalRecords" -> page.totalRecords, "items" -> Json.toJson(page.items)))
         case None => BadRequest("")
       }
@@ -59,7 +59,7 @@ class PublisherController @Inject()(val messagesApi: MessagesApi)
 
       publisherService.findOneBy(PublisherFilter(id = Some(id)))(publisherRepository.findOneBy).map {
         case Some(publisher) => Ok(Json.obj("publisher" -> Json.toJson(publisher)))
-        case None => NotFound(Json.obj("msg" -> "publisher.not.found"))
+        case None => NotFound(Json.obj("msg" -> withMessage("publisher.not.found")))
       }
   }
 
@@ -70,10 +70,10 @@ class PublisherController @Inject()(val messagesApi: MessagesApi)
 
       request.body.validate[Publisher].map {
         publisher => publisherService.update(id, publisher)(publisherRepository.update)(publisherRepository.findBy).map {
-          case Left(error) => BadRequest(Json.obj("msg" -> error.message))
-          case Right(success) => Ok(Json.obj("msg" -> success.message))
+          case Left(error) => BadRequest(Json.obj("msg" -> withMessage(error.message)))
+          case Right(success) => Ok(Json.obj("msg" -> withMessage(success.message)))
         }
-      }.getOrElse(Future.successful(BadRequest("invalid json")))
+      } getOrElse Future.successful(BadRequest(withMessage("error.invalid.json")))
   }
 
   def removePublisher(id: UUID) = HasTokenAsync() {
@@ -82,8 +82,8 @@ class PublisherController @Inject()(val messagesApi: MessagesApi)
       logger debug s"Removing id = $id"
 
       publisherService.remove(id)(publisherRepository.remove)(publisherRepository.findOneBy).map {
-        case Left(error) => BadRequest(Json.obj("msg" -> error.message))
-        case Right(success) => Ok(Json.obj("msg" -> success.message))
+        case Left(error) => BadRequest(Json.obj("msg" -> withMessage(error.message)))
+        case Right(success) => Ok(Json.obj("msg" -> withMessage(success.message)))
       }
   }
 }

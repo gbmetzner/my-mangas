@@ -32,10 +32,10 @@ class MangaController @Inject()(val messagesApi: MessagesApi)
 
       request.body.validate[Manga].map {
         manga => mangaService.insert(manga)(mangaRepository.insert)(mangaRepository.findBy).map {
-          case Left(error) => BadRequest(Json.obj("msg" -> error.message))
-          case Right(success) => Created(Json.obj("msg" -> success.message))
+          case Left(error) => BadRequest(Json.obj("msg" -> withMessage(error.message)))
+          case Right(success) => Created(Json.obj("msg" -> withMessage(success.message)))
         }
-      }.getOrElse(Future.successful(BadRequest("invalid json")))
+      }.getOrElse(Future.successful(BadRequest(withMessage("error.invalid.json"))))
   }
 
   def updateManga(id: UUID) = HasTokenAsync(parse.json) {
@@ -45,10 +45,10 @@ class MangaController @Inject()(val messagesApi: MessagesApi)
 
       request.body.validate[Manga].map {
         manga => mangaService.update(id, manga.copy(id = id))(mangaRepository.update)(mangaRepository.findOneBy).map {
-          case Left(error) => BadRequest(Json.obj("msg" -> error.message))
-          case Right(success) => Created(Json.obj("msg" -> success.message))
+          case Left(error) => BadRequest(Json.obj("msg" -> withMessage(error.message)))
+          case Right(success) => Created(Json.obj("msg" -> withMessage(success.message)))
         }
-      }.getOrElse(Future.successful(BadRequest("invalid json")))
+      }.getOrElse(Future.successful(BadRequest(withMessage("error.invalid.json"))))
   }
 
   def searchMangas = Action.async {
@@ -71,7 +71,7 @@ class MangaController @Inject()(val messagesApi: MessagesApi)
 
       mangaService.findOneBy(MangaFilter(id = Some(id)))(mangaRepository.findOneBy).map {
         case Some(manga) => Ok(Json.obj("manga" -> Json.toJson(manga)))
-        case None => NotFound(Json.obj("msg" -> "manga.not.found"))
+        case None => NotFound(Json.obj("msg" -> withMessage("manga.not.found")))
       }
   }
 
@@ -91,9 +91,9 @@ class MangaController @Inject()(val messagesApi: MessagesApi)
           mangaService.uploadCover(mangaID, directory.standardize, file)(mangaRepository.update)(mangaRepository.findOneBy)
           file.delete()
 
-          Future.successful(Ok(Json.obj("msg" -> "cover.uploaded")))
+          Future.successful(Ok(Json.obj("msg" -> withMessage("cover.uploaded"))))
       }.getOrElse {
-        Future.successful(NotFound(Json.obj("msg" -> "cover.not.found")))
+        Future.successful(NotFound(Json.obj("msg" -> withMessage("cover.not.found"))))
       }
   }
 
@@ -101,7 +101,7 @@ class MangaController @Inject()(val messagesApi: MessagesApi)
     _ => _ => request =>
       mangaService.latestNumber(collectionName)(mangaRepository.findOneBy).map {
         case Some(manga) => Ok(Json.obj("data" -> Json.toJson(manga)))
-        case None => NotFound(Json.obj("msg" -> "manga.not.found"))
+        case None => NotFound(Json.obj("msg" -> withMessage("manga.not.found")))
       }
   }
 
@@ -111,8 +111,8 @@ class MangaController @Inject()(val messagesApi: MessagesApi)
       logger debug s"Removing id = $id"
 
       mangaService.remove(id)(mangaRepository.remove)(mangaRepository.findOneBy).map {
-        case Left(error) => BadRequest(Json.obj("msg" -> error.message))
-        case Right(success) => Ok(Json.obj("msg" -> success.message))
+        case Left(error) => BadRequest(Json.obj("msg" -> withMessage(error.message)))
+        case Right(success) => Ok(Json.obj("msg" -> withMessage(success.message)))
       }
   }
 
@@ -123,10 +123,10 @@ class MangaController @Inject()(val messagesApi: MessagesApi)
 
       request.body.validate[Boolean].map {
         doIHaveIt => mangaService.updateOwnership(id, doIHaveIt)(mangaRepository.update)(mangaRepository.findOneBy).map {
-          case Left(error) => BadRequest(Json.obj("msg" -> error.message))
-          case Right(success) => Created(Json.obj("msg" -> success.message))
+          case Left(error) => BadRequest(Json.obj("msg" -> withMessage(error.message)))
+          case Right(success) => Created(Json.obj("msg" -> withMessage(success.message)))
         }
-      }.getOrElse(Future.successful(BadRequest("invalid json")))
+      }.getOrElse(Future.successful(BadRequest(withMessage("error.invalid.json"))))
   }
 
 }

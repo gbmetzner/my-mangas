@@ -21,8 +21,7 @@ import scala.language.postfixOps
 /**
   * Created by gbmetzner on 11/5/15.
   */
-class LoginController @Inject()(val messagesApi: MessagesApi)
-  extends BaseController with UserComponentRegistry{
+class LoginController @Inject()(val messagesApi: MessagesApi) extends BaseController with UserComponentRegistry {
   requires: UserServiceComponent with UserRepositoryComponent =>
 
   def login = Action.async(parse.json) {
@@ -34,9 +33,9 @@ class LoginController @Inject()(val messagesApi: MessagesApi)
             case Some(user) =>
               val token = generate().toString
               Ok(Json.obj("authToken" -> token, "user" -> Json.toJson(user))).withToken(token -> user)
-            case None => NotFound(Json.obj("msg" -> "invalid.credentials"))
+            case None => NotFound(Json.obj("msg" -> withMessage("login.invalid.credentials")))
           }
-      }.getOrElse(Future.successful(BadRequest("invalid json")))
+      }.getOrElse(Future.successful(BadRequest(withMessage("error.invalid.json"))))
   }
 
   def logout = Action.async {
@@ -45,8 +44,11 @@ class LoginController @Inject()(val messagesApi: MessagesApi)
         request.headers.get(AuthTokenHeader).map {
           token =>
             logger debug s"Logging out for token = $token"
-            Ok(Json.obj("msg" -> "user.logged.out")).discardingToken(token)
-        } getOrElse BadRequest(Json.obj("msg" -> "No Token"))
+            Ok(Json.obj("msg" -> withMessage("login.logged.out"))).discardingToken(token)
+        } getOrElse {
+          logger warn s"Token not found during logout."
+          BadRequest(Json.obj("msg" -> withMessage("error.general")))
+        }
       }
   }
 

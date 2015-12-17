@@ -44,7 +44,6 @@ var myMangas = angular.module('myMangas',
               case 404:
                 $location.path('/404');
                 break;
-              default: $location.path('/error');
           }
         return $q.reject(rejection);
       }

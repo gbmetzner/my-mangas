@@ -1,0 +1,28 @@
+## General
+error.general = Something went wrong, sorry.
+error.invalid.json = Invalid Json Format.
+
+## Login
+login.invalid.credentials = Username or password are incorrect!
+login.logged.out = You logged out successfully!
+
+## Publisher
+publisher.added = Publisher has been added.
+publisher.already.exists = Publisher already exists.
+publisher.not.found = Publisher not found.
+publisher.updated = Publisher has been updated.
+publisher.removed = Publisher has been removed.
+
+## Collection
+collection.added = Collection has been added.
+collection.already.exists = Collection already exists.
+collection.not.found = Collection not found.
+collection.updated = Collection has been updated.
+collection.removed = Collection has been removed.
+
+## Manga
+manga.added = Manga has been added.
+manga.already.exists = Manga already exists.
+manga.not.found = Manga not found.
+manga.updated = Manga has been updated.
+manga.removed = Manga has been removed.

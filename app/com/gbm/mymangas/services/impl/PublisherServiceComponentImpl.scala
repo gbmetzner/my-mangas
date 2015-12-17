@@ -25,7 +25,11 @@ trait PublisherServiceComponentImpl extends PublisherServiceComponent {
       findBy(PublisherFilter(name = Some(publisher.name)))(g).flatMap {
         publishers => if (publishers.isEmpty) {
           f(publisher).map {
-            lastError => if (lastError.hasErrors) Left(Error(lastError.message)) else Right(Succeed("publisher.added"))
+            lastError =>
+              if (lastError.hasErrors) {
+                logger error(s"Error while persisting publisher = $publisher", lastError.getCause)
+                Left(Error("error.general"))
+              } else Right(Succeed("publisher.added"))
           }
         }
         else Future.successful(Left(Error("publisher.already.exists")))
@@ -49,7 +53,10 @@ trait PublisherServiceComponentImpl extends PublisherServiceComponent {
         case Some(oldPublisher) =>
           f(id, oldPublisher.copy(name = publisher.name, updatedAt = DateTime.now())).map {
             lastError =>
-              if (lastError.hasErrors) promise.success(Left(Error(lastError.message)))
+              if (lastError.hasErrors) {
+                logger error(s"Error while updating publisher = $publisher", lastError.getCause)
+                promise.success(Left(Error("error.general")))
+              }
               else promise.success(Right(Succeed("publisher.updated")))
           }
         case None => promise.success(Left(Error("publisher.not.found")))
