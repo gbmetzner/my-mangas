@@ -8,8 +8,7 @@ import com.gbm.mymangas.models.filters.PublisherFilter
 import com.gbm.mymangas.registries.PublisherComponentRegistry
 import com.gbm.mymangas.repositories.PublisherRepositoryComponent
 import com.gbm.mymangas.services.PublisherServiceComponent
-import com.gbm.mymangas.utils.json.PublisherParser.publisherFormatter
-import com.gbm.mymangas.utils.json.PublisherParser.queryString2Predicate
+import com.gbm.mymangas.utils.json.PublisherParser.{publisherFormatter, queryString2Predicate}
 import play.api.i18n.MessagesApi
 import play.api.libs.json.Json
 import play.api.mvc.Action
@@ -31,7 +30,7 @@ class PublisherController @Inject()(val messagesApi: MessagesApi)
       logger debug s"Create a Publisher = $request"
 
       request.body.validate[Publisher].map {
-        publisher => publisherService.insert(publisher)(publisherRepository.insert)(publisherRepository.findBy).map {
+        publisher => publisherService.insert(publisher)(publisherRepository.insert)(publisherRepository.findOneBy).map {
           case Left(error) =>
             BadRequest(Json.obj("msg" -> withMessage(error.message)))
           case Right(success) => Created(Json.obj("msg" -> withMessage(success.message)))

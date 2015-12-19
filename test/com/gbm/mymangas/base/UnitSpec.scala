@@ -3,6 +3,7 @@ package com.gbm.mymangas.base
 import com.gbm.mymangas.browser.FakeBrowser
 import org.jsoup.nodes.Document
 import org.scalatest._
+import org.scalatest.concurrent.ScalaFutures
 
 /**
   * Created by gbmetzner on 11/15/15.
@@ -13,7 +14,8 @@ abstract class UnitSpec
   with Matchers
   with OptionValues
   with Inside
-  with Inspectors {
+  with Inspectors
+  with ScalaFutures {
 
 
   def getDocument(key: String): Document = FakeBrowser.get(key) match {

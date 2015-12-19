@@ -21,8 +21,8 @@ trait PublisherServiceComponentImpl extends PublisherServiceComponent {
 
   class PublisherServiceImpl extends PublisherService {
 
-    def insert(publisher: Publisher)(f: Publisher => Future[WriteResult])(g: Predicate => Future[List[Publisher]]): Future[Either[Failed, Succeed]] = {
-      findBy(PublisherFilter(name = Some(publisher.name)))(g).flatMap {
+    def insert(publisher: Publisher)(f: Publisher => Future[WriteResult])(g: Predicate => Future[Option[Publisher]]): Future[Either[Failed, Succeed]] = {
+      findOneBy(PublisherFilter(name = Some(publisher.name)))(g).flatMap {
         publishers => if (publishers.isEmpty) {
           f(publisher).map {
             lastError =>
