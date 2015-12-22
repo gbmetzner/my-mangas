@@ -21,12 +21,17 @@ trait CollectionServiceComponentImpl extends CollectionServiceComponent {
 
   class CollectionServiceImpl extends CollectionService {
 
-    def insert(coll: Collection)(f: Collection => Future[WriteResult])(g: Predicate => Future[List[Collection]]): Future[Either[Failed, Succeed]] = {
-      findBy(CollectionFilter(name = Some(coll.name)))(g).flatMap {
+    def insert(coll: Collection)(f: Collection => Future[WriteResult])(g: Predicate => Future[Option[Collection]]): Future[Either[Failed, Succeed]] = {
+      findOneBy(CollectionFilter(name = Some(coll.name)))(g).flatMap {
         colls =>
           if (colls.isEmpty) {
             f(coll).map {
-              lastError => if (lastError.hasErrors) Left(Error(lastError.message)) else Right(Succeed("collection.added"))
+              lastError =>
+                if (lastError.hasErrors) {
+                  logger error(s"Error while persisting collection = $coll", lastError.getCause)
+                  Left(Error("error.general"))
+                }
+                else Right(Succeed("collection.added"))
             }
           }
           else Future.successful(Left(Error("collection.already.exists")))
@@ -34,7 +39,7 @@ trait CollectionServiceComponentImpl extends CollectionServiceComponent {
     }
 
     def update(id: UUID, coll: Collection)(f: (UUID, Collection) => Future[WriteResult])
-              (g: Predicate => Future[List[Collection]])(h: (String, Boolean) => Unit): Future[Either[Failed, Succeed]] = {
+              (g: Predicate => Future[List[Collection]])(h: (String, Boolean) => Future[Unit]): Future[Either[Failed, Succeed]] = {
 
       val promise = Promise[Either[Failed, Succeed]]()
 
@@ -52,13 +57,16 @@ trait CollectionServiceComponentImpl extends CollectionServiceComponent {
         case Some(oldCollection) =>
           f(id, oldCollection.copy(publisher = coll.publisher, name = coll.name, updatedAt = DateTime.now())).map {
             lastError =>
-              if (lastError.hasErrors) promise.success(Left(Error(lastError.message)))
+              if (lastError.hasErrors) {
+                logger error(s"Error while persisting collection = $coll", lastError.getCause)
+                promise.success(Left(Error("error.general")))
+              }
               else {
-                h(coll.name, coll.isComplete)
-                promise.success(Right(Succeed("publisher.updated")))
+                if (coll.isComplete) h(coll.name, coll.isComplete)
+                promise.success(Right(Succeed("collection.updated")))
               }
           }
-        case None => promise.success(Left(Error("publisher.not.found")))
+        case None => promise.success(Left(Error("collection.not.found")))
       }
 
       promise.future

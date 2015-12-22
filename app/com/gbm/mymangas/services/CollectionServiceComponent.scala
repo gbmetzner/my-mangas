@@ -18,9 +18,9 @@ trait CollectionServiceComponent {
 
   trait CollectionService extends Service[Collection] {
 
-    def insert(coll: Collection)(f: Collection => Future[WriteResult])(g: Predicate => Future[List[Collection]]): Future[Either[Failed, Succeed]]
+    def insert(coll: Collection)(f: Collection => Future[WriteResult])(g: Predicate => Future[Option[Collection]]): Future[Either[Failed, Succeed]]
 
-    def update(id: UUID, coll: Collection)(f: (UUID, Collection) => Future[WriteResult])(g: Predicate => Future[List[Collection]])(h: (String, Boolean) => Unit): Future[Either[Failed, Succeed]]
+    def update(id: UUID, coll: Collection)(f: (UUID, Collection) => Future[WriteResult])(g: Predicate => Future[List[Collection]])(h: (String, Boolean) => Future[Unit]): Future[Either[Failed, Succeed]]
   }
 
 }

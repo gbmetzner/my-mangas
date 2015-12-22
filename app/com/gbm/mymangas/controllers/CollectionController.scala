@@ -30,7 +30,7 @@ class CollectionController @Inject()(val messagesApi: MessagesApi)
       logger info s"Create a Collection = $request"
 
       request.body.validate[Collection].map {
-        coll => collectionService.insert(coll)(collectionRepository.insert)(collectionRepository.findBy).map {
+        coll => collectionService.insert(coll)(collectionRepository.insert)(collectionRepository.findOneBy).map {
           case Left(error) => BadRequest(Json.obj("msg" -> withMessage(error.message)))
           case Right(success) => Created(Json.obj("msg" -> withMessage(success.message)))
         }

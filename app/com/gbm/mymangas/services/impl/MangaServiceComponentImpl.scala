@@ -63,10 +63,10 @@ trait MangaServiceComponentImpl extends MangaServiceComponent {
       }
     }
 
-    def completeUpdate(collectionsName: String, doIHaveIt: Boolean)(f: (UUID, Manga) => Future[WriteResult])(g: Predicate => Future[List[Manga]]): Unit = {
+    def completeUpdate(collectionsName: String, doIHaveIt: Boolean)(f: (UUID, Manga) => Future[WriteResult])(g: Predicate => Future[List[Manga]]): Future[Unit] = {
       logger debug s"Updating mangas for collection = $collectionsName with $doIHaveIt"
 
-      findBy(MangaFilter(collection = Some(collectionsName)))(g).foreach {
+      findBy(MangaFilter(collection = Some(collectionsName)))(g).map {
         _.foreach(manga => f(manga.id, manga.copy(doIHaveIt = doIHaveIt, updatedAt = DateTime.now())))
       }
     }
