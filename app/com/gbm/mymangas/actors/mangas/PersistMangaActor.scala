@@ -26,7 +26,7 @@ class PersistMangaActor(creator: ActorRef) extends Actor with ActorLogging {
 
   override def receive: Receive = {
     case PersistMangaActor.Persist(manga, id) =>
-      mangaService.insert(manga)(mangaRepository.insert)(mangaRepository.findBy).foreach(r => creator ! PersistMangaActor.Persisted(id))
+      mangaService.insert(manga)(mangaRepository.insert)(mangaRepository.findOneBy).foreach(r => creator ! PersistMangaActor.Persisted(id))
   }
 
 }

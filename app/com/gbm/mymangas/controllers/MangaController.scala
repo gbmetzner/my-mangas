@@ -31,7 +31,7 @@ class MangaController @Inject()(val messagesApi: MessagesApi)
       logger info s"Create a Manga = $request"
 
       request.body.validate[Manga].map {
-        manga => mangaService.insert(manga)(mangaRepository.insert)(mangaRepository.findBy).map {
+        manga => mangaService.insert(manga)(mangaRepository.insert)(mangaRepository.findOneBy).map {
           case Left(error) => BadRequest(Json.obj("msg" -> withMessage(error.message)))
           case Right(success) => Created(Json.obj("msg" -> withMessage(success.message)))
         }

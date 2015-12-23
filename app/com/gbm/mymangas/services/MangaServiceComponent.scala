@@ -19,7 +19,7 @@ trait MangaServiceComponent {
 
   trait MangaService extends Service[Manga] {
 
-    def insert(manga: Manga)(f: Manga => Future[WriteResult])(g: Predicate => Future[List[Manga]]): Future[Either[Failed, Succeed]]
+    def insert(manga: Manga)(f: Manga => Future[WriteResult])(g: Predicate => Future[Option[Manga]]): Future[Either[Failed, Succeed]]
 
     def update(id: UUID, manga: Manga)(f: (UUID, Manga) => Future[WriteResult])(g: Predicate => Future[Option[Manga]]): Future[Either[Failed, Succeed]]
 
