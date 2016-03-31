@@ -8,7 +8,7 @@ import org.jsoup.nodes.Document
   */
 case class JBCLinksScraper(override val browser: Browser) extends LinksScraper {
 
-  override val baseURL: String = "http://mangasjbc.uol.com.br"
+  override val baseURL: String = ""
 
   override def scrape(document: Document): Seq[Document] = extract(document)(jbc.extractLinks)
 }

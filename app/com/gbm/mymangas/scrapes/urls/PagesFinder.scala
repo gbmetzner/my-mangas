@@ -48,7 +48,7 @@ trait PagesFinder {
   object jbc {
 
     def verifyLatestEdition(document: Document, latestNumber: Int): Boolean = {
-      (document >> extractor(".txt a strong", text)).split("#").last.trim().toInt > latestNumber
+      (document >> extractor(".edicoes li a strong", text)).split("#").last.trim().toInt > latestNumber
     }
 
     def docFromPage(searchParam: String, page: Int): Option[Document] = {

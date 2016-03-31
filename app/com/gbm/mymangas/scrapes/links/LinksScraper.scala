@@ -7,6 +7,7 @@ import net.ruippeixotog.scalascraper.scraper.ContentExtractors._
 import org.jsoup.nodes.Document
 
 /** Defines a scraper for manga's links.
+  *
   * @author Gustavo Metzner on 11/15/15.
   */
 trait LinksScraper extends Scraper {
@@ -18,9 +19,7 @@ trait LinksScraper extends Scraper {
 
   protected[links] def extract(document: Document)(f: Document => L): Seq[Document] = {
     f(document).map {
-      link =>
-        val fixedLink = s"/$link".replaceAll("//", "/")
-        browser.get(s"$baseURL$fixedLink")
+      link => browser.get(s"$baseURL$link")
     }.filter(_.isDefined).map(_.get)
   }
 
@@ -36,7 +35,7 @@ trait LinksScraper extends Scraper {
 
   object jbc extends Scraper {
     override def extractLinks(document: Document): L = {
-      document >> extractor(".txt a", attrs("href"))
+      document >> extractor(".edicoes li a", attrs("href"))
     }
   }
 

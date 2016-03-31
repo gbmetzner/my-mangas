@@ -51,15 +51,16 @@ trait MangaScraper extends Scraper {
   object jbc extends Scraper {
 
     override def extractCoverLink(document: Document): String = {
-      document >> extractor("#int_content img", attr("src"))
+      println(document >> extractor(".content img", attr("src")))
+      document >> extractor(".content img", attr("src"))
     }
 
     protected[this] override def extractNumber(document: Document): Int = {
-      (document >> extractor("#int_content h2", text)).split("#").last.trim().toInt
+      (document >> extractor(".content h1", text)).split("#").last.trim().toInt
     }
 
     protected[this] override def extractCollection(document: Document): String = {
-      (document >> extractor("#int_content h2", text)).split("#").head.trim()
+      (document >> extractor(".content h1", text)).split("#").head.trim()
     }
   }
 

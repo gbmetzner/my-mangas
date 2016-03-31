@@ -20,16 +20,16 @@ class UrlGeneratorSpec extends UnitSpec {
     result.size shouldBe 0
   }
 
-  "A JBCUrlGenerator" should "returns a 2 documents from a urls" in {
+  "A JBCUrlGenerator" should "returns 2 documents from a urls" in {
     val result = JBCPagesFinder(FakeBrowser).generate("fairy-tail", 0)
     result.size shouldBe 2
   }
   it should "returns 1 document from the urls" in {
-    val result = JBCPagesFinder(FakeBrowser).generate("fairy-tail", 40)
+    val result = JBCPagesFinder(FakeBrowser).generate("fairy-tail", 42)
     result.size shouldBe 1
   }
   it should "returns no document from the urls" in {
-    val result = JBCPagesFinder(FakeBrowser).generate("fairy-tail", 50)
+    val result = JBCPagesFinder(FakeBrowser).generate("fairy-tail", 53)
     result.size shouldBe 0
   }
 }

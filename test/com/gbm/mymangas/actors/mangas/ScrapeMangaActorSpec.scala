@@ -52,7 +52,7 @@ class ScrapeMangaActorSpec extends ActorUnitSpec("ScrapeMangaActorSystem") {
     manager.expectMsgPF() {
       case ScrapeMangaActor.ScrapeDone(manga, url, i) =>
         manga.fullName shouldBe "Video Girl - #1"
-        url shouldBe "http://jbchost.com.br/mangasjbc/wp-content/uploads/2005/05/capa_video_girl_ai_01_g-200x311.jpg"
+        url shouldBe "http://jbchost.com.br/mangasjbc/wp-content/uploads/2005/05/capa_video_girl_ai_01_g.jpg"
         i shouldBe id
     }
   }
