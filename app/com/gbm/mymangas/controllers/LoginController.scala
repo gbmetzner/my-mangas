@@ -41,13 +41,13 @@ class LoginController @Inject()(val messagesApi: MessagesApi) extends BaseContro
   def logout = Action.async {
     request =>
       Future {
-        request.headers.get(AuthTokenHeader).map {
+        request.headers.get(AuthTokenHeader).fold {
+          logger warn s"Token not found during logout."
+          BadRequest(Json.obj("msg" -> withMessage("error.general")))
+        } {
           token =>
             logger debug s"Logging out for token = $token"
             Ok(Json.obj("msg" -> withMessage("login.logged.out"))).discardingToken(token)
-        } getOrElse {
-          logger warn s"Token not found during logout."
-          BadRequest(Json.obj("msg" -> withMessage("error.general")))
         }
       }
   }

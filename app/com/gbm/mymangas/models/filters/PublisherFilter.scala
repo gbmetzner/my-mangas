@@ -18,7 +18,7 @@ case class PublisherFilter(id: Option[UUID] = None,
     ))) :: id.map(i => Json.obj("id" -> i
     )) :: Nil).map(_.getOrElse(JsObject(Nil)))
 
-    Json.obj("$and" -> JsArray(filter.toSeq))
+    Json.obj("$and" -> JsArray(filter))
   }
 
   override def sort: JsObject = Json.obj(

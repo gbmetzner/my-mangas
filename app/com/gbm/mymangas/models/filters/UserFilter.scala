@@ -16,7 +16,7 @@ case class UserFilter(username: Option[String] = None,
       :: password.map(p => Json.obj("password" -> p))
       :: Nil).map(_.getOrElse(JsObject(Nil)))
 
-    Json.obj("$and" -> JsArray(filter.toSeq))
+    Json.obj("$and" -> JsArray(filter))
 
   }
 

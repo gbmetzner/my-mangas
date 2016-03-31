@@ -29,7 +29,7 @@ case class MangaFilter(id: Option[UUID] = None,
       :: to.map(t => Json.obj("createdAt" -> Json.obj("$lt" -> t.getMillis)))
       :: Nil).map(_.getOrElse(JsObject(Nil)))
 
-    Json.obj("$and" -> JsArray(filter.toSeq))
+    Json.obj("$and" -> JsArray(filter))
 
   }
 

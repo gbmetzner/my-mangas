@@ -9,7 +9,7 @@ import com.sksamuel.scrimage.{Image => SImage}
   */
 object Image {
 
-  def resize(file: File)(width: Int, height: Int): Unit = {
+  def resize(file: File)(width: Int, height: Int) {
     SImage.fromFile(file).cover(width, height).output(file)
   }
 

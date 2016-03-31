@@ -11,7 +11,7 @@ import play.api.libs.concurrent.AkkaGuiceSupport
 class OnStartApplication
   extends AbstractModule with AkkaGuiceSupport with LazyLogging {
 
-  override def configure(): Unit = {
+  override def configure() {
 
     logger debug "On start application binding actors..."
     bind(classOf[SchedulerMangaScraping]).asEagerSingleton()

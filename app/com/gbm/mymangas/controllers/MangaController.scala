@@ -84,7 +84,7 @@ class MangaController @Inject()(val messagesApi: MessagesApi)
 
       logger debug s"Request upload = $request"
 
-      request.body.file("file").map {
+      request.body.file("file").fold(Future.successful(NotFound(Json.obj("msg" -> withMessage("cover.not.found"))))) {
         picture =>
 
           val file = picture.ref.moveTo(new File(s"/tmp/$filename.jpg".standardize))
@@ -92,8 +92,6 @@ class MangaController @Inject()(val messagesApi: MessagesApi)
           file.delete()
 
           Future.successful(Ok(Json.obj("msg" -> withMessage("cover.uploaded"))))
-      }.getOrElse {
-        Future.successful(NotFound(Json.obj("msg" -> withMessage("cover.not.found"))))
       }
   }
 

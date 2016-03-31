@@ -22,7 +22,7 @@ case class CollectionFilter(id: Option[UUID] = None,
         isComplete.map(c => Json.obj("isComplete" -> c)) ::
         Nil).map(_.getOrElse(JsObject(Nil)))
 
-    Json.obj("$and" -> JsArray(filter.toSeq))
+    Json.obj("$and" -> JsArray(filter))
   }
 
   override def sort: JsObject = Json.obj("createdAt" -> -1)

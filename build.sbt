@@ -18,7 +18,6 @@ resolvers += "Sonatype Snapshots" at "https://oss.sonatype.org/content/repositor
 
 libraryDependencies ++= Seq(
   cache,
-  ws,
   "org.reactivemongo" %% "play2-reactivemongo" % "0.11.9-play25-SNAPSHOT" withSources(),
   "com.typesafe.scala-logging" %% "scala-logging" % "3.1.0" withSources(),
   "com.typesafe.play" %% "play-mailer" % "3.0.1" withSources(),

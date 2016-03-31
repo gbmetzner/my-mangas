@@ -3,6 +3,7 @@ package com.gbm.mymangas.utils.files.download
 import java.io.File
 import java.net.URL
 
+import scala.language.postfixOps
 import scala.sys.process._
 
 /**
@@ -19,7 +20,7 @@ trait FileDownloaderComponent {
 
     object default {
       def download(url: String, filename: String): String = {
-        new URL(url) #> new File(filename) !!
+        (new URL(url) #> new File(filename)).!!
       }
 
       def extractExtension(url: String): String = {
