@@ -31,7 +31,7 @@ trait MangaServiceComponentImpl extends MangaServiceComponent {
         mangas => if (mangas.isEmpty) {
           f(manga).map {
             lastError => if (lastError.hasErrors) {
-              logger error(s"Error while persisting manga = $manga", lastError.getCause)
+              logger error(s"Error while persisting manga = $manga", lastError.message)
               Left(Error("error.general"))
             } else Right(Succeed("manga.added"))
           }
@@ -51,7 +51,7 @@ trait MangaServiceComponentImpl extends MangaServiceComponent {
 
           f(id, manga.copy(publicLink = link, createdAt = m.createdAt, updatedAt = DateTime.now())).map {
             lastError => if (lastError.hasErrors) {
-              logger error(s"Error while updating manga = $manga", lastError.getCause)
+              logger error(s"Error while updating manga = $manga", lastError.message)
               Left(Error("error.general"))
             } else Right(Succeed("manga.updated"))
           }
@@ -64,7 +64,7 @@ trait MangaServiceComponentImpl extends MangaServiceComponent {
         case Some(m) =>
           f(id, m.copy(doIHaveIt = doIHaveIt, updatedAt = DateTime.now())).map {
             lastError => if (lastError.hasErrors) {
-              logger error(s"Error while updating ownership for manga id = $id", lastError.getCause)
+              logger error(s"Error while updating ownership for manga id = $id", lastError.message)
               Left(Error("error.general"))
             } else Right(Succeed("manga.updated"))
           }
@@ -94,7 +94,7 @@ trait MangaServiceComponentImpl extends MangaServiceComponent {
           f(mangaID, updatedManga).map {
             lastError =>
               if (lastError.hasErrors) {
-                logger error(s"Error while uploading Cover for manga = $manga", lastError.getCause)
+                logger error(s"Error while uploading Cover for manga = $manga", lastError.message)
                 Left(Error("error.general"))
               } else Right(Succeed("manga.updated"))
           }

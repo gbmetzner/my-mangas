@@ -50,7 +50,7 @@ trait Service[T] extends LazyLogging {
       case Some(result) => f(id).map {
         lastError =>
           if (lastError.hasErrors) {
-            logger error(s"Error while removing = $result", lastError.getCause)
+            logger error(s"Error while removing = $result", lastError.message)
             Left(Error("error.general"))
           }
           else Right(Succeed(removeMsg))

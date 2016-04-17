@@ -12,13 +12,15 @@ scalaVersion := "2.11.8"
 
 conflictManager := ConflictManager.latestRevision
 
-resolvers += "Local Maven Repository" at Path.userHome.asFile.toURI.toURL + ".m2/repository"
-
-resolvers += "Sonatype Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/"
+resolvers ++= Seq(
+  "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases",
+  "Local Maven Repository" at Path.userHome.asFile.toURI.toURL + ".m2/repository",
+  "Sonatype Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/"
+)
 
 libraryDependencies ++= Seq(
   cache,
-  "org.reactivemongo" %% "play2-reactivemongo" % "0.11.9-play25-SNAPSHOT" withSources(),
+  "org.reactivemongo" %% "play2-reactivemongo" % "0.11.11" withSources(),
   "com.typesafe.scala-logging" %% "scala-logging" % "3.1.0" withSources(),
   "com.typesafe.play" %% "play-mailer" % "3.0.1" withSources(),
   "com.typesafe" % "config" % "1.3.0" withSources(),
@@ -28,12 +30,11 @@ libraryDependencies ++= Seq(
   "com.smartfile" % "JavaClient" % "1.0",
   "com.typesafe.akka" %% "akka-actor" % "2.4.2" withSources(),
   "org.scalatest" %% "scalatest" % "2.2.6" % Test withSources(),
-  "com.typesafe.akka" %% "akka-testkit" % "2.4.2" % Test withSources()
+  "com.typesafe.akka" %% "akka-testkit" % "2.4.2" % Test withSources(),
+  "org.scalatestplus.play" %% "scalatestplus-play" % "1.5.1" % Test withSources()
 )
-
-// Play provides two styles of routers, one expects its actions to be injected, the
-// other, legacy style, accesses its actions statically.
-routesGenerator := InjectedRoutesGenerator
 
 // run gulp
 playRunHooks += RunSubProcess("gulp")
+
+//fork in run := true

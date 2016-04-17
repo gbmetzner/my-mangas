@@ -41,13 +41,14 @@ object MangaParser {
   implicit val mangaFormatterRepo = Json.format[Manga]
 
   def queryString2Predicate(request: Request[AnyContent]): Predicate = {
+
     val id = request.getQueryString("id").map(fromString)
     val collection = request.getQueryString("collection")
     val number = request.getQueryString("number").map(_.toInt)
     val limit = request.getQueryString("limit").map(_.toInt)
     val skip = request.getQueryString("skip").map(_.toInt)
-    val random = request.getQueryString("random").exists(_.toBoolean)
-    MangaFilter(id = id, collection = collection, number = number, limit = limit, skip = skip, randomSort = random)
+
+    MangaFilter(id = id, collection = collection, number = number, limit = limit, skip = skip)
   }
 
 }

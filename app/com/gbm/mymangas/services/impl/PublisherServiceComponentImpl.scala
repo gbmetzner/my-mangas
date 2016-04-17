@@ -27,7 +27,7 @@ trait PublisherServiceComponentImpl extends PublisherServiceComponent {
           f(publisher).map {
             lastError =>
               if (lastError.hasErrors) {
-                logger error(s"Error while persisting publisher = $publisher", lastError.getCause)
+                logger error(s"Error while persisting publisher = $publisher", lastError.message)
                 Left(Error("error.general"))
               } else Right(Succeed("publisher.added"))
           }
@@ -54,7 +54,7 @@ trait PublisherServiceComponentImpl extends PublisherServiceComponent {
           f(id, oldPublisher.copy(name = publisher.name, updatedAt = DateTime.now())).map {
             lastError =>
               if (lastError.hasErrors) {
-                logger error(s"Error while updating publisher = $publisher", lastError.getCause)
+                logger error(s"Error while updating publisher = $publisher", lastError.message)
                 promise.success(Left(Error("error.general")))
               }
               else promise.success(Right(Succeed("publisher.updated")))
