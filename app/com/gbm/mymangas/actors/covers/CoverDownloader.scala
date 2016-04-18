@@ -2,7 +2,7 @@ package com.gbm.mymangas.actors.covers
 
 import akka.actor.{Actor, ActorLogging, ActorRef, Props}
 import com.gbm.mymangas.models.Manga
-import com.gbm.mymangas.utils.Config2
+import com.gbm.mymangas.utils.Config
 import com.gbm.mymangas.utils.StandardizeNames.StandardizeName
 import com.gbm.mymangas.utils.files.download.{FileDownloaderComponent, FileDownloaderComponentImpl}
 
@@ -38,7 +38,7 @@ class CoverDownloader(creator: ActorRef) extends Actor with ActorLogging {
         case Success(filePath) => creator ! CoverDownloader.DownloadDone(manga, filePath, id)
         case Failure(_) =>
           log info s"Cover not found for ${manga.fullName}"
-          creator ! CoverDownloader.CoverNotAvailable(manga.copy(publicLink = Config2.defaultCover), id)
+          creator ! CoverDownloader.CoverNotAvailable(manga.copy(publicLink = Config.defaultCover), id)
       }
   }
 }

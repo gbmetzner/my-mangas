@@ -10,7 +10,7 @@ import scala.concurrent.duration.Duration
   */
 object Config {
 
-  private val config = play.api.Play.configuration
+  private val config = ConfigFactory.load("application.conf")
 
   lazy val defaultCover: String = getStringFromKey("manga.no.cover")
 
@@ -29,12 +29,6 @@ object Config {
   private def getDuration(key: String): Duration = Duration(getStringFromKey(key))
 
   private def getStringFromKey(key: String): String = {
-    config.getString(key).getOrElse(throw new IllegalArgumentException(s"key $key not found."))
+    Option(config.getString(key)).getOrElse(throw new IllegalArgumentException(s"key $key not found."))
   }
-}
-
-object Config2 {
-  private val config = ConfigFactory.load("application.conf")
-
-  lazy val defaultCover: String = config.getString("manga.no.cover")
 }

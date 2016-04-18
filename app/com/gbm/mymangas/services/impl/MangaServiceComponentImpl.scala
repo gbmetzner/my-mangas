@@ -6,7 +6,7 @@ import java.util.UUID
 import com.gbm.mymangas.models.Manga
 import com.gbm.mymangas.models.filters.{MangaFilter, Predicate}
 import com.gbm.mymangas.services.MangaServiceComponent
-import com.gbm.mymangas.utils.{Config2, Config}
+import com.gbm.mymangas.utils.Config
 import com.gbm.mymangas.utils.files.upload.FileUploaderComponent
 import com.gbm.mymangas.utils.messages.{Error, Failed, Succeed, Warning}
 import org.joda.time.DateTime
@@ -45,7 +45,7 @@ trait MangaServiceComponentImpl extends MangaServiceComponent {
         case Some(m) =>
 
           val link = manga.publicLink match {
-            case Config2.defaultCover => m.publicLink
+            case Config.defaultCover => m.publicLink
             case _ => manga.publicLink
           }
 

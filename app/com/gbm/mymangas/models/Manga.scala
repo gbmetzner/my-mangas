@@ -2,7 +2,7 @@ package com.gbm.mymangas.models
 
 import java.util.UUID
 
-import com.gbm.mymangas.utils.Config2
+import com.gbm.mymangas.utils.Config
 import com.gbm.mymangas.utils.UUID._
 import org.joda.time.DateTime
 
@@ -13,7 +13,7 @@ case class Manga(id: UUID = generate(),
                  collection: String,
                  number: Int,
                  doIHaveIt: Boolean = false,
-                 publicLink: String = Config2.defaultCover,
+                 publicLink: String = Config.defaultCover,
                  createdAt: DateTime = DateTime.now(),
                  updatedAt: DateTime = DateTime.now()) {
 
