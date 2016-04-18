@@ -9,6 +9,7 @@ import com.gbm.mymangas.registries.{CollectionComponentRegistry, MangaComponentR
 import com.gbm.mymangas.repositories.{CollectionRepositoryComponent, MangaRepositoryComponent}
 import com.gbm.mymangas.services.{CollectionServiceComponent, MangaServiceComponent}
 import com.gbm.mymangas.utils.json.CollectionParser.collectionFormatter
+import play.api.cache.CacheApi
 import play.api.i18n.MessagesApi
 import play.api.libs.json.Json
 import play.api.mvc.Action
@@ -19,7 +20,7 @@ import scala.concurrent.Future
 /**
   * @author Gustavo Metzner on 10/13/15.
   */
-class CollectionController @Inject()(val messagesApi: MessagesApi)
+class CollectionController @Inject()(val messagesApi: MessagesApi, val cacheApi: CacheApi)
   extends BaseController with CollectionComponentRegistry with MangaComponentRegistry {
   requires: CollectionServiceComponent with CollectionRepositoryComponent
     with MangaServiceComponent with MangaRepositoryComponent =>

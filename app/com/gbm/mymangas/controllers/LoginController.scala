@@ -10,6 +10,7 @@ import com.gbm.mymangas.services.UserServiceComponent
 import com.gbm.mymangas.utils.Password.EncryptPassword
 import com.gbm.mymangas.utils.UUID.generate
 import com.gbm.mymangas.utils.json.UserParser.{loginFormatterController, userFormatterController}
+import play.api.cache.CacheApi
 import play.api.i18n.MessagesApi
 import play.api.libs.json.Json
 import play.api.mvc.Action
@@ -21,7 +22,7 @@ import scala.language.postfixOps
 /**
   * Created by gbmetzner on 11/5/15.
   */
-class LoginController @Inject()(val messagesApi: MessagesApi) extends BaseController with UserComponentRegistry {
+class LoginController @Inject()(val messagesApi: MessagesApi, val cacheApi: CacheApi) extends BaseController with UserComponentRegistry {
   requires: UserServiceComponent with UserRepositoryComponent =>
 
   def login = Action.async(parse.json) {

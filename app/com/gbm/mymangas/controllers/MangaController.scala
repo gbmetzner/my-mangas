@@ -11,6 +11,7 @@ import com.gbm.mymangas.repositories.MangaRepositoryComponent
 import com.gbm.mymangas.services.MangaServiceComponent
 import com.gbm.mymangas.utils.StandardizeNames._
 import com.gbm.mymangas.utils.json.MangaParser.{mangaFormatterController, queryString2Predicate}
+import play.api.cache.CacheApi
 import play.api.i18n.MessagesApi
 import play.api.libs.json.Json
 import play.api.mvc.Action
@@ -21,7 +22,7 @@ import scala.concurrent.Future
 /**
   * @author Gustavo Metzner on 10/13/15.
   */
-class MangaController @Inject()(val messagesApi: MessagesApi)
+class MangaController @Inject()(val messagesApi: MessagesApi, val cacheApi: CacheApi)
   extends BaseController with MangaComponentRegistry {
   requires: MangaServiceComponent with MangaRepositoryComponent =>
 

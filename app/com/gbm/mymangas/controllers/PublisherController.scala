@@ -9,6 +9,7 @@ import com.gbm.mymangas.registries.PublisherComponentRegistry
 import com.gbm.mymangas.repositories.PublisherRepositoryComponent
 import com.gbm.mymangas.services.PublisherServiceComponent
 import com.gbm.mymangas.utils.json.PublisherParser.{publisherFormatter, queryString2Predicate}
+import play.api.cache.CacheApi
 import play.api.i18n.MessagesApi
 import play.api.libs.json.Json
 import play.api.mvc.Action
@@ -19,7 +20,7 @@ import scala.concurrent.Future
 /**
   * @author Gustavo Metzner on 10/10/15.
   */
-class PublisherController @Inject()(val messagesApi: MessagesApi)
+class PublisherController @Inject()(val messagesApi: MessagesApi, val cacheApi: CacheApi)
   extends BaseController with PublisherComponentRegistry {
   requires: PublisherServiceComponent with PublisherRepositoryComponent =>
 

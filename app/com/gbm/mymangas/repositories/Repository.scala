@@ -6,7 +6,7 @@ import com.gbm.mymangas.models.Page
 import com.gbm.mymangas.models.filters.Predicate
 import com.gbm.mymangas.utils.Config
 import com.typesafe.scalalogging.LazyLogging
-import play.modules.reactivemongo.json.collection.JSONCollection
+import reactivemongo.play.json.collection.JSONCollection
 import reactivemongo.api._
 import reactivemongo.api.commands.WriteResult
 
@@ -76,7 +76,7 @@ object MongoContext {
 
   private val connection = driver.connection(uri)
 
-  val dbs = connection.db(uri.authenticate.get.db)
+  val dbs = connection(uri.authenticate.get.db)
   Thread.sleep(1000)
 
   def db: DefaultDB = dbs

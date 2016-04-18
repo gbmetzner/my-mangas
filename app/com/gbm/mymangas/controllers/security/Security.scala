@@ -2,8 +2,7 @@ package com.gbm.mymangas.controllers.security
 
 import com.gbm.mymangas.models.User
 import com.gbm.mymangas.utils.Config._
-import play.api.Play.current
-import play.api.cache.Cache
+import play.api.cache.CacheApi
 import play.api.i18n.MessagesApi
 import play.api.libs.json.Json
 import play.api.mvc._
@@ -17,6 +16,8 @@ trait Security {
   requires: Controller =>
 
   val messagesApi: MessagesApi
+  val cacheApi: CacheApi
+
   type Id = User
 
   val AuthTokenHeader = "X-XSRF-TOKEN"
@@ -29,15 +30,16 @@ trait Security {
       request =>
         val maybeToken = request.headers.get(AuthTokenHeader).orElse(request.getQueryString(AuthTokenUrlKey))
         maybeToken flatMap {
-          token => Cache.getAs[Id](token) map {
-            id => Cache.set(token, id, cacheDuration)
+          token => cacheApi.get[Id](token) map {
+            id =>
+              cacheApi.set(token, id, cacheDuration)
               f(token)(id)(request)
           }
         } getOrElse Future.successful(Unauthorized(Json.obj("msg" -> messagesApi("user.not.logged"))))
     }
 
-  def fromCache(token: String): Option[Id] = Cache.getAs[Id](token) match {
-    case Some(id) => Cache.set(token, id, cacheDuration)
+  def fromCache(token: String): Option[Id] = cacheApi.get[Id](token) match {
+    case Some(id) => cacheApi.set(token, id, cacheDuration)
       Some(id)
     case None => None
   }
@@ -45,12 +47,12 @@ trait Security {
   implicit class ResultWithToken(result: Result) {
 
     def withToken(token: (String, Id)): Result = {
-      Cache.set(token._1, token._2, cacheDuration)
+      cacheApi.set(token._1, token._2, cacheDuration)
       result.withCookies(Cookie(AuthTokenCookieKey, token._1, None, httpOnly = false))
     }
 
     def discardingToken(token: String): Result = {
-      Cache.remove(token)
+      cacheApi remove token
       result.discardingCookies(DiscardingCookie(name = AuthTokenCookieKey))
     }
 
