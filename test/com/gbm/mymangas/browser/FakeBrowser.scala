@@ -2,15 +2,15 @@ package com.gbm.mymangas.browser
 
 import com.gbm.mymangas.utils.browser.Browser
 import com.typesafe.scalalogging.LazyLogging
-import org.jsoup.nodes.Document
-import net.ruippeixotog.scalascraper.browser.{Browser => OBrowser}
+import net.ruippeixotog.scalascraper.browser.JsoupBrowser
+import net.ruippeixotog.scalascraper.model.Document
 
 /**
-  * Created by gbmetzner on 11/15/15.
-  */
+ * Created by gbmetzner on 11/15/15.
+ */
 object FakeBrowser extends Browser with LazyLogging {
 
-  lazy val browser = new OBrowser
+  lazy val browser = new JsoupBrowser
 
   val videoGirlDocument = browser.parseFile(getClass.getResource("/jbc/extract_manga.html").getPath)
 
@@ -37,10 +37,12 @@ object FakeBrowser extends Browser with LazyLogging {
     "http://mangasjbc.com.br/titulos/fairy-tail/page/2" -> browser.parseFile(getClass.getResource("/jbc/extract_page_2.html").getPath)
   )
 
-  /** Get a document from a url.
-    * @param url The url to get the document from.
-    * @return An [[scala.Option]] of [[Document]]
-    * */
+  /**
+   * Get a document from a url.
+   *
+   * @param url The url to get the document from.
+   * @return An [[scala.Option]] of [[Document]]
+   */
   override def get(url: String): Option[Document] = {
     logger debug s"URL $url"
     urls.get(url)

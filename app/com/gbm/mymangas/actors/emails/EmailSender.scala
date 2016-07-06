@@ -1,6 +1,6 @@
 package com.gbm.mymangas.actors.emails
 
-import akka.actor.{Actor, ActorLogging, Props}
+import akka.actor.{ Actor, ActorLogging, Props }
 import com.gbm.mymangas.models.Email
 import com.gbm.mymangas.models.filters.MangaFilter
 import com.gbm.mymangas.registries.MangaComponentRegistry
@@ -13,8 +13,8 @@ import play.api.libs.mailer.MailerClient
 import scala.concurrent.ExecutionContext.Implicits.global
 
 /**
-  * Created by gbmetzner on 11/7/15.
-  */
+ * Created by gbmetzner on 11/7/15.
+ */
 object EmailSender {
 
   case object Send

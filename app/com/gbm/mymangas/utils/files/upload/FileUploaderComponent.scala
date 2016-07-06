@@ -1,18 +1,18 @@
 package com.gbm.mymangas.utils.files.upload
 
-import java.io.{File, InputStream}
+import java.io.{ File, InputStream }
 
 import com.gbm.mymangas.utils.Config._
-import com.gbm.mymangas.utils.{Config, Image}
+import com.gbm.mymangas.utils.{ Config, Image }
 import com.smartfile.api.BasicClient
 import org.apache.commons.io.IOUtils
 import play.api.libs.json.Json
 
-import scala.util.{Failure, Success, Try}
+import scala.util.{ Failure, Success, Try }
 
 /**
-  * Created by gbmetzner on 12/4/15.
-  */
+ * Created by gbmetzner on 12/4/15.
+ */
 trait FileUploaderComponent {
 
   def fileUploader: FileUploader
@@ -21,17 +21,13 @@ trait FileUploaderComponent {
     def upload(externalPath: String, file: File): String
   }
 
-  object smartfile {
+  object SmartFile {
 
     private val client = new BasicClient(smartFileKey, smartFileSecret)
 
     client.setApiUrl(smartFileApiUrl)
 
-    def upload(externalPath: String, file: File)
-              (f: String => Unit)(g: File => Unit)
-              (h: (String, File) => Unit)
-              (i: (String, String) => String)
-              (j: String => String): String = {
+    def upload(externalPath: String, file: File)(f: String => Unit)(g: File => Unit)(h: (String, File) => Unit)(i: (String, String) => String)(j: String => String): String = {
       Try {
         f(externalPath)
         g(file)
@@ -45,7 +41,11 @@ trait FileUploaderComponent {
       }
     }
 
-    def resize(file: File): Unit = Image.resize(file)(204, 300)
+    def resize(file: File): Unit = {
+      val width = 204
+      val height = 300
+      Image.resize(file)(width, height)
+    }
 
     def makeDirectory(directory: String): Unit = {
       client.put(s"/path/oper/mkdir/$directory", null, "")

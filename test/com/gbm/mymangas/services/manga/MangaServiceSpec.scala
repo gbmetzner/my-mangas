@@ -9,14 +9,14 @@ import com.gbm.mymangas.models.filters.Predicate
 import com.gbm.mymangas.services.MangaServiceComponent
 import com.gbm.mymangas.services.impl.MangaServiceComponentImpl
 import com.gbm.mymangas.upload.FakeFileUploaderComponentImpl
-import com.gbm.mymangas.utils.messages.{Warning, Error, Succeed}
-import reactivemongo.api.commands.{DefaultWriteResult, LastError, WriteConcernError, WriteError}
+import com.gbm.mymangas.utils.messages.{ Warning, Error, Succeed }
+import reactivemongo.api.commands.{ DefaultWriteResult, LastError, WriteConcernError, WriteError }
 
 import scala.concurrent.Future
 
 /**
-  * Created by gbmetzner on 12/22/15.
-  */
+ * Created by gbmetzner on 12/22/15.
+ */
 class MangaServiceSpec extends UnitSpec {
 
   val dragonBall = Manga(collection = "Dragon Ball", number = 1)
@@ -42,7 +42,6 @@ class MangaServiceSpec extends UnitSpec {
 
   it should "not insert a manga correctly due an error" in {
     val mangaServiceComponent = new MangaServiceComponent with MangaServiceComponentImpl with FakeFileUploaderComponentImpl
-
 
     val result = mangaServiceComponent.mangaService.insert(dragonBall)(fWriteResultInsertNOk)(findNone)
 
@@ -110,7 +109,7 @@ class MangaServiceSpec extends UnitSpec {
 
     val result = mangaServiceComponent.mangaService.updateOwnership(dragonBall.id, true)(fWriteResultUpdateOk)(findOne)
 
-    result.futureValue shouldBe  Right(Succeed("manga.updated"))
+    result.futureValue shouldBe Right(Succeed("manga.updated"))
   }
 
   it should "not update the ownership correctly due a manga not found" in {
@@ -126,7 +125,7 @@ class MangaServiceSpec extends UnitSpec {
 
     val result = mangaServiceComponent.mangaService.updateOwnership(dragonBall.id, true)(fWriteResultUpdateNOk)(findOne)
 
-    result.futureValue shouldBe  Left(Error("error.general"))
+    result.futureValue shouldBe Left(Error("error.general"))
   }
 
   it should "return the latest edition from a collection's name" in {
@@ -150,7 +149,7 @@ class MangaServiceSpec extends UnitSpec {
 
     val result = mangaServiceComponent.mangaService.uploadCover(dragonBall.id, "/mangas/dragon_ball", new File(""))(fWriteResultUpdateOk)(findOne)
 
-    result.futureValue shouldBe  Right(Succeed("manga.updated"))
+    result.futureValue shouldBe Right(Succeed("manga.updated"))
   }
 
   it should "not updload a cover for a manga due a manga not found" in {

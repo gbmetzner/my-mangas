@@ -1,18 +1,21 @@
 package com.gbm.mymangas.utils.json
 
 import com.gbm.mymangas.models.Publisher
-import com.gbm.mymangas.models.filters.{PublisherFilter, MangaFilter, Predicate}
+import com.gbm.mymangas.models.filters.{ PublisherFilter, MangaFilter, Predicate }
 import com.gbm.mymangas.utils.UUID._
 import play.api.libs.functional.syntax._
 import play.api.libs.json.Reads._
 import play.api.libs.json._
-import play.api.mvc.{AnyContent, Request}
+import play.api.mvc.{ AnyContent, Request }
 
 object PublisherParser {
 
+  private val MinLength = 3
+  private val MaxLength = 30
+
   private val reads: Reads[Publisher] = new Reads[Publisher] {
     override def reads(json: JsValue): JsResult[Publisher] = {
-      val name = (json \ "name").as[String](minLength[String](3) keepAnd maxLength[String](30))
+      val name = (json \ "name").as[String](minLength[String](MinLength) keepAnd maxLength[String](MaxLength))
       JsSuccess(Publisher(name = name))
     }
   }
@@ -37,4 +40,5 @@ object PublisherParser {
 
   implicit val publisherFormatter = Format(reads, writes)
   implicit val publisherFormatterRepo = Json.format[Publisher]
+
 }

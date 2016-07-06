@@ -4,12 +4,12 @@ import akka.actor.Props
 import akka.testkit.TestProbe
 import com.gbm.mymangas.base.ActorUnitSpec
 import com.gbm.mymangas.data.MangaDataProvider._
-import com.gbm.mymangas.actors.covers.download.{FakeFileDownloadComponentImpl, FakeFileDownloadComponentImplError}
+import com.gbm.mymangas.actors.covers.download.{ FakeFileDownloadComponentImpl, FakeFileDownloadComponentImplError }
 import com.gbm.mymangas.utils.UUID
 
 /**
-  * Created by gbmetzner on 12/5/15.
-  */
+ * Created by gbmetzner on 12/5/15.
+ */
 class CoverDownloaderSpec extends ActorUnitSpec("CoverDownloaderActorSystem") {
 
   "A CoverDownloader" should "react properly to Download/DownloadDone" in {

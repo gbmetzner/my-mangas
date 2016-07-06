@@ -8,8 +8,8 @@ import com.gbm.mymangas.upload.FakeFileUploaderComponentImpl
 import com.gbm.mymangas.utils.UUID
 
 /**
-  * Created by gbmetzner on 12/4/15.
-  */
+ * Created by gbmetzner on 12/4/15.
+ */
 class CoverUploaderSpec extends ActorUnitSpec("CoverUploaderActorSystem") {
 
   "A CoverUpload" should "handler an Upload message" in {

@@ -2,15 +2,15 @@ package com.gbm.mymangas.actors.covers
 
 import java.io.File
 
-import akka.actor.{Actor, ActorLogging, ActorRef, Props}
+import akka.actor.{ Actor, ActorLogging, ActorRef, Props }
 import com.gbm.mymangas.actors.covers.CoverUploader.Upload
 import com.gbm.mymangas.models.Manga
 import com.gbm.mymangas.utils.StandardizeNames.StandardizeName
-import com.gbm.mymangas.utils.files.upload.{FileUploaderComponent, FileUploaderComponentImpl}
+import com.gbm.mymangas.utils.files.upload.{ FileUploaderComponent, FileUploaderComponentImpl }
 
 /**
-  * @author Gustavo Metzner on 10/19/15.
-  */
+ * @author Gustavo Metzner on 10/19/15.
+ */
 object CoverUploader {
   def props(creator: ActorRef): Props = Props(new CoverUploader(creator) with FileUploaderComponentImpl)
 

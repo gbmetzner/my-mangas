@@ -2,14 +2,16 @@ package com.gbm.mymangas.repositories
 
 import com.gbm.mymangas.models.User
 
-/** Defines a User Repository cake pattern component.
-  * @author Gustavo Metzner on 12/8/15.
-  */
+/**
+ * Defines a User Repository cake pattern component.
+ * @author Gustavo Metzner on 12/8/15.
+ */
 trait UserRepositoryComponent {
 
-  /** A repository that runs actions on Users.
-    * @return The [[UserRepository]].
-    */
+  /**
+   * A repository that runs actions on Users.
+   * @return The [[UserRepository]].
+   */
   def userRepository: UserRepository
 
   trait UserRepository extends Repository[User]

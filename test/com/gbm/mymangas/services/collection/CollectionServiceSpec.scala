@@ -7,14 +7,14 @@ import com.gbm.mymangas.models.Collection
 import com.gbm.mymangas.models.filters.Predicate
 import com.gbm.mymangas.services.CollectionServiceComponent
 import com.gbm.mymangas.services.impl.CollectionServiceComponentImpl
-import com.gbm.mymangas.utils.messages.{Error, Succeed}
-import reactivemongo.api.commands.{DefaultWriteResult, LastError, WriteConcernError, WriteError}
+import com.gbm.mymangas.utils.messages.{ Error, Succeed }
+import reactivemongo.api.commands.{ DefaultWriteResult, LastError, WriteConcernError, WriteError }
 
 import scala.concurrent.Future
 
 /**
-  * Created by gbmetzner on 12/22/15.
-  */
+ * Created by gbmetzner on 12/22/15.
+ */
 class CollectionServiceSpec extends UnitSpec {
 
   val dragonBall = Collection(publisher = "Panini", name = "Dragon Ball", searchParam = "dragon ball ed. #")
@@ -43,7 +43,6 @@ class CollectionServiceSpec extends UnitSpec {
 
   it should "not insert a collection correctly due an error" in {
     val collectionServiceComponent = new CollectionServiceComponent with CollectionServiceComponentImpl
-
 
     val result = collectionServiceComponent.collectionService.insert(dragonBall)(fWriteResultInsertNOk)(findNone)
 

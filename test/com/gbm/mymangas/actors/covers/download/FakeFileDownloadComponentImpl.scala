@@ -5,8 +5,8 @@ import java.io.FileNotFoundException
 import com.gbm.mymangas.utils.files.download.FileDownloaderComponent
 
 /**
-  * Created by gbmetzner on 12/5/15.
-  */
+ * Created by gbmetzner on 12/5/15.
+ */
 trait FakeFileDownloadComponentImplError extends FileDownloaderComponent {
   override def fileDownloader: FileDownloader = new FakeFileDownloadImpl
 

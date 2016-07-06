@@ -7,15 +7,17 @@ import com.gbm.mymangas.utils.UUID._
 import org.joda.time.DateTime
 
 /**
-  * @author Gustavo Metzner on 10/13/15.
-  */
-case class Manga(id: UUID = generate(),
-                 collection: String,
-                 number: Int,
-                 doIHaveIt: Boolean = false,
-                 publicLink: String = Config.defaultCover,
-                 createdAt: DateTime = DateTime.now(),
-                 updatedAt: DateTime = DateTime.now()) {
+ * @author Gustavo Metzner on 10/13/15.
+ */
+case class Manga(
+    id: UUID = generate(),
+    collection: String,
+    number: Int,
+    doIHaveIt: Boolean = false,
+    publicLink: String = Config.defaultCover,
+    createdAt: DateTime = DateTime.now(),
+    updatedAt: DateTime = DateTime.now()
+) {
 
   def fullName: String = s"$collection - #$number"
 }

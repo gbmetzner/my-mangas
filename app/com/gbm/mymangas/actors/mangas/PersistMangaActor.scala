@@ -1,6 +1,6 @@
 package com.gbm.mymangas.actors.mangas
 
-import akka.actor.{Actor, ActorLogging, ActorRef, Props}
+import akka.actor.{ Actor, ActorLogging, ActorRef, Props }
 import com.gbm.mymangas.models.Manga
 import com.gbm.mymangas.registries.MangaComponentRegistry
 import com.gbm.mymangas.repositories.MangaRepositoryComponent
@@ -9,8 +9,8 @@ import com.gbm.mymangas.services.MangaServiceComponent
 import scala.concurrent.ExecutionContext.Implicits.global
 
 /**
-  * Created by gbmetzner on 12/9/15.
-  */
+ * Created by gbmetzner on 12/9/15.
+ */
 object PersistMangaActor {
 
   case class Persist(manga: Manga, id: String)

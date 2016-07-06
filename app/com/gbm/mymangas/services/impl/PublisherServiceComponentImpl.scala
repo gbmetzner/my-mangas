@@ -3,18 +3,18 @@ package com.gbm.mymangas.services.impl
 import java.util.UUID
 
 import com.gbm.mymangas.models.Publisher
-import com.gbm.mymangas.models.filters.{Predicate, PublisherFilter}
+import com.gbm.mymangas.models.filters.{ Predicate, PublisherFilter }
 import com.gbm.mymangas.services.PublisherServiceComponent
-import com.gbm.mymangas.utils.messages.{Error, Failed, Succeed}
+import com.gbm.mymangas.utils.messages.{ Error, Failed, Succeed }
 import org.joda.time.DateTime
 import reactivemongo.api.commands.WriteResult
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.{Future, Promise}
+import scala.concurrent.{ Future, Promise }
 
 /**
-  * Created by gbmetzner on 12/8/15.
-  */
+ * Created by gbmetzner on 12/8/15.
+ */
 trait PublisherServiceComponentImpl extends PublisherServiceComponent {
 
   override def publisherService: PublisherService = new PublisherServiceImpl
@@ -23,16 +23,16 @@ trait PublisherServiceComponentImpl extends PublisherServiceComponent {
 
     def insert(publisher: Publisher)(f: Publisher => Future[WriteResult])(g: Predicate => Future[Option[Publisher]]): Future[Either[Failed, Succeed]] = {
       findOneBy(PublisherFilter(name = Some(publisher.name)))(g).flatMap {
-        publishers => if (publishers.isEmpty) {
-          f(publisher).map {
-            lastError =>
-              if (lastError.hasErrors) {
-                logger error(s"Error while persisting publisher = $publisher", lastError.message)
-                Left(Error("error.general"))
-              } else Right(Succeed("publisher.added"))
-          }
-        }
-        else Future.successful(Left(Error("publisher.already.exists")))
+        publishers =>
+          if (publishers.isEmpty) {
+            f(publisher).map {
+              lastError =>
+                if (lastError.hasErrors) {
+                  logger error (s"Error while persisting publisher = $publisher", lastError.message)
+                  Left(Error("error.general"))
+                } else Right(Succeed("publisher.added"))
+            }
+          } else Future.successful(Left(Error("publisher.already.exists")))
       }
     }
 
@@ -49,15 +49,14 @@ trait PublisherServiceComponentImpl extends PublisherServiceComponent {
         else promise.success(Left(Error("publisher.already.exists")))
       }
 
-      def update() = findBy(PublisherFilter(id = Option(id)))(g).map(_.headOption).foreach {
+      def update(): Unit = findBy(PublisherFilter(id = Option(id)))(g).map(_.headOption).foreach {
         case Some(oldPublisher) =>
           f(id, oldPublisher.copy(name = publisher.name, updatedAt = DateTime.now())).map {
             lastError =>
               if (lastError.hasErrors) {
-                logger error(s"Error while updating publisher = $publisher", lastError.message)
+                logger error (s"Error while updating publisher = $publisher", lastError.message)
                 promise.success(Left(Error("error.general")))
-              }
-              else promise.success(Right(Succeed("publisher.updated")))
+              } else promise.success(Right(Succeed("publisher.updated")))
           }
         case None => promise.success(Left(Error("publisher.not.found")))
       }

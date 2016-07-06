@@ -10,8 +10,8 @@ import com.gbm.mymangas.models.Collection
 import com.gbm.mymangas.utils.UUID._
 
 /**
-  * Created by gbmetzner on 12/9/15.
-  */
+ * Created by gbmetzner on 12/9/15.
+ */
 class LinksActorSpec extends ActorUnitSpec("LinksActorSystem") {
   "A LinksActor" should "react properly to FindLinks for Panini" in {
 

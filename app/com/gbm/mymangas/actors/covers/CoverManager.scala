@@ -4,8 +4,8 @@ import akka.actor._
 import com.gbm.mymangas.models.Manga
 
 /**
-  * @author Gustavo Metzner on 10/19/15.
-  */
+ * @author Gustavo Metzner on 10/19/15.
+ */
 object CoverManager {
 
   case class Start(manga: (Manga, String), id: String)

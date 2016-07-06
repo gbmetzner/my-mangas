@@ -7,8 +7,8 @@ import scala.language.postfixOps
 import scala.sys.process._
 
 /**
-  * Created by gbmetzner on 12/5/15.
-  */
+ * Created by gbmetzner on 12/5/15.
+ */
 trait FileDownloaderComponent {
 
   def fileDownloader: FileDownloader
@@ -18,7 +18,7 @@ trait FileDownloaderComponent {
 
     def extractExtension(url: String): String
 
-    object default {
+    object Default {
       def download(url: String, filename: String): String = {
         (new URL(url) #> new File(filename)).!!
       }
@@ -31,6 +31,5 @@ trait FileDownloaderComponent {
     }
 
   }
-
 
 }

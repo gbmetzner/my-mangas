@@ -1,21 +1,24 @@
 package com.gbm.mymangas.utils.json
 
 import com.gbm.mymangas.models.Manga
-import com.gbm.mymangas.models.filters.{MangaFilter, Predicate}
+import com.gbm.mymangas.models.filters.{ MangaFilter, Predicate }
 import com.gbm.mymangas.utils.UUID._
 import play.api.libs.functional.syntax._
 import play.api.libs.json.Reads._
 import play.api.libs.json._
-import play.api.mvc.{AnyContent, Request}
+import play.api.mvc.{ AnyContent, Request }
 
 /**
-  * @author Gustavo Metzner on 10/13/15.
-  */
+ * @author Gustavo Metzner on 10/13/15.
+ */
 object MangaParser {
+
+  private val CollectionMinLength = 3
+  private val CollectionMaxLength = 30
 
   private val reads: Reads[Manga] = new Reads[Manga] {
     override def reads(json: JsValue): JsResult[Manga] = {
-      val collection = (json \ "collection").as[String](minLength[String](3) keepAnd maxLength[String](30))
+      val collection = (json \ "collection").as[String](minLength[String](CollectionMinLength) keepAnd maxLength[String](CollectionMaxLength))
       val number = (json \ "number").as[Int]
       val doIHaveIt = (json \ "doIHaveIt").as[Boolean]
       JsSuccess(Manga(collection = collection, number = number, doIHaveIt = doIHaveIt))

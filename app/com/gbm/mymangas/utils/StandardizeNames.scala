@@ -3,8 +3,8 @@ package com.gbm.mymangas.utils
 import java.text.Normalizer
 
 /**
-  * @author Gustavo Metzner on 10/20/15.
-  */
+ * @author Gustavo Metzner on 10/20/15.
+ */
 object StandardizeNames {
 
   implicit class StandardizeName(name: String) {

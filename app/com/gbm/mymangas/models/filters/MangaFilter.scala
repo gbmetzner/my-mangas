@@ -4,20 +4,22 @@ import java.util.UUID
 
 import com.sksamuel.scrimage.Position
 import org.joda.time.DateTime
-import play.api.libs.json.{JsArray, JsObject, Json}
+import play.api.libs.json.{ JsArray, JsObject, Json }
 
 import scala.util.Random
 
 /**
-  * @author Gustavo Metzner on 10/13/15.
-  */
-case class MangaFilter(id: Option[UUID] = None,
-                       collection: Option[String] = None,
-                       number: Option[Int] = None,
-                       from: Option[DateTime] = None,
-                       to: Option[DateTime] = None,
-                       override val limit: Option[Int] = None,
-                       override val skip: Option[Int] = None) extends Predicate {
+ * @author Gustavo Metzner on 10/13/15.
+ */
+case class MangaFilter(
+  id: Option[UUID] = None,
+    collection: Option[String] = None,
+    number: Option[Int] = None,
+    from: Option[DateTime] = None,
+    to: Option[DateTime] = None,
+    override val limit: Option[Int] = None,
+    override val skip: Option[Int] = None
+) extends Predicate {
 
   override def filter: JsObject = {
 

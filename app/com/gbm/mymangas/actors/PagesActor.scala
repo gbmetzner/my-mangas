@@ -1,15 +1,15 @@
 package com.gbm.mymangas.actors
 
-import akka.actor.{Actor, ActorLogging, ActorRef, Props}
+import akka.actor.{ Actor, ActorLogging, ActorRef, Props }
 import com.gbm.mymangas.actors.PagesActor.FindPages
 import com.gbm.mymangas.models.Collection
-import com.gbm.mymangas.scrapes.urls.{JBCPagesFinder, PagesFinder, PaniniPagesFinder}
+import com.gbm.mymangas.scrapes.urls.{ JBCPagesFinder, PagesFinder, PaniniPagesFinder }
 import com.gbm.mymangas.utils.browser.DefaultBrowser
-import org.jsoup.nodes.Document
+import net.ruippeixotog.scalascraper.model.Document
 
 /**
-  * Created by gbmetzner on 11/19/15.
-  */
+ * Created by gbmetzner on 11/19/15.
+ */
 object PagesActor {
   def props(creator: ActorRef): Props = Props(new PagesActor(creator))
 

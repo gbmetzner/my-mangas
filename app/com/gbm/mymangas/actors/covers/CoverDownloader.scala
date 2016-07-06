@@ -1,16 +1,16 @@
 package com.gbm.mymangas.actors.covers
 
-import akka.actor.{Actor, ActorLogging, ActorRef, Props}
+import akka.actor.{ Actor, ActorLogging, ActorRef, Props }
 import com.gbm.mymangas.models.Manga
 import com.gbm.mymangas.utils.Config
 import com.gbm.mymangas.utils.StandardizeNames.StandardizeName
-import com.gbm.mymangas.utils.files.download.{FileDownloaderComponent, FileDownloaderComponentImpl}
+import com.gbm.mymangas.utils.files.download.{ FileDownloaderComponent, FileDownloaderComponentImpl }
 
-import scala.util.{Failure, Success, Try}
+import scala.util.{ Failure, Success, Try }
 
 /**
-  * @author Gustavo Metzner on 10/19/15.
-  */
+ * @author Gustavo Metzner on 10/19/15.
+ */
 object CoverDownloader {
 
   def props(creator: ActorRef): Props = Props(new CoverDownloader(creator) with FileDownloaderComponentImpl)

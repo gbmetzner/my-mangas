@@ -1,6 +1,6 @@
 package com.gbm.mymangas.actors
 
-import akka.actor.{Actor, ActorLogging, ActorRef, Props}
+import akka.actor.{ Actor, ActorLogging, ActorRef, Props }
 import com.gbm.mymangas.actors.mangas.MangaManager
 import com.gbm.mymangas.models.filters.CollectionFilter
 import com.gbm.mymangas.registries.CollectionComponentRegistry
@@ -8,11 +8,11 @@ import com.gbm.mymangas.repositories.CollectionRepositoryComponent
 import com.gbm.mymangas.services.CollectionServiceComponent
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.util.{Failure, Success}
+import scala.util.{ Failure, Success }
 
 /**
-  * @author Gustavo Metzner on 10/17/15.
-  */
+ * @author Gustavo Metzner on 10/17/15.
+ */
 object MangasScraper {
 
   case object Start

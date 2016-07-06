@@ -3,8 +3,8 @@ package com.gbm.mymangas.utils
 import java.security.MessageDigest
 
 /**
-  * Created by gbmetzner on 11/5/15.
-  */
+ * Created by gbmetzner on 11/5/15.
+ */
 object Password {
 
   implicit class EncryptPassword(password: String) {

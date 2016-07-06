@@ -1,18 +1,20 @@
 package com.gbm.mymangas.utils.json
 
-import com.gbm.mymangas.models.{Login, User}
+import com.gbm.mymangas.models.{ Login, User }
 import play.api.libs.json.Reads._
 import play.api.libs.json._
 
 /**
-  * Created by gbmetzner on 11/6/15.
-  */
+ * Created by gbmetzner on 11/6/15.
+ */
 object UserParser {
+
+  private val MinLength = 5
 
   private val reads: Reads[User] = new Reads[User] {
     override def reads(json: JsValue): JsResult[User] = {
-      val name = (json \ "name").as[String](minLength[String](5))
-      val username = (json \ "username").as[String](minLength[String](5))
+      val name = (json \ "name").as[String](minLength[String](MinLength))
+      val username = (json \ "username").as[String](minLength[String](MinLength))
       JsSuccess(User(name = name, username = username, password = ""))
     }
   }

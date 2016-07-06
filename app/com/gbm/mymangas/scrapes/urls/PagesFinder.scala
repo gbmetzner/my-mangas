@@ -3,22 +3,20 @@ package com.gbm.mymangas.scrapes.urls
 import com.gbm.mymangas.utils.browser.Browser
 import net.ruippeixotog.scalascraper.dsl.DSL._
 import net.ruippeixotog.scalascraper.scraper.ContentExtractors._
-import org.jsoup.nodes.Document
+import net.ruippeixotog.scalascraper.model.Document
 
-import scala.util.{Failure, Success, Try}
+import scala.util.{ Failure, Success, Try }
 
 /**
-  * Created by gbmetzner on 11/17/15.
-  */
+ * Created by gbmetzner on 11/17/15.
+ */
 trait PagesFinder {
   val baseURL: String
   val browser: Browser
 
   def generate(searchParam: String, latestNumber: Int): Seq[Document]
 
-  protected[urls] def generateURLs(searchParam: String, latestNumber: Int, page: Int)
-                                  (f: (String, Int) => Option[Document])
-                                  (g: (Document, Int) => Boolean): Seq[Document] = {
+  protected[urls] def generateURLs(searchParam: String, latestNumber: Int, page: Int)(f: (String, Int) => Option[Document])(g: (Document, Int) => Boolean): Seq[Document] = {
     @annotation.tailrec
     def generateURLs(page: Int, acc: Seq[Document]): Seq[Document] = f(searchParam, page) match {
       case Some(document) =>
@@ -29,8 +27,7 @@ trait PagesFinder {
     generateURLs(page + 1, Seq.empty[Document])
   }
 
-
-  object panini {
+  object Panini {
 
     def verifyLatestEdition(document: Document, latestNumber: Int): Boolean = {
       Try((document >> extractor(".search_summary h3 strong", text)).trim().toInt) match {
@@ -45,7 +42,7 @@ trait PagesFinder {
     }
   }
 
-  object jbc {
+  object JBC {
 
     def verifyLatestEdition(document: Document, latestNumber: Int): Boolean = {
       (document >> extractor(".edicoes li a strong", text)).split("#").last.trim().toInt > latestNumber

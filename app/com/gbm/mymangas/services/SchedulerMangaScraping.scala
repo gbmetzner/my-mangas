@@ -1,8 +1,8 @@
 package com.gbm.mymangas.services
 
-import javax.inject.{Inject, Named, Singleton}
+import javax.inject.{ Inject, Named, Singleton }
 
-import akka.actor.{ActorRef, ActorSystem}
+import akka.actor.{ ActorRef, ActorSystem }
 import com.gbm.mymangas.actors.MangasScraper
 import com.gbm.mymangas.repositories.MangaRepositoryComponent
 import com.typesafe.scalalogging.LazyLogging
@@ -12,11 +12,13 @@ import scala.concurrent.ExecutionContext
 import scala.concurrent.duration._
 
 /**
-  * @author Gustavo Metzner on 10/19/15.
-  */
+ * @author Gustavo Metzner on 10/19/15.
+ */
 @Singleton
-class SchedulerMangaScraping @Inject()(val app: Application,
-                                       val system: ActorSystem)(implicit ec: ExecutionContext) extends LazyLogging {
+class SchedulerMangaScraping @Inject() (
+    val app: Application,
+    val system: ActorSystem
+)(implicit ec: ExecutionContext) extends LazyLogging {
 
   implicit val application = app
 

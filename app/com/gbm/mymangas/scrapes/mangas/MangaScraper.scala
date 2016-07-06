@@ -4,12 +4,12 @@ import com.gbm.mymangas.models.Manga
 import com.gbm.mymangas.scrapes.Scraper
 import com.gbm.mymangas.utils.StandardizeNames._
 import net.ruippeixotog.scalascraper.dsl.DSL._
+import net.ruippeixotog.scalascraper.model.Document
 import net.ruippeixotog.scalascraper.scraper.ContentExtractors._
-import org.jsoup.nodes.Document
 
 /**
-  * @author Gustavo Metzner on 11/15/15.
-  */
+ * @author Gustavo Metzner on 11/15/15.
+ */
 trait MangaScraper extends Scraper {
 
   override type R = (Manga, String)
@@ -33,7 +33,7 @@ trait MangaScraper extends Scraper {
     protected[this] def extractCollection(document: Document): String
   }
 
-  object panini extends Scraper {
+  object Panini extends Scraper {
 
     override def extractCoverLink(document: Document): String = {
       s"$baseURL${document >> extractor(".cover img", attr("src"))}"
@@ -48,10 +48,9 @@ trait MangaScraper extends Scraper {
     }
   }
 
-  object jbc extends Scraper {
+  object JBC extends Scraper {
 
     override def extractCoverLink(document: Document): String = {
-      println(document >> extractor(".content img", attr("src")))
       document >> extractor(".content img", attr("src"))
     }
 

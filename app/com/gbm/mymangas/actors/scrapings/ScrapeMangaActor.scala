@@ -1,14 +1,14 @@
 package com.gbm.mymangas.actors.scrapings
 
-import akka.actor.{Actor, ActorLogging, ActorRef, Props}
+import akka.actor.{ Actor, ActorLogging, ActorRef, Props }
 import com.gbm.mymangas.actors.scrapings.ScrapeMangaActor.Scrape
-import com.gbm.mymangas.models.{Collection, Manga}
-import com.gbm.mymangas.scrapes.mangas.{JBCMangaScraper, MangaScraper, PaniniMangaScraper}
-import org.jsoup.nodes.Document
+import com.gbm.mymangas.models.{ Collection, Manga }
+import com.gbm.mymangas.scrapes.mangas.{ JBCMangaScraper, MangaScraper, PaniniMangaScraper }
+import net.ruippeixotog.scalascraper.model.Document
 
 /**
-  * @author Gustavo Metzner on 10/19/15.
-  */
+ * @author Gustavo Metzner on 10/19/15.
+ */
 object ScrapeMangaActor {
 
   def props(creator: ActorRef): Props = Props(new ScrapeMangaActor(creator))

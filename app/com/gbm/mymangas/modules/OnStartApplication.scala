@@ -1,15 +1,15 @@
 package com.gbm.mymangas.modules
 
-import com.gbm.mymangas.services.{SchedulerEmail, SchedulerMangaScraping}
+import com.gbm.mymangas.services.{ SchedulerEmail, SchedulerMangaScraping }
 import com.google.inject.AbstractModule
 import com.typesafe.scalalogging.LazyLogging
 import play.api.libs.concurrent.AkkaGuiceSupport
 
 /**
-  * @author Gustavo Metzner on 10/17/15.
-  */
+ * @author Gustavo Metzner on 10/17/15.
+ */
 class OnStartApplication
-  extends AbstractModule with AkkaGuiceSupport with LazyLogging {
+    extends AbstractModule with AkkaGuiceSupport with LazyLogging {
 
   override def configure() {
 

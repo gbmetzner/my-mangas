@@ -10,8 +10,8 @@ import com.gbm.mymangas.models.Collection
 import com.gbm.mymangas.utils.UUID._
 
 /**
-  * Created by gbmetzner on 12/10/15.
-  */
+ * Created by gbmetzner on 12/10/15.
+ */
 class ScrapeMangaActorSpec extends ActorUnitSpec("ScrapeMangaActorSystem") {
 
   "A ScrapeMangaActor" should "react to Scrape for Panini" in {
@@ -34,7 +34,6 @@ class ScrapeMangaActorSpec extends ActorUnitSpec("ScrapeMangaActorSystem") {
         i shouldBe id
     }
   }
-
 
   it should "react to Scrape for JBC" in {
     val manager = TestProbe()

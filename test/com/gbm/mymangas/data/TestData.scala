@@ -1,8 +1,8 @@
 package com.gbm.mymangas.data
 
 /**
-  * Created by gbmetzner on 12/4/15.
-  */
+ * Created by gbmetzner on 12/4/15.
+ */
 trait TestData[T] {
 
   protected var values: Map[String, T] = Map.empty[String, T]

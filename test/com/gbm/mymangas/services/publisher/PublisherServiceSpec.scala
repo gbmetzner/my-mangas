@@ -7,14 +7,14 @@ import com.gbm.mymangas.models.Publisher
 import com.gbm.mymangas.models.filters.Predicate
 import com.gbm.mymangas.services.PublisherServiceComponent
 import com.gbm.mymangas.services.impl.PublisherServiceComponentImpl
-import com.gbm.mymangas.utils.messages.{Error, Succeed}
+import com.gbm.mymangas.utils.messages.{ Error, Succeed }
 import reactivemongo.api.commands._
 
 import scala.concurrent.Future
 
 /**
-  * Created by gbmetzner on 12/18/15.
-  */
+ * Created by gbmetzner on 12/18/15.
+ */
 class PublisherServiceSpec extends UnitSpec {
 
   val panini = Publisher(name = "Panini")
@@ -42,7 +42,6 @@ class PublisherServiceSpec extends UnitSpec {
 
   it should "not insert a publisher correctly due an error" in {
     val publisherServiceComponent = new PublisherServiceComponent with PublisherServiceComponentImpl
-
 
     val result = publisherServiceComponent.publisherService.insert(panini)(fWriteResultInsertNOk)(findNone)
 

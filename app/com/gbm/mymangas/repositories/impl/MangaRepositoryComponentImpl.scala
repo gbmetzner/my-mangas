@@ -3,7 +3,7 @@ package com.gbm.mymangas.repositories.impl
 import java.util.UUID
 
 import com.gbm.mymangas.models.filters.Predicate
-import com.gbm.mymangas.models.{Manga, Page}
+import com.gbm.mymangas.models.{ Manga, Page }
 import com.gbm.mymangas.repositories.MangaRepositoryComponent
 import com.gbm.mymangas.utils.json.MangaParser.mangaFormatterRepo
 import play.api.libs.json.Json
@@ -14,8 +14,8 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 /**
-  * Created by gbmetzner on 12/8/15.
-  */
+ * Created by gbmetzner on 12/8/15.
+ */
 trait MangaRepositoryComponentImpl extends MangaRepositoryComponent {
 
   override def mangaRepository: MangaRepository = new MangaRepositoryImpl

@@ -4,12 +4,13 @@ import com.gbm.mymangas.scrapes.Scraper
 import com.gbm.mymangas.utils.browser.Browser
 import net.ruippeixotog.scalascraper.dsl.DSL._
 import net.ruippeixotog.scalascraper.scraper.ContentExtractors._
-import org.jsoup.nodes.Document
+import net.ruippeixotog.scalascraper.model.Document
 
-/** Defines a scraper for manga's links.
-  *
-  * @author Gustavo Metzner on 11/15/15.
-  */
+/**
+ * Defines a scraper for manga's links.
+ *
+ * @author Gustavo Metzner on 11/15/15.
+ */
 trait LinksScraper extends Scraper {
 
   val browser: Browser
@@ -27,15 +28,15 @@ trait LinksScraper extends Scraper {
     def extractLinks(document: Document): L
   }
 
-  object panini extends Scraper {
+  object Panini extends Scraper {
     override def extractLinks(document: Document): L = {
       Seq(document >> extractor("h3 a", attr("href")))
     }
   }
 
-  object jbc extends Scraper {
+  object JBC extends Scraper {
     override def extractLinks(document: Document): L = {
-      document >> extractor(".edicoes li a", attrs("href"))
+      (document >> extractor(".edicoes li a", attrs("href"))).toSeq
     }
   }
 

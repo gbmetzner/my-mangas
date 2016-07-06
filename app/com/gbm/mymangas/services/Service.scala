@@ -4,17 +4,17 @@ import java.util.UUID
 
 import com.gbm.mymangas.models.Page
 import com.gbm.mymangas.models.filters.Predicate
-import com.gbm.mymangas.utils.messages.{Error, Failed, Succeed}
+import com.gbm.mymangas.utils.messages.{ Error, Failed, Succeed }
 import com.typesafe.scalalogging.LazyLogging
-import play.api.libs.json.{JsObject, Json}
+import play.api.libs.json.{ JsObject, Json }
 import reactivemongo.api.commands.WriteResult
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 /**
-  * @author Gustavo Metzner on 10/16/15.
-  */
+ * @author Gustavo Metzner on 10/16/15.
+ */
 trait Service[T] extends LazyLogging {
 
   def findBy(predicate: Predicate)(f: Predicate => Future[List[T]]): Future[List[T]] = {
@@ -50,10 +50,9 @@ trait Service[T] extends LazyLogging {
       case Some(result) => f(id).map {
         lastError =>
           if (lastError.hasErrors) {
-            logger error(s"Error while removing = $result", lastError.message)
+            logger error (s"Error while removing = $result", lastError.message)
             Left(Error("error.general"))
-          }
-          else Right(Succeed(removeMsg))
+          } else Right(Succeed(removeMsg))
       }
       case None => Future.successful(Left(Error(notFoundMsg)))
     }

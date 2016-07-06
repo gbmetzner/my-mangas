@@ -4,14 +4,14 @@ import java.util.UUID
 
 import com.gbm.mymangas.models.Collection
 import com.gbm.mymangas.models.filters.Predicate
-import com.gbm.mymangas.utils.messages.{Failed, Succeed}
+import com.gbm.mymangas.utils.messages.{ Failed, Succeed }
 import reactivemongo.api.commands.WriteResult
 
 import scala.concurrent.Future
 
 /**
-  * @author Gustavo Metzner on 10/13/15.
-  */
+ * @author Gustavo Metzner on 10/13/15.
+ */
 trait CollectionServiceComponent {
 
   def collectionService: CollectionService

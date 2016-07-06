@@ -3,7 +3,7 @@ package com.gbm.mymangas.actors.mangas
 import akka.actor._
 import com.gbm.mymangas.actors.covers.CoverManager
 import com.gbm.mymangas.actors.scrapings.ScrapeMangaActor
-import com.gbm.mymangas.actors.{LinksActor, PagesActor}
+import com.gbm.mymangas.actors.{ LinksActor, PagesActor }
 import com.gbm.mymangas.models.Collection
 import com.gbm.mymangas.registries.MangaComponentRegistry
 import com.gbm.mymangas.repositories.MangaRepositoryComponent
@@ -15,8 +15,8 @@ import com.gbm.mymangas.utils.browser.DefaultBrowser
 import scala.concurrent.ExecutionContext.Implicits.global
 
 /**
-  * @author Gustavo Metzner on 10/17/15.
-  */
+ * @author Gustavo Metzner on 10/17/15.
+ */
 object MangaManager {
 
   case class StartProcess(collection: Collection)

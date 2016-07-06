@@ -10,12 +10,15 @@ import play.api.libs.json._
  */
 object CollectionParser {
 
+  private val MinLength = 3
+  private val MaxLength = 30
+  private val paramMaxLength = 50
   private val reads: Reads[Collection] = new Reads[Collection] {
     override def reads(json: JsValue): JsResult[Collection] = {
-      val publisher = (json \ "publisher").as[String](minLength[String](3) keepAnd maxLength[String](30))
-      val name = (json \ "name").as[String](minLength[String](3) keepAnd maxLength[String](30))
+      val publisher = (json \ "publisher").as[String](minLength[String](MinLength) keepAnd maxLength[String](MaxLength))
+      val name = (json \ "name").as[String](minLength[String](MinLength) keepAnd maxLength[String](MaxLength))
       val isComplete = (json \ "isComplete").as[Boolean]
-      val searchParam = (json \ "searchParam").as[String](minLength[String](3) keepAnd maxLength[String](50))
+      val searchParam = (json \ "searchParam").as[String](minLength[String](MinLength) keepAnd maxLength[String](paramMaxLength))
       JsSuccess(Collection(publisher = publisher, name = name, searchParam = searchParam, isComplete = isComplete))
     }
   }

@@ -6,8 +6,8 @@ import play.api.Play.current
 import scala.concurrent.duration.Duration
 
 /**
-  * @author Gustavo Metzner on 10/10/15.
-  */
+ * @author Gustavo Metzner on 10/10/15.
+ */
 object Config {
 
   private val config = ConfigFactory.load("application.conf")
@@ -24,7 +24,7 @@ object Config {
 
   lazy val hostname: String = getStringFromKey("hostname")
 
-  def getString(key: String) = getStringFromKey(key)
+  def getString(key: String): String = getStringFromKey(key)
 
   private def getDuration(key: String): Duration = Duration(getStringFromKey(key))
 

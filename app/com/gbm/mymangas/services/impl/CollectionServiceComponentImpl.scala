@@ -3,18 +3,18 @@ package com.gbm.mymangas.services.impl
 import java.util.UUID
 
 import com.gbm.mymangas.models.Collection
-import com.gbm.mymangas.models.filters.{CollectionFilter, Predicate}
+import com.gbm.mymangas.models.filters.{ CollectionFilter, Predicate }
 import com.gbm.mymangas.services.CollectionServiceComponent
-import com.gbm.mymangas.utils.messages.{Error, Failed, Succeed}
+import com.gbm.mymangas.utils.messages.{ Error, Failed, Succeed }
 import org.joda.time.DateTime
 import reactivemongo.api.commands.WriteResult
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.{Future, Promise}
+import scala.concurrent.{ Future, Promise }
 
 /**
-  * Created by gbmetzner on 12/8/15.
-  */
+ * Created by gbmetzner on 12/8/15.
+ */
 trait CollectionServiceComponentImpl extends CollectionServiceComponent {
 
   override def collectionService: CollectionService = new CollectionServiceImpl
@@ -28,18 +28,15 @@ trait CollectionServiceComponentImpl extends CollectionServiceComponent {
             f(coll).map {
               lastError =>
                 if (lastError.hasErrors) {
-                  logger error(s"Error while persisting collection = $coll", lastError.message)
+                  logger error (s"Error while persisting collection = $coll", lastError.message)
                   Left(Error("error.general"))
-                }
-                else Right(Succeed("collection.added"))
+                } else Right(Succeed("collection.added"))
             }
-          }
-          else Future.successful(Left(Error("collection.already.exists")))
+          } else Future.successful(Left(Error("collection.already.exists")))
       }
     }
 
-    def update(id: UUID, coll: Collection)(f: (UUID, Collection) => Future[WriteResult])
-              (g: Predicate => Future[List[Collection]])(h: (String, Boolean) => Future[Unit]): Future[Either[Failed, Succeed]] = {
+    def update(id: UUID, coll: Collection)(f: (UUID, Collection) => Future[WriteResult])(g: Predicate => Future[List[Collection]])(h: (String, Boolean) => Future[Unit]): Future[Either[Failed, Succeed]] = {
 
       val promise = Promise[Either[Failed, Succeed]]()
 
@@ -58,10 +55,9 @@ trait CollectionServiceComponentImpl extends CollectionServiceComponent {
           f(id, oldCollection.copy(publisher = coll.publisher, name = coll.name, updatedAt = DateTime.now())).map {
             lastError =>
               if (lastError.hasErrors) {
-                logger error(s"Error while persisting collection = $coll", lastError.message)
+                logger error (s"Error while persisting collection = $coll", lastError.message)
                 promise.success(Left(Error("error.general")))
-              }
-              else {
+              } else {
                 if (coll.isComplete) h(coll.name, coll.isComplete)
                 promise.success(Right(Succeed("collection.updated")))
               }

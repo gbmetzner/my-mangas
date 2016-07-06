@@ -4,8 +4,8 @@ import com.gbm.mymangas.base.UnitSpec
 import com.gbm.mymangas.browser.FakeBrowser
 
 /**
-  * Created by gbmetzner on 11/18/15.
-  */
+ * Created by gbmetzner on 11/18/15.
+ */
 class UrlGeneratorSpec extends UnitSpec {
   "A PaniniUrlGenerator" should "returns a 2 documents from a urls" in {
     val result = PaniniPagesFinder(FakeBrowser).generate("berserk_#_manga", 0)

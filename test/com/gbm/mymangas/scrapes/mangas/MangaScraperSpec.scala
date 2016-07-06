@@ -3,8 +3,8 @@ package com.gbm.mymangas.scrapes.mangas
 import com.gbm.mymangas.base.UnitSpec
 
 /**
-  * Created by gbmetzner on 11/16/15.
-  */
+ * Created by gbmetzner on 11/16/15.
+ */
 class MangaScraperSpec extends UnitSpec {
 
   "A PaniniMangaScraper" should "extract a (Manga, Links) from a document" in {

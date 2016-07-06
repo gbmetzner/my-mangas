@@ -1,15 +1,15 @@
 package com.gbm.mymangas.actors
 
-import akka.actor.{Actor, ActorLogging, ActorRef, Props}
-import com.gbm.mymangas.actors.LinksActor.{FindLinks, Links}
+import akka.actor.{ Actor, ActorLogging, ActorRef, Props }
+import com.gbm.mymangas.actors.LinksActor.{ FindLinks, Links }
 import com.gbm.mymangas.models.Collection
-import com.gbm.mymangas.scrapes.links.{JBCLinksScraper, LinksScraper, PaniniLinksScraper}
+import com.gbm.mymangas.scrapes.links.{ JBCLinksScraper, LinksScraper, PaniniLinksScraper }
 import com.gbm.mymangas.utils.browser.Browser
-import org.jsoup.nodes.Document
+import net.ruippeixotog.scalascraper.model.Document
 
 /**
-  * Created by gbmetzner on 11/21/15.
-  */
+ * Created by gbmetzner on 11/21/15.
+ */
 object LinksActor {
 
   def props(creator: ActorRef, browser: Browser): Props = Props(new LinksActor(creator, browser))
