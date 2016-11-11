@@ -5,26 +5,29 @@ import javax.inject.Inject
 
 import com.gbm.mymangas.models.Publisher
 import com.gbm.mymangas.models.filters.PublisherFilter
-import com.gbm.mymangas.registries.PublisherComponentRegistry
-import com.gbm.mymangas.repositories.PublisherRepositoryComponent
-import com.gbm.mymangas.services.PublisherServiceComponent
-import com.gbm.mymangas.utils.json.PublisherParser.{ publisherFormatter, queryString2Predicate }
+import com.gbm.mymangas.registries.PublisherComponent
+import com.gbm.mymangas.repositories.PublisherRepository
+import com.gbm.mymangas.services.PublisherService
+import com.gbm.mymangas.utils.json.PublisherParser.{publisherFormatter, queryString2Predicate}
 import play.api.cache.CacheApi
 import play.api.i18n.MessagesApi
 import play.api.libs.json.Json
 import play.api.mvc.Action
 
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 /**
- * @author Gustavo Metzner on 10/10/15.
- */
-class PublisherController @Inject() (val messagesApi: MessagesApi, val cacheApi: CacheApi)
-    extends BaseController with PublisherComponentRegistry {
-  requires: PublisherServiceComponent with PublisherRepositoryComponent =>
+  * @author Gustavo Metzner on 10/10/15.
+  */
+class PublisherController @Inject()(val messagesApi: MessagesApi,
+                                    val cacheApi: CacheApi,
+                                    val publisherComponent: PublisherComponent) extends BaseController {
 
-  def createPublisher = hasTokenAsync(parse.json) { _ => _ => request =>
+  private val publisherService: PublisherService = publisherComponent.publisherService
+  private val publisherRepository: PublisherRepository = publisherComponent.publisherRepository
+
+  def createPublisher:Action = hasTokenAsync(parse.json) {
+    _ => _ => request =>
 
     logger debug s"Create a Publisher = $request"
 
@@ -33,7 +36,8 @@ class PublisherController @Inject() (val messagesApi: MessagesApi, val cacheApi:
         publisherService.insert(publisher)(publisherRepository.insert)(publisherRepository.findOneBy).map {
           case Left(error) =>
             BadRequest(Json.obj("msg" -> withMessage(error.message)))
-          case Right(success) => Created(Json.obj("msg" -> withMessage(success.message)))
+          case Right(success) =>
+            Created(Json.obj("msg" -> withMessage(success.message)))
         }
     }.getOrElse(Future.successful(BadRequest(Json.obj("msg" -> withMessage("error.invalid.json")))))
   }

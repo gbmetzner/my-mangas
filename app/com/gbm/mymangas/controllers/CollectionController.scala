@@ -20,7 +20,8 @@ import scala.concurrent.Future
 /**
  * @author Gustavo Metzner on 10/13/15.
  */
-class CollectionController @Inject() (val messagesApi: MessagesApi, val cacheApi: CacheApi)
+class CollectionController @Inject() (val messagesApi: MessagesApi,
+                                      val cacheApi: CacheApi)
     extends BaseController with CollectionComponentRegistry with MangaComponentRegistry {
   requires: CollectionServiceComponent with CollectionRepositoryComponent with MangaServiceComponent with MangaRepositoryComponent =>
 

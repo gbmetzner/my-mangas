@@ -6,7 +6,7 @@ import com.gbm.mymangas.base.UnitSpec
 import com.gbm.mymangas.models.Publisher
 import com.gbm.mymangas.models.filters.Predicate
 import com.gbm.mymangas.services.PublisherServiceComponent
-import com.gbm.mymangas.services.impl.PublisherServiceComponentImpl
+import com.gbm.mymangas.services.impl.PublisherServiceImpl
 import com.gbm.mymangas.utils.messages.{ Error, Succeed }
 import reactivemongo.api.commands._
 
@@ -33,7 +33,7 @@ class PublisherServiceSpec extends UnitSpec {
   val findOneList = (p: Predicate) => Future.successful(List(panini))
 
   "A PublisherService" should "insert a publisher correctly" in {
-    val publisherServiceComponent = new PublisherServiceComponent with PublisherServiceComponentImpl
+    val publisherServiceComponent = new PublisherServiceComponent with PublisherServiceImpl
 
     val result = publisherServiceComponent.publisherService.insert(panini)(fWriteResultInsertOk)(findNone)
 
@@ -41,7 +41,7 @@ class PublisherServiceSpec extends UnitSpec {
   }
 
   it should "not insert a publisher correctly due an error" in {
-    val publisherServiceComponent = new PublisherServiceComponent with PublisherServiceComponentImpl
+    val publisherServiceComponent = new PublisherServiceComponent with PublisherServiceImpl
 
     val result = publisherServiceComponent.publisherService.insert(panini)(fWriteResultInsertNOk)(findNone)
 
@@ -49,7 +49,7 @@ class PublisherServiceSpec extends UnitSpec {
   }
 
   it should "not insert a publisher correctly due an existent publisher in db" in {
-    val publisherServiceComponent = new PublisherServiceComponent with PublisherServiceComponentImpl
+    val publisherServiceComponent = new PublisherServiceComponent with PublisherServiceImpl
 
     val result = publisherServiceComponent.publisherService.insert(panini)(fWriteResultInsertOk)(findOne)
 
@@ -57,7 +57,7 @@ class PublisherServiceSpec extends UnitSpec {
   }
 
   it should "update a publisher correctly" in {
-    val publisherServiceComponent = new PublisherServiceComponent with PublisherServiceComponentImpl
+    val publisherServiceComponent = new PublisherServiceComponent with PublisherServiceImpl
 
     val result = publisherServiceComponent.publisherService.update(panini.id, panini)(fWriteResultUpdateOk)(findOneList)
 
@@ -65,7 +65,7 @@ class PublisherServiceSpec extends UnitSpec {
   }
 
   it should "not update a publisher correctly due an error" in {
-    val publisherServiceComponent = new PublisherServiceComponent with PublisherServiceComponentImpl
+    val publisherServiceComponent = new PublisherServiceComponent with PublisherServiceImpl
 
     val result = publisherServiceComponent.publisherService.update(panini.id, panini)(fWriteResultUpdateNOk)(findOneList)
 
@@ -73,7 +73,7 @@ class PublisherServiceSpec extends UnitSpec {
   }
 
   it should "not update a publisher correctly due a publisher not found" in {
-    val publisherServiceComponent = new PublisherServiceComponent with PublisherServiceComponentImpl
+    val publisherServiceComponent = new PublisherServiceComponent with PublisherServiceImpl
 
     val result = publisherServiceComponent.publisherService.update(panini.id, panini)(fWriteResultUpdateOk)(findNoneList)
 
@@ -81,7 +81,7 @@ class PublisherServiceSpec extends UnitSpec {
   }
 
   it should "remove a publisher correctly" in {
-    val publisherServiceComponent = new PublisherServiceComponent with PublisherServiceComponentImpl
+    val publisherServiceComponent = new PublisherServiceComponent with PublisherServiceImpl
 
     val result = publisherServiceComponent.publisherService.remove(panini.id)(fWriteResultRemoveOk)(findOne)
 
@@ -89,7 +89,7 @@ class PublisherServiceSpec extends UnitSpec {
   }
 
   it should "not remove a publisher correctly due an error" in {
-    val publisherServiceComponent = new PublisherServiceComponent with PublisherServiceComponentImpl
+    val publisherServiceComponent = new PublisherServiceComponent with PublisherServiceImpl
 
     val result = publisherServiceComponent.publisherService.remove(panini.id)(fWriteResultRemoveNOk)(findOne)
 
@@ -97,7 +97,7 @@ class PublisherServiceSpec extends UnitSpec {
   }
 
   it should "not remove a publisher correctly due a publisher not found" in {
-    val publisherServiceComponent = new PublisherServiceComponent with PublisherServiceComponentImpl
+    val publisherServiceComponent = new PublisherServiceComponent with PublisherServiceImpl
 
     val result = publisherServiceComponent.publisherService.remove(panini.id)(fWriteResultRemoveOk)(findNone)
 
