@@ -6,7 +6,7 @@ import play.api.libs.json.{ JsArray, Json, JsObject }
  * Created by gbmetzner on 11/5/15.
  */
 case class UserFilter(
-  username: Option[String] = None,
+    username: Option[String] = None,
     password: Option[String] = None,
     override val limit: Option[Int] = None,
     override val skip: Option[Int] = None

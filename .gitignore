@@ -8,8 +8,12 @@ target
 /RUNNING_PID
 /conf/db-dev.conf
 /conf/db-prod.conf
-/conf/smartfile.conf
+/conf/smartfile-prod.conf
+/conf/smartfile-dev.conf
 /conf/email.conf
 .DS_Store
 .sbtserver
 .sbtserver.lock
+app-2.11/
+project/project/
+test-2.11/

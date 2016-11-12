@@ -5,16 +5,15 @@ import java.util.UUID
 import com.gbm.mymangas.base.UnitSpec
 import com.gbm.mymangas.models.Collection
 import com.gbm.mymangas.models.filters.Predicate
-import com.gbm.mymangas.services.CollectionServiceComponent
-import com.gbm.mymangas.services.impl.CollectionServiceComponentImpl
-import com.gbm.mymangas.utils.messages.{ Error, Succeed }
-import reactivemongo.api.commands.{ DefaultWriteResult, LastError, WriteConcernError, WriteError }
+import com.gbm.mymangas.services.CollectionService
+import com.gbm.mymangas.utils.messages.{Error, Succeed}
+import reactivemongo.api.commands.{DefaultWriteResult, LastError, WriteConcernError, WriteError}
 
 import scala.concurrent.Future
 
 /**
- * Created by gbmetzner on 12/22/15.
- */
+  * Created by gbmetzner on 12/22/15.
+  */
 class CollectionServiceSpec extends UnitSpec {
 
   val dragonBall = Collection(publisher = "Panini", name = "Dragon Ball", searchParam = "dragon ball ed. #")
@@ -34,73 +33,73 @@ class CollectionServiceSpec extends UnitSpec {
   val updateEntireColl = (collection: String, update: Boolean) => Future.successful(())
 
   "A CollectionService" should "insert a collection correctly" in {
-    val collectionServiceComponent = new CollectionServiceComponent with CollectionServiceComponentImpl
+    val collectionService = new CollectionService
 
-    val result = collectionServiceComponent.collectionService.insert(dragonBall)(fWriteResultInsertOk)(findNone)
+    val result = collectionService.insert(dragonBall)(fWriteResultInsertOk)(findNone)
 
     result.futureValue shouldBe Right(Succeed("collection.added"))
   }
 
   it should "not insert a collection correctly due an error" in {
-    val collectionServiceComponent = new CollectionServiceComponent with CollectionServiceComponentImpl
+    val collectionService = new CollectionService
 
-    val result = collectionServiceComponent.collectionService.insert(dragonBall)(fWriteResultInsertNOk)(findNone)
+    val result = collectionService.insert(dragonBall)(fWriteResultInsertNOk)(findNone)
 
     result.futureValue shouldBe Left(Error("error.general"))
   }
 
   it should "not insert a collection correctly due an existent collection in db" in {
-    val collectionServiceComponent = new CollectionServiceComponent with CollectionServiceComponentImpl
+    val collectionService = new CollectionService
 
-    val result = collectionServiceComponent.collectionService.insert(dragonBall)(fWriteResultInsertOk)(findOne)
+    val result = collectionService.insert(dragonBall)(fWriteResultInsertOk)(findOne)
 
     result.futureValue shouldBe Left(Error("collection.already.exists"))
   }
 
   it should "update a collection correctly" in {
-    val collectionServiceComponent = new CollectionServiceComponent with CollectionServiceComponentImpl
+    val collectionService = new CollectionService
 
-    val result = collectionServiceComponent.collectionService.update(dragonBall.id, dragonBall)(fWriteResultUpdateOk)(findOneList)(updateEntireColl)
+    val result = collectionService.update(dragonBall.id, dragonBall)(fWriteResultUpdateOk)(findOneList)(updateEntireColl)
 
     result.futureValue shouldBe Right(Succeed("collection.updated"))
   }
 
   it should "not update a collection correctly due an error" in {
-    val collectionServiceComponent = new CollectionServiceComponent with CollectionServiceComponentImpl
+    val collectionService = new CollectionService
 
-    val result = collectionServiceComponent.collectionService.update(dragonBall.id, dragonBall)(fWriteResultUpdateNOk)(findOneList)(updateEntireColl)
+    val result = collectionService.update(dragonBall.id, dragonBall)(fWriteResultUpdateNOk)(findOneList)(updateEntireColl)
 
     result.futureValue shouldBe Left(Error("error.general"))
   }
 
   it should "not update a collection correctly due a collection not found" in {
-    val collectionServiceComponent = new CollectionServiceComponent with CollectionServiceComponentImpl
+    val collectionService = new CollectionService
 
-    val result = collectionServiceComponent.collectionService.update(dragonBall.id, dragonBall)(fWriteResultUpdateOk)(findNoneList)(updateEntireColl)
+    val result = collectionService.update(dragonBall.id, dragonBall)(fWriteResultUpdateOk)(findNoneList)(updateEntireColl)
 
     result.futureValue shouldBe Left(Error("collection.not.found"))
   }
 
   it should "remove a collection correctly" in {
-    val collectionServiceComponent = new CollectionServiceComponent with CollectionServiceComponentImpl
+    val collectionService = new CollectionService
 
-    val result = collectionServiceComponent.collectionService.remove(dragonBall.id)(fWriteResultRemoveOk)(findOne)
+    val result = collectionService.remove(dragonBall.id)(fWriteResultRemoveOk)(findOne)
 
     result.futureValue shouldBe Right(Succeed("collection.removed"))
   }
 
   it should "not remove a collection correctly due an error" in {
-    val collectionServiceComponent = new CollectionServiceComponent with CollectionServiceComponentImpl
+    val collectionService = new CollectionService
 
-    val result = collectionServiceComponent.collectionService.remove(dragonBall.id)(fWriteResultRemoveNOk)(findOne)
+    val result = collectionService.remove(dragonBall.id)(fWriteResultRemoveNOk)(findOne)
 
     result.futureValue shouldBe Left(Error("error.general"))
   }
 
   it should "not remove a collection correctly due a collection not found" in {
-    val collectionServiceComponent = new CollectionServiceComponent with CollectionServiceComponentImpl
+    val collectionService = new CollectionService
 
-    val result = collectionServiceComponent.collectionService.remove(dragonBall.id)(fWriteResultRemoveOk)(findNone)
+    val result = collectionService.remove(dragonBall.id)(fWriteResultRemoveOk)(findNone)
 
     result.futureValue shouldBe Left(Error("collection.not.found"))
   }

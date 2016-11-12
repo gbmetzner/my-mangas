@@ -5,9 +5,8 @@ import java.util.UUID
 import com.gbm.mymangas.base.UnitSpec
 import com.gbm.mymangas.models.Publisher
 import com.gbm.mymangas.models.filters.Predicate
-import com.gbm.mymangas.services.PublisherServiceComponent
-import com.gbm.mymangas.services.impl.PublisherServiceImpl
-import com.gbm.mymangas.utils.messages.{ Error, Succeed }
+import com.gbm.mymangas.services.PublisherService
+import com.gbm.mymangas.utils.messages.{Error, Succeed}
 import reactivemongo.api.commands._
 
 import scala.concurrent.Future
@@ -33,73 +32,73 @@ class PublisherServiceSpec extends UnitSpec {
   val findOneList = (p: Predicate) => Future.successful(List(panini))
 
   "A PublisherService" should "insert a publisher correctly" in {
-    val publisherServiceComponent = new PublisherServiceComponent with PublisherServiceImpl
+    val publisherService = new PublisherService
 
-    val result = publisherServiceComponent.publisherService.insert(panini)(fWriteResultInsertOk)(findNone)
+    val result = publisherService.insert(panini)(fWriteResultInsertOk)(findNone)
 
     result.futureValue shouldBe Right(Succeed("publisher.added"))
   }
 
   it should "not insert a publisher correctly due an error" in {
-    val publisherServiceComponent = new PublisherServiceComponent with PublisherServiceImpl
+    val publisherService = new PublisherService
 
-    val result = publisherServiceComponent.publisherService.insert(panini)(fWriteResultInsertNOk)(findNone)
+    val result = publisherService.insert(panini)(fWriteResultInsertNOk)(findNone)
 
     result.futureValue shouldBe Left(Error("error.general"))
   }
 
   it should "not insert a publisher correctly due an existent publisher in db" in {
-    val publisherServiceComponent = new PublisherServiceComponent with PublisherServiceImpl
+    val publisherService = new PublisherService
 
-    val result = publisherServiceComponent.publisherService.insert(panini)(fWriteResultInsertOk)(findOne)
+    val result = publisherService.insert(panini)(fWriteResultInsertOk)(findOne)
 
     result.futureValue shouldBe Left(Error("publisher.already.exists"))
   }
 
   it should "update a publisher correctly" in {
-    val publisherServiceComponent = new PublisherServiceComponent with PublisherServiceImpl
+    val publisherService = new PublisherService
 
-    val result = publisherServiceComponent.publisherService.update(panini.id, panini)(fWriteResultUpdateOk)(findOneList)
+    val result = publisherService.update(panini.id, panini)(fWriteResultUpdateOk)(findOneList)
 
     result.futureValue shouldBe Right(Succeed("publisher.updated"))
   }
 
   it should "not update a publisher correctly due an error" in {
-    val publisherServiceComponent = new PublisherServiceComponent with PublisherServiceImpl
+    val publisherService = new PublisherService
 
-    val result = publisherServiceComponent.publisherService.update(panini.id, panini)(fWriteResultUpdateNOk)(findOneList)
+    val result = publisherService.update(panini.id, panini)(fWriteResultUpdateNOk)(findOneList)
 
     result.futureValue shouldBe Left(Error("error.general"))
   }
 
   it should "not update a publisher correctly due a publisher not found" in {
-    val publisherServiceComponent = new PublisherServiceComponent with PublisherServiceImpl
+    val publisherService = new PublisherService
 
-    val result = publisherServiceComponent.publisherService.update(panini.id, panini)(fWriteResultUpdateOk)(findNoneList)
+    val result = publisherService.update(panini.id, panini)(fWriteResultUpdateOk)(findNoneList)
 
     result.futureValue shouldBe Left(Error("publisher.not.found"))
   }
 
   it should "remove a publisher correctly" in {
-    val publisherServiceComponent = new PublisherServiceComponent with PublisherServiceImpl
+    val publisherService = new PublisherService
 
-    val result = publisherServiceComponent.publisherService.remove(panini.id)(fWriteResultRemoveOk)(findOne)
+    val result = publisherService.remove(panini.id)(fWriteResultRemoveOk)(findOne)
 
     result.futureValue shouldBe Right(Succeed("publisher.removed"))
   }
 
   it should "not remove a publisher correctly due an error" in {
-    val publisherServiceComponent = new PublisherServiceComponent with PublisherServiceImpl
+    val publisherService = new PublisherService
 
-    val result = publisherServiceComponent.publisherService.remove(panini.id)(fWriteResultRemoveNOk)(findOne)
+    val result = publisherService.remove(panini.id)(fWriteResultRemoveNOk)(findOne)
 
     result.futureValue shouldBe Left(Error("error.general"))
   }
 
   it should "not remove a publisher correctly due a publisher not found" in {
-    val publisherServiceComponent = new PublisherServiceComponent with PublisherServiceImpl
+    val publisherService = new PublisherService
 
-    val result = publisherServiceComponent.publisherService.remove(panini.id)(fWriteResultRemoveOk)(findNone)
+    val result = publisherService.remove(panini.id)(fWriteResultRemoveOk)(findNone)
 
     result.futureValue shouldBe Left(Error("publisher.not.found"))
   }

@@ -1,11 +1,11 @@
 package com.gbm.mymangas.actors.emails
 
-import akka.actor.{ Actor, ActorLogging, Props }
+import akka.actor.{Actor, ActorLogging, Props}
 import com.gbm.mymangas.models.Email
 import com.gbm.mymangas.models.filters.MangaFilter
-import com.gbm.mymangas.registries.MangaComponentRegistry
-import com.gbm.mymangas.repositories.MangaRepositoryComponent
-import com.gbm.mymangas.services.MangaServiceComponent
+import com.gbm.mymangas.registries.MangaComponent
+import com.gbm.mymangas.repositories.MangaRepository
+import com.gbm.mymangas.services.impl.MangaService
 import com.gbm.mymangas.utils.Config._
 import org.joda.time.DateTime
 import play.api.libs.mailer.MailerClient
@@ -13,18 +13,20 @@ import play.api.libs.mailer.MailerClient
 import scala.concurrent.ExecutionContext.Implicits.global
 
 /**
- * Created by gbmetzner on 11/7/15.
- */
+  * @author Gustavo Metzner on 11/7/15.
+  */
 object EmailSender {
 
   case object Send
 
-  def props(mailerClient: MailerClient): Props = Props(new EmailSender(mailerClient) with MangaComponentRegistry)
+  def props(mailerClient: MailerClient): Props = Props(new EmailSender(mailerClient, new MangaComponent(new MangaService, new MangaRepository)))
 
 }
 
-class EmailSender(mailerClient: MailerClient) extends Actor with ActorLogging {
-  requires: MangaServiceComponent with MangaRepositoryComponent =>
+class EmailSender(mailerClient: MailerClient, mangaComponent: MangaComponent) extends Actor with ActorLogging {
+
+  val mangaService: MangaService = mangaComponent.mangaService
+  val mangaRepository: MangaRepository = mangaComponent.mangaRepository
 
   override def receive: Receive = {
     case EmailSender.Send =>

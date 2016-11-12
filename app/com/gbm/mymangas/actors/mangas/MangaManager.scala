@@ -3,11 +3,11 @@ package com.gbm.mymangas.actors.mangas
 import akka.actor._
 import com.gbm.mymangas.actors.covers.CoverManager
 import com.gbm.mymangas.actors.scrapings.ScrapeMangaActor
-import com.gbm.mymangas.actors.{ LinksActor, PagesActor }
+import com.gbm.mymangas.actors.{LinksActor, PagesActor}
 import com.gbm.mymangas.models.Collection
-import com.gbm.mymangas.registries.MangaComponentRegistry
-import com.gbm.mymangas.repositories.MangaRepositoryComponent
-import com.gbm.mymangas.services.MangaServiceComponent
+import com.gbm.mymangas.registries.MangaComponent
+import com.gbm.mymangas.repositories.MangaRepository
+import com.gbm.mymangas.services.impl.MangaService
 import com.gbm.mymangas.utils.StandardizeNames._
 import com.gbm.mymangas.utils.UUID._
 import com.gbm.mymangas.utils.browser.DefaultBrowser
@@ -15,20 +15,21 @@ import com.gbm.mymangas.utils.browser.DefaultBrowser
 import scala.concurrent.ExecutionContext.Implicits.global
 
 /**
- * @author Gustavo Metzner on 10/17/15.
- */
+  * @author Gustavo Metzner on 10/17/15.
+  */
 object MangaManager {
 
   case class StartProcess(collection: Collection)
 
-  def props: Props = Props(new MangaManager with MangaComponentRegistry)
+  def props: Props = Props(new MangaManager(new MangaComponent(new MangaService, new MangaRepository)))
 
 }
 
-class MangaManager extends Actor with ActorLogging {
-  requires: MangaServiceComponent with MangaRepositoryComponent =>
+class MangaManager(mangaComponent: MangaComponent) extends Actor with ActorLogging {
 
   val coverManager = context.actorOf(CoverManager.props(self), "cover-manager")
+  val mangaService: MangaService = mangaComponent.mangaService
+  val mangaRepository: MangaRepository = mangaComponent.mangaRepository
 
   var pagesActors: Map[String, ActorRef] = Map.empty[String, ActorRef]
   var linksActors: Map[String, ActorRef] = Map.empty[String, ActorRef]
@@ -121,7 +122,7 @@ class MangaManager extends Actor with ActorLogging {
 
   def createPersistActor(id: String): ActorRef = {
     log debug s"Creating persist-actor-$id"
-    val actorRef = context.actorOf(PersistMangaActor.props(self), s"persist-actor-$id")
+    val actorRef = context.actorOf(PersistMangaActor.props(self, mangaComponent), s"persist-actor-$id")
     persistActors += (s"persist-actor-$id" -> actorRef)
     actorRef
   }

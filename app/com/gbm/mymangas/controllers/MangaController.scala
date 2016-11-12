@@ -6,11 +6,12 @@ import javax.inject.Inject
 
 import com.gbm.mymangas.models.Manga
 import com.gbm.mymangas.models.filters.MangaFilter
-import com.gbm.mymangas.registries.MangaComponentRegistry
-import com.gbm.mymangas.repositories.MangaRepositoryComponent
-import com.gbm.mymangas.services.MangaServiceComponent
+import com.gbm.mymangas.registries.MangaComponent
+import com.gbm.mymangas.repositories.MangaRepository
+import com.gbm.mymangas.services.impl.MangaService
 import com.gbm.mymangas.utils.StandardizeNames._
-import com.gbm.mymangas.utils.json.MangaParser.{ mangaFormatterController, queryString2Predicate }
+import com.gbm.mymangas.utils.files.upload.FileUploaderComponentImpl
+import com.gbm.mymangas.utils.json.MangaParser.{mangaFormatterController, queryString2Predicate}
 import play.api.cache.CacheApi
 import play.api.i18n.MessagesApi
 import play.api.libs.json.Json
@@ -20,11 +21,14 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 /**
- * @author Gustavo Metzner on 10/13/15.
- */
-class MangaController @Inject() (val messagesApi: MessagesApi, val cacheApi: CacheApi)
-    extends BaseController with MangaComponentRegistry {
-  requires: MangaServiceComponent with MangaRepositoryComponent =>
+  * @author Gustavo Metzner on 10/13/15.
+  */
+class MangaController @Inject()(val messagesApi: MessagesApi,
+                                val cacheApi: CacheApi,
+                                val mangaComponent: MangaComponent) extends BaseController with FileUploaderComponentImpl {
+
+  private val mangaService: MangaService = mangaComponent.mangaService
+  private val mangaRepository: MangaRepository = mangaComponent.mangaRepository
 
   def createManga = hasTokenAsync(parse.json) { _ => _ => request =>
 
@@ -87,9 +91,8 @@ class MangaController @Inject() (val messagesApi: MessagesApi, val cacheApi: Cac
       picture =>
 
         val file = picture.ref.moveTo(new File(s"/tmp/$filename.jpg".standardize))
-        mangaService.uploadCover(mangaID, directory.standardize, file)(mangaRepository.update)(mangaRepository.findOneBy)
+        mangaService.uploadCover(mangaID, directory.standardize, file)(fileUploader.upload)(mangaRepository.update)(mangaRepository.findOneBy)
         file.delete()
-
         Future.successful(Ok(Json.obj("msg" -> withMessage("cover.uploaded"))))
     }
   }

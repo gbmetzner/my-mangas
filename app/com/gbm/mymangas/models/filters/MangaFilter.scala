@@ -12,7 +12,7 @@ import scala.util.Random
  * @author Gustavo Metzner on 10/13/15.
  */
 case class MangaFilter(
-  id: Option[UUID] = None,
+    id: Option[UUID] = None,
     collection: Option[String] = None,
     number: Option[Int] = None,
     from: Option[DateTime] = None,

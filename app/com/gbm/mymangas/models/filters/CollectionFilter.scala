@@ -8,7 +8,7 @@ import play.api.libs.json.{ JsArray, JsObject, Json }
  * @author Gustavo Metzner on 10/13/15.
  */
 case class CollectionFilter(
-  id: Option[UUID] = None,
+    id: Option[UUID] = None,
     publisher: Option[String] = None,
     name: Option[String] = None,
     isComplete: Option[Boolean] = None,

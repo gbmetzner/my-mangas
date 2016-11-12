@@ -8,26 +8,35 @@ import com.gbm.mymangas.models.filters.PublisherFilter
 import com.gbm.mymangas.registries.PublisherComponent
 import com.gbm.mymangas.repositories.PublisherRepository
 import com.gbm.mymangas.services.PublisherService
-import com.gbm.mymangas.utils.json.PublisherParser.{publisherFormatter, queryString2Predicate}
+import com.gbm.mymangas.utils.json.PublisherParser.{ publisherFormatter, queryString2Predicate }
 import play.api.cache.CacheApi
 import play.api.i18n.MessagesApi
-import play.api.libs.json.Json
-import play.api.mvc.Action
+import play.api.libs.json.{ JsValue, Json }
+import play.api.mvc.{ Action, AnyContent }
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 /**
-  * @author Gustavo Metzner on 10/10/15.
-  */
-class PublisherController @Inject()(val messagesApi: MessagesApi,
-                                    val cacheApi: CacheApi,
-                                    val publisherComponent: PublisherComponent) extends BaseController {
+ * Controller for Publisher actions.
+ *
+ * @author Gustavo Metzner on 10/10/15.
+ */
+class PublisherController @Inject() (
+    val messagesApi: MessagesApi,
+    val cacheApi: CacheApi,
+    val publisherComponent: PublisherComponent
+) extends BaseController {
 
   private val publisherService: PublisherService = publisherComponent.publisherService
   private val publisherRepository: PublisherRepository = publisherComponent.publisherRepository
 
-  def createPublisher:Action = hasTokenAsync(parse.json) {
-    _ => _ => request =>
+  /**
+   * Creates a new [[Publisher]] based on the json content received.
+   *
+   * @return Whether the [[Publisher]] was created or not.
+   */
+  def createPublisher: Action[JsValue] = hasTokenAsync(parse.json) { _ => _ => request =>
 
     logger debug s"Create a Publisher = $request"
 
@@ -39,10 +48,10 @@ class PublisherController @Inject()(val messagesApi: MessagesApi,
           case Right(success) =>
             Created(Json.obj("msg" -> withMessage(success.message)))
         }
-    }.getOrElse(Future.successful(BadRequest(Json.obj("msg" -> withMessage("error.invalid.json")))))
+    }.getOrElse(Future(BadRequest(Json.obj("msg" -> withMessage("error.invalid.json")))))
   }
 
-  def searchPublishers = Action.async {
+  def searchPublishers: Action[AnyContent] = Action.async {
     request =>
 
       val predicate = queryString2Predicate(request)
@@ -55,7 +64,7 @@ class PublisherController @Inject()(val messagesApi: MessagesApi,
       }
   }
 
-  def editPublisher(id: UUID) = hasTokenAsync() { _ => _ => request =>
+  def editPublisher(id: UUID): Action[AnyContent] = hasTokenAsync() { _ => _ => request =>
 
     logger debug s"Find by id = $id"
 
@@ -65,7 +74,7 @@ class PublisherController @Inject()(val messagesApi: MessagesApi,
     }
   }
 
-  def updatePublisher(id: UUID) = hasTokenAsync(parse.json) { _ => _ => request =>
+  def updatePublisher(id: UUID): Action[JsValue] = hasTokenAsync(parse.json) { _ => _ => request =>
 
     logger debug s"Update a Publisher = $request"
 
@@ -78,7 +87,7 @@ class PublisherController @Inject()(val messagesApi: MessagesApi,
     } getOrElse Future.successful(BadRequest(withMessage("error.invalid.json")))
   }
 
-  def removePublisher(id: UUID) = hasTokenAsync() { _ => _ => request =>
+  def removePublisher(id: UUID): Action[AnyContent] = hasTokenAsync() { _ => _ => request =>
 
     logger debug s"Removing id = $id"
 

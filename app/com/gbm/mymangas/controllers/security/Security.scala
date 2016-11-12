@@ -15,8 +15,9 @@ import scala.concurrent.Future
 trait Security {
   requires: Controller =>
 
-  val messagesApi: MessagesApi
-  val cacheApi: CacheApi
+  def messagesApi: MessagesApi
+
+  def cacheApi: CacheApi
 
   type Id = User
 

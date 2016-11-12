@@ -5,9 +5,10 @@ import javax.inject.Inject
 
 import com.gbm.mymangas.models.Collection
 import com.gbm.mymangas.models.filters.CollectionFilter
-import com.gbm.mymangas.registries.{ CollectionComponentRegistry, MangaComponentRegistry }
-import com.gbm.mymangas.repositories.{ CollectionRepositoryComponent, MangaRepositoryComponent }
-import com.gbm.mymangas.services.{ CollectionServiceComponent, MangaServiceComponent }
+import com.gbm.mymangas.registries.{CollectionComponent, MangaComponent}
+import com.gbm.mymangas.repositories.{CollectionRepository, MangaRepository}
+import com.gbm.mymangas.services.CollectionService
+import com.gbm.mymangas.services.impl.MangaService
 import com.gbm.mymangas.utils.json.CollectionParser.collectionFormatter
 import play.api.cache.CacheApi
 import play.api.i18n.MessagesApi
@@ -18,12 +19,18 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 /**
- * @author Gustavo Metzner on 10/13/15.
- */
-class CollectionController @Inject() (val messagesApi: MessagesApi,
-                                      val cacheApi: CacheApi)
-    extends BaseController with CollectionComponentRegistry with MangaComponentRegistry {
-  requires: CollectionServiceComponent with CollectionRepositoryComponent with MangaServiceComponent with MangaRepositoryComponent =>
+  * @author Gustavo Metzner on 10/13/15.
+  */
+class CollectionController @Inject()(val messagesApi: MessagesApi,
+                                     val cacheApi: CacheApi,
+                                     val collectionComponent: CollectionComponent,
+                                     val mangaComponent: MangaComponent)
+  extends BaseController {
+
+  private val collectionService: CollectionService = collectionComponent.collectionService
+  private val collectionRepository: CollectionRepository = collectionComponent.collectionRepository
+  private val mangaService: MangaService = mangaComponent.mangaService
+  private val mangaRepository: MangaRepository = mangaComponent.mangaRepository
 
   def createCollection = hasTokenAsync(parse.json) { _ => _ => request =>
 

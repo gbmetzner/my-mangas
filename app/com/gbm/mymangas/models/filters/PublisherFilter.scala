@@ -8,7 +8,7 @@ import play.api.libs.json.{ JsArray, JsObject, Json }
  * @author Gustavo Metzner on 10/12/15.
  */
 case class PublisherFilter(
-  id: Option[UUID] = None,
+    id: Option[UUID] = None,
     name: Option[String] = None,
     override val limit: Option[Int] = None,
     override val skip: Option[Int] = None

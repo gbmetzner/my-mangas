@@ -4,7 +4,7 @@ import javax.inject.{ Inject, Named, Singleton }
 
 import akka.actor.{ ActorRef, ActorSystem }
 import com.gbm.mymangas.actors.MangasScraper
-import com.gbm.mymangas.repositories.MangaRepositoryComponent
+import com.gbm.mymangas.repositories.MangaRepository
 import com.typesafe.scalalogging.LazyLogging
 import play.api.Application
 

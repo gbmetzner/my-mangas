@@ -41,4 +41,4 @@ libraryDependencies ++= Seq(
 // run gulp
 playRunHooks += RunSubProcess("gulp")
 
-//fork in run := true
+fork in run := true
