@@ -20,7 +20,7 @@ class MangaServiceSpec extends UnitSpec {
   val dragonBall = Manga(collection = "Dragon Ball", number = 1)
   val error = WriteConcernError(1, "error")
   val actionOk = LastError(true, None, None, None, 1, None, false, None, None, false, None, None)
-  val actionNOk = DefaultWriteResult(false, 1, Seq.empty[WriteError], Some(error), None, None)
+  val actionNOk = DefaultWriteResult(false, 1, Seq(WriteError(1, 1, "error")), Some(error), None, None)
   val fWriteResultInsertOk = (m: Manga) => Future.successful(actionOk)
   val fWriteResultInsertNOk = (m: Manga) => Future.successful(actionNOk)
   val fWriteResultUpdateOk = (id: UUID, m: Manga) => Future.successful(actionOk)

@@ -24,8 +24,8 @@ class CollectionService extends Service[Collection] {
         if (colls.isEmpty) {
           f(coll).map {
             lastError =>
-              if (lastError.hasErrors) {
-                logger error(s"Error while persisting collection = $coll", lastError.message)
+              if (lastError.writeErrors.nonEmpty) {
+                logger error s"Error while persisting collection = $coll, errors = ${lastError.writeErrors.mkString}"
                 Left(Error("error.general"))
               } else Right(Succeed("collection.added"))
           }
@@ -51,8 +51,8 @@ class CollectionService extends Service[Collection] {
       case Some(oldCollection) =>
         f(id, oldCollection.copy(publisher = coll.publisher, name = coll.name, updatedAt = DateTime.now())).map {
           lastError =>
-            if (lastError.hasErrors) {
-              logger error(s"Error while persisting collection = $coll", lastError.message)
+            if (lastError.writeErrors.nonEmpty) {
+              logger error s"Error while updating collection = $coll, errors = ${lastError.writeErrors.mkString}"
               promise.success(Left(Error("error.general")))
             } else {
               if (coll.isComplete) h(coll.name, coll.isComplete)

@@ -49,8 +49,8 @@ trait Service[T] extends LazyLogging {
     findOneBy(predicate)(g).flatMap {
       case Some(result) => f(id).map {
         lastError =>
-          if (lastError.hasErrors) {
-            logger error (s"Error while removing = $result", lastError.message)
+          if (lastError.writeErrors.nonEmpty) {
+            logger error s"Error while removing = $result with erros = ${lastError.writeErrors.mkString}"
             Left(Error("error.general"))
           } else Right(Succeed(removeMsg))
       }

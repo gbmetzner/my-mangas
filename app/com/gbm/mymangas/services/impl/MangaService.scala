@@ -28,8 +28,8 @@ class MangaService extends Service[Manga] {
         if (mangas.isEmpty) {
           f(manga).map {
             lastError =>
-              if (lastError.hasErrors) {
-                logger error(s"Error while persisting manga = $manga", lastError.message)
+              if (lastError.writeErrors.nonEmpty) {
+                logger error s"Error while persisting manga = $manga -> errors = ${lastError.writeErrors.mkString}"
                 Left(Error("error.general"))
               } else Right(Succeed("manga.added"))
           }
@@ -48,8 +48,8 @@ class MangaService extends Service[Manga] {
 
         f(id, manga.copy(publicLink = link, createdAt = m.createdAt, updatedAt = DateTime.now())).map {
           lastError =>
-            if (lastError.hasErrors) {
-              logger error(s"Error while updating manga = $manga", lastError.message)
+            if (lastError.writeErrors.nonEmpty) {
+              logger error s"Error while updating manga = $manga with errors = ${lastError.writeErrors.mkString}"
               Left(Error("error.general"))
             } else Right(Succeed("manga.updated"))
         }
@@ -62,8 +62,8 @@ class MangaService extends Service[Manga] {
       case Some(m) =>
         f(id, m.copy(doIHaveIt = doIHaveIt, updatedAt = DateTime.now())).map {
           lastError =>
-            if (lastError.hasErrors) {
-              logger error(s"Error while updating ownership for manga id = $id", lastError.message)
+            if (lastError.writeErrors.nonEmpty) {
+              logger error s"Error while updating ownership for manga id = $id -> errors = ${lastError.writeErrors.mkString}"
               Left(Error("error.general"))
             } else Right(Succeed("manga.updated"))
         }
@@ -85,15 +85,15 @@ class MangaService extends Service[Manga] {
 
   def uploadCover(mangaID: UUID, directory: String, file: File)(u: (String, File) => String)(f: (UUID, Manga) => Future[WriteResult])(g: Predicate => Future[Option[Manga]]): Future[Either[Failed, Succeed]] = {
 
-    val publicLink = u(s"/my-mangas/mangas/$directory", file)
+    val publicLink = u(s"${Config.smartFilePath}$directory", file)
 
     findOneBy(MangaFilter(id = Some(mangaID)))(g).flatMap {
       case Some(manga) =>
         val updatedManga = manga.copy(publicLink = publicLink, updatedAt = DateTime.now())
         f(mangaID, updatedManga).map {
           lastError =>
-            if (lastError.hasErrors) {
-              logger error(s"Error while uploading Cover for manga = $manga", lastError.message)
+            if (lastError.writeErrors.nonEmpty) {
+              logger error s"Error while uploading Cover for manga = $manga with errors = ${lastError.writeErrors.mkString}"
               Left(Error("error.general"))
             } else Right(Succeed("manga.updated"))
         }

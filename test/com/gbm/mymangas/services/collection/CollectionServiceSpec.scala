@@ -19,7 +19,7 @@ class CollectionServiceSpec extends UnitSpec {
   val dragonBall = Collection(publisher = "Panini", name = "Dragon Ball", searchParam = "dragon ball ed. #")
   val error = WriteConcernError(1, "error")
   val actionOk = LastError(true, None, None, None, 1, None, false, None, None, false, None, None)
-  val actionNOk = DefaultWriteResult(false, 1, Seq.empty[WriteError], Some(error), None, None)
+  val actionNOk = DefaultWriteResult(false, 1, Seq(WriteError(1, 1, "error")), Some(error), None, None)
   val fWriteResultInsertOk = (c: Collection) => Future.successful(actionOk)
   val fWriteResultInsertNOk = (p: Collection) => Future.successful(actionNOk)
   val fWriteResultUpdateOk = (id: UUID, p: Collection) => Future.successful(actionOk)

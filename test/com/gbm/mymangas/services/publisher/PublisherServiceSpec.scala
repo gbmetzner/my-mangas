@@ -12,14 +12,14 @@ import reactivemongo.api.commands._
 import scala.concurrent.Future
 
 /**
- * Created by gbmetzner on 12/18/15.
- */
+  * Created by gbmetzner on 12/18/15.
+  */
 class PublisherServiceSpec extends UnitSpec {
 
   val panini = Publisher(name = "Panini")
   val error = WriteConcernError(1, "error")
   val actionOk = LastError(true, None, None, None, 1, None, false, None, None, false, None, None)
-  val actionNOk = DefaultWriteResult(false, 1, Seq.empty[WriteError], Some(error), None, None)
+  val actionNOk = DefaultWriteResult(false, 1, Seq(WriteError(1, 1, "error")), Some(error), None, None)
   val fWriteResultInsertOk = (p: Publisher) => Future.successful(actionOk)
   val fWriteResultInsertNOk = (p: Publisher) => Future.successful(actionNOk)
   val fWriteResultUpdateOk = (id: UUID, p: Publisher) => Future.successful(actionOk)

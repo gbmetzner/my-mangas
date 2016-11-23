@@ -1,13 +1,12 @@
 package com.gbm.mymangas.utils
 
 import com.typesafe.config.ConfigFactory
-import play.api.Play.current
 
 import scala.concurrent.duration.Duration
 
 /**
- * @author Gustavo Metzner on 10/10/15.
- */
+  * @author Gustavo Metzner on 10/10/15.
+  */
 object Config {
 
   private val config = ConfigFactory.load("application.conf")
@@ -23,6 +22,8 @@ object Config {
   lazy val cacheDuration: Duration = getDuration("cache.expiration")
 
   lazy val hostname: String = getStringFromKey("hostname")
+
+  lazy val smartFilePath: String = getStringFromKey("smartfile.base.path")
 
   def getString(key: String): String = getStringFromKey(key)
 

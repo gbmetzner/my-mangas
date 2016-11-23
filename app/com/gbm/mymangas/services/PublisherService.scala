@@ -24,8 +24,8 @@ class PublisherService extends Service[Publisher] {
         if (publishers.isEmpty) {
           f(publisher).map {
             lastError =>
-              if (lastError.hasErrors) {
-                logger error(s"Error while persisting publisher = $publisher", lastError.message)
+              if (lastError.writeErrors.nonEmpty) {
+                logger error s"Error while persisting publisher = $publisher, errors = ${lastError.writeErrors.mkString}"
                 Left(Error("error.general"))
               } else Right(Succeed("publisher.added"))
           }
@@ -50,8 +50,8 @@ class PublisherService extends Service[Publisher] {
       case Some(oldPublisher) =>
         f(id, oldPublisher.copy(name = publisher.name, updatedAt = DateTime.now())).map {
           lastError =>
-            if (lastError.hasErrors) {
-              logger error(s"Error while updating publisher = $publisher", lastError.message)
+            if (lastError.writeErrors.nonEmpty) {
+              logger error s"Error while persisting updating = $publisher, errors = ${lastError.writeErrors.mkString}"
               promise.success(Left(Error("error.general")))
             } else promise.success(Right(Succeed("publisher.updated")))
         }
