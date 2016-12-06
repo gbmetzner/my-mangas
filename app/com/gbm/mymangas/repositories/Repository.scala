@@ -93,8 +93,8 @@ object MongoContext {
 
   private val connection = driver.connection(uri)
 
-  val dbs = connection.database(uri.authenticate.get.db)
+  private val dbs = connection.database(uri.authenticate.get.db)
 
-  def db: DefaultDB = Await.result(dbs, 1.second)
+  def db: DefaultDB = Await.result(dbs, 2.second)
 
 }

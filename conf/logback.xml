@@ -1,41 +1,43 @@
 <configuration>
 
-    <conversionRule conversionWord="coloredLevel" converterClass="play.api.libs.logback.ColoredLevel" />
+    <conversionRule conversionWord="coloredLevel" converterClass="play.api.Logger$ColoredLevel"/>
 
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <pattern>%coloredLevel - %logger - %message%n%xException</pattern>
         </encoder>
     </appender>
-    <!--appender name="LE" class="com.logentries.logback.LogentriesAppender">
+    <appender name="LE" class="com.logentries.logback.LogentriesAppender">
         <Debug>False</Debug>
         <Token></Token>
         <Ssl>False</Ssl>
         <layout>
             <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
         </layout>
-    </appender-->
-
+    </appender>
+    <!--
+      The logger name is typically the Java/Scala package name.
+      This configures the log level to log at for a package and its children packages.
+    -->
     <logger name="play" level="INFO"/>
     <logger name="akka" level="INFO"/>
     <logger name="com.gbm.mymangas" level="DEBUG"/>
-    <logger name="com.gbm.mymangas" level="INFO"/>
 
     <root level="ERROR">
-        <!--appender-ref ref="LE"/-->
-        <appender-ref ref="STDOUT"/>
+        <!--appender-ref ref="STDOUT"/-->
+        <appender-ref ref="LE"/>
     </root>
     <root level="DEBUG">
-        <!--appender-ref ref="LE"/-->
-        <appender-ref ref="STDOUT"/>
+        <!--appender-ref ref="STDOUT"/-->
+        <appender-ref ref="LE"/>
     </root>
     <root level="WARNING">
-        <!--appender-ref ref="LE"/-->
-        <appender-ref ref="STDOUT"/>
+        <!--appender-ref ref="STDOUT"/-->
+        <appender-ref ref="LE"/>
     </root>
     <root level="INFO">
-        <!--appender-ref ref="LE"/-->
-        <appender-ref ref="STDOUT"/>
+        <!--appender-ref ref="STDOUT"/-->
+        <appender-ref ref="LE"/>
     </root>
 
 </configuration>

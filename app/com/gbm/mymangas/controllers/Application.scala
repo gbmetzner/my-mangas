@@ -1,9 +1,9 @@
 package com.gbm.mymangas.controllers
 
-import com.typesafe.scalalogging.LazyLogging
+import play.api.Logger
 import play.api.mvc._
 
-class Application extends Controller with LazyLogging {
+class Application extends Controller {
 
   /**
    * It
@@ -11,7 +11,7 @@ class Application extends Controller with LazyLogging {
    * @return
    */
   def main(any: String): Action[AnyContent] = Action {
-    logger info ""
+    Logger debug s"First call to $any..."
     Ok(views.html.main())
   }
 

@@ -11,6 +11,7 @@ target
 /conf/smartfile-prod.conf
 /conf/smartfile-dev.conf
 /conf/email.conf
+/conf/generated.keystore
 .DS_Store
 .sbtserver
 .sbtserver.lock

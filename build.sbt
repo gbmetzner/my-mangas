@@ -1,3 +1,4 @@
+import com.typesafe.sbt.packager.docker.ExecCmd
 import play.sbt.PlayImport.PlayKeys._
 import sbt.Keys._
 import sbt._
@@ -7,6 +8,9 @@ name := """my-mangas"""
 version := "1.0-SNAPSHOT"
 
 lazy val root = (project in file(".")).enablePlugins(PlayScala)
+  .enablePlugins(JavaAppPackaging)
+  .enablePlugins(DockerPlugin)
+
 
 scalaVersion := "2.11.8"
 
@@ -48,3 +52,24 @@ libraryDependencies ++= Seq(
 playRunHooks += RunSubProcess("gulp")
 
 fork in run := true
+
+// Docker
+packageName in Docker := packageName.value
+
+version in Docker := "latest"
+
+dockerBaseImage := "azul/zulu-openjdk"
+
+maintainer := "gbmetzner@yahoo.com"
+
+dockerRepository := Some("gbmetzner")
+
+lazy val dockerPort = Seq(9000, 9443)
+
+dockerExposedPorts := dockerPort
+
+javaOptions in Docker ++= Seq(
+  "-server",
+  "-Xms256M",
+  "-Xmx256M"
+)
